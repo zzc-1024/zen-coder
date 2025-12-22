@@ -2,7 +2,7 @@
   <div class="wrapper">
     <ToolBar />
     <div class="lf-container">
-      <div ref="containerRef" style="height: 100%;"></div>
+      <div ref="containerRef" style="height: 100%"></div>
       <TeleportContainer :flow-id="flowId" />
     </div>
   </div>
@@ -12,10 +12,10 @@
 import { onMounted, ref } from 'vue';
 import { getTeleport } from '@logicflow/vue-node-registry';
 import LogicFlow from '@logicflow/core';
-import { MiniMap } from '@logicflow/extension';
+import { DndPanel, MiniMap } from '@logicflow/extension';
 import { BasicType } from '@/nodes/basic/typeDifination';
 import { batchRegisterVueNode } from '@/utils/editor';
-import { basicEditorNode } from '@/nodes/basic/basicEditorConfig';
+import { basicEditorNode, dndPanelItem } from '@/nodes/basic/basicEditorConfig';
 import ToolBar from '@/components/ToolBar.vue';
 
 // LogicFlow 相关的必要变量
@@ -46,6 +46,9 @@ onMounted(() => {
     plugins: [MiniMap],
   });
   batchRegisterVueNode(lf, basicEditorNode);
+  if (lf.extension.dndPanel instanceof DndPanel) {
+    lf.extension.dndPanel.setPatternItems(dndPanelItem);
+  }
   lf.render(renderData.value);
   lf.translateCenter();
   if (lf.extension.miniMap instanceof MiniMap) {
