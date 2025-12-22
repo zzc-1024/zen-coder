@@ -1,0 +1,28 @@
+import './assets/main.css';
+import '@logicflow/core/lib/style/index.css';
+import '@logicflow/extension/lib/style/index.css';
+
+import { createApp } from 'vue';
+import App from './App.vue';
+import router from './router';
+
+import LogicFlow from '@logicflow/core';
+import { Control, DndPanel, MiniMap } from '@logicflow/extension';
+
+const app = createApp(App);
+
+app.use(router);
+
+app.mount('#app');
+
+LogicFlow.use(Control);
+LogicFlow.use(MiniMap);
+LogicFlow.use(DndPanel);
+class A {
+  toString() {
+    return 'A';
+  }
+}
+
+const test = new A();
+console.log(JSON.stringify(test));

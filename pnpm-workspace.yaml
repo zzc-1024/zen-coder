@@ -1,0 +1,4 @@
+packages:  
+  # 放置各种项目  
+  - 'packages/**'
+  - 'apps/**'
