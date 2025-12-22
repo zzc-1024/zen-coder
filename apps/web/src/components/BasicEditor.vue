@@ -1,6 +1,11 @@
 <template>
-  <div ref="containerRef" class="lf-container"></div>
-  <TeleportContainer :flow-id="flowId" />
+  <div class="wrapper">
+    <ToolBar />
+    <div class="lf-container">
+      <div ref="containerRef" style="height: 100%;"></div>
+      <TeleportContainer :flow-id="flowId" />
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -11,6 +16,7 @@ import { MiniMap } from '@logicflow/extension';
 import { BasicType } from '@/nodes/basic/typeDifination';
 import { batchRegisterVueNode } from '@/utils/editor';
 import { basicEditorNode } from '@/nodes/basic/basicEditorConfig';
+import ToolBar from '@/components/ToolBar.vue';
 
 // LogicFlow 相关的必要变量
 const containerRef = ref(null);
@@ -49,7 +55,10 @@ onMounted(() => {
 </script>
 
 <style scoped lang="scss">
-.lf-container {
-  height: 99%;
+.wrapper {
+  height: 100%;
+  .lf-container {
+    height: calc(99% - 49px);
+  }
 }
 </style>
