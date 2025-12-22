@@ -5,12 +5,12 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { getTeleport, register } from '@logicflow/vue-node-registry';
+import { getTeleport } from '@logicflow/vue-node-registry';
 import LogicFlow from '@logicflow/core';
-import SetNodeModel from '@/nodes/basic/setNode/setNodeModel';
-import SetNodeView from '@/nodes/basic/setNode/SetNodeView.vue';
 import { MiniMap } from '@logicflow/extension';
 import { BasicType } from '@/nodes/basic/typeDifination';
+import { batchRegisterVueNode } from '@/utils/editor';
+import { basicEditorNode } from '@/nodes/basic/basicEditorConfig';
 
 // LogicFlow 相关的必要变量
 const containerRef = ref(null);
@@ -21,7 +21,7 @@ const renderData = ref<LogicFlow.GraphConfigData>({
   nodes: [
     {
       id: '1',
-      type: 'set-node',
+      type: 'builtin:basic:set',
       x: 100,
       y: 100,
       properties: {
@@ -39,14 +39,7 @@ onMounted(() => {
     container: containerRef.value,
     plugins: [MiniMap],
   });
-  register(
-    {
-      type: 'set-node',
-      component: SetNodeView,
-      model: SetNodeModel,
-    },
-    lf,
-  );
+  batchRegisterVueNode(lf, basicEditorNode);
   lf.render(renderData.value);
   lf.translateCenter();
   if (lf.extension.miniMap instanceof MiniMap) {
