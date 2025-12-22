@@ -29,7 +29,6 @@ export class BasicType extends BaseType {
     super();
   }
   toString() {
-    console.log('type', this.type);
     return this.type;
   }
 }
@@ -63,9 +62,24 @@ export function parseType(type: string): BaseType {
     const itemType = trimType.slice(5, -1);
     return new ListType(parseType(itemType));
   } else if (trimType.startsWith('dict<')) {
-    const [keyType, valueType] = trimType.slice(5, -1).split(',');
-    if (!keyType || !valueType) throw new Error(`Invalid dict type: ${type}`);
-    return new DictType(parseType(keyType.trim()), parseType(valueType.trim()));
+    const inner = trimType.slice(5, -1);
+    // ✅ 正确分割顶层逗号
+    let depth = 0;
+    let commaIndex = -1;
+    for (let i = 0; i < inner.length; i++) {
+      if (inner[i] === '<') depth++;
+      else if (inner[i] === '>') depth--;
+      else if (inner[i] === ',' && depth === 0) {
+        commaIndex = i;
+        break;
+      }
+    }
+    if (commaIndex === -1) {
+      throw new Error(`Invalid dict type: ${type}`);
+    }
+    const keyType = inner.slice(0, commaIndex);
+    const valueType = inner.slice(commaIndex + 1);
+    return new DictType(parseType(keyType), parseType(valueType));
   }
   return new BasicType(trimType as BasicTypeName);
 }

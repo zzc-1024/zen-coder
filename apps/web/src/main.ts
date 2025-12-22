@@ -18,11 +18,3 @@ app.mount('#app');
 LogicFlow.use(Control);
 LogicFlow.use(MiniMap);
 LogicFlow.use(DndPanel);
-class A {
-  toString() {
-    return 'A';
-  }
-}
-
-const test = new A();
-console.log(JSON.stringify(test));

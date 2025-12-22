@@ -26,7 +26,6 @@ const props = defineProps<{
   type: string | 'blank';
 }>();
 const fieldType = computed(() => {
-  console.log(props.type);
   if (props.type === 'blank') {
     return '未知类型';
   }

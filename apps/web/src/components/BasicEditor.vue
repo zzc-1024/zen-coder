@@ -7,8 +7,8 @@
 import { onMounted, ref } from 'vue';
 import { getTeleport, register } from '@logicflow/vue-node-registry';
 import LogicFlow from '@logicflow/core';
-import GetNodeModel from '@/nodes/basic/getNode/getNodeModel';
-import GetNodeView from '@/nodes/basic/getNode/GetNodeView.vue';
+import SetNodeModel from '@/nodes/basic/setNode/setNodeModel';
+import SetNodeView from '@/nodes/basic/setNode/SetNodeView.vue';
 import { MiniMap } from '@logicflow/extension';
 import { BasicType } from '@/nodes/basic/typeDifination';
 
@@ -21,7 +21,7 @@ const renderData = ref<LogicFlow.GraphConfigData>({
   nodes: [
     {
       id: '1',
-      type: 'get-node',
+      type: 'set-node',
       x: 100,
       y: 100,
       properties: {
@@ -41,9 +41,9 @@ onMounted(() => {
   });
   register(
     {
-      type: 'get-node',
-      component: GetNodeView,
-      model: GetNodeModel,
+      type: 'set-node',
+      component: SetNodeView,
+      model: SetNodeModel,
     },
     lf,
   );
@@ -52,8 +52,6 @@ onMounted(() => {
   if (lf.extension.miniMap instanceof MiniMap) {
     lf.extension.miniMap.show();
   }
-  const graphData = lf.getGraphData();
-  console.log(JSON.stringify(graphData));
 });
 </script>
 

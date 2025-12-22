@@ -20,8 +20,8 @@
 import { ref, inject, onMounted } from 'vue';
 import { EventType, GraphModel } from '@logicflow/core';
 import NodeHeader from '@/components/node/NodeHeader.vue';
-import type GetNodeModel from './getNodeModel';
-import type { GetNodeProperties } from './getNodeModel';
+import type GetNodeModel from './setNodeModel';
+import type { GetNodeProperties } from './setNodeModel';
 import NodeField from '@/components/node/NodeField.vue';
 
 // 1. 注入 LogicFlow 核心方法
@@ -46,7 +46,6 @@ onMounted(() => {
       title: props.title,
       type: props.type,
     };
-    console.log(properties.value);
   };
 
   // A. 初始化：首次加载时读取数据
