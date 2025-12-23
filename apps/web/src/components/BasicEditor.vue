@@ -18,7 +18,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { getTeleport } from '@logicflow/vue-node-registry';
-import LogicFlow from '@logicflow/core';
+import LogicFlow, { BezierEdge } from '@logicflow/core';
 import { DndPanel, MiniMap } from '@logicflow/extension';
 import { BaseType, BasicType } from '@/nodes/basic/typeDifination';
 import { batchRegisterVueNode } from '@/utils/editor';
@@ -30,6 +30,7 @@ import {
 import ToolBar from '@/components/ToolBar.vue';
 import VariableList from '@/components/variableList/VariableList.vue';
 import { dragVariable, type Variable } from './variableList/variableList';
+import BasicEdgeModel from '@/edges/BasicEdgeModel';
 
 // LogicFlow 相关的必要变量
 const containerRef = ref(null);
@@ -62,6 +63,13 @@ onMounted(() => {
     container: containerRef.value,
     plugins: [MiniMap],
   });
+  // 注册自定义边
+  lf.register({
+    type: 'builtin:basic:edge',
+    view: BezierEdge,
+    model: BasicEdgeModel,
+  });
+  lf.setDefaultEdgeType('builtin:basic:edge');
   batchRegisterVueNode(lf, basicEditorNode);
   if (lf.extension.dndPanel instanceof DndPanel) {
     lf.extension.dndPanel.setPatternItems(dndPanelItem);
