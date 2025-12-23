@@ -1,10 +1,9 @@
 // src/components/LF/BaseNode/model.ts
 import { type Model } from '@logicflow/core';
-import BasicNodeModel from '../basicNodeModel';
+import BasicNodeModel, { type BasicNodeProperties } from '../basicNodeModel';
 import { parseType } from '../typeDifination';
 
-export type SetNodeProperties = {
-  title: string;
+export type SetNodeProperties = BasicNodeProperties & {
   type: string;
 };
 
@@ -23,12 +22,19 @@ class SetNodeModel extends BasicNodeModel {
    * 让每个字段的左右两侧都能连线
    */
   getDefaultAnchor() {
+    // 先定义需要的数据
     const anchors: Model.AnchorConfig[] = [];
-
     const properties = this.properties as SetNodeProperties;
-    anchors.push(this.generateAnchorConfig(0, 'in', 'builtin:basic:flow', 'flow-in'));
-    anchors.push(this.generateAnchorConfig(0, 'out', 'builtin:basic:flow', 'flow-out'));
-    anchors.push(this.generateAnchorConfig(1, 'in', parseType(properties.type), 'data-in'));
+
+    // 进入当前节点的流程锚点
+    const flowInAnchor = this.generateAnchorConfig(0, 'in', 'builtin:basic:flow', 'flow-in');
+    if (flowInAnchor) anchors.push(flowInAnchor);
+    // 退出当前节点的流程锚点
+    const flowOutAnchor = this.generateAnchorConfig(0, 'out', 'builtin:basic:flow', 'flow-out');
+    if (flowOutAnchor) anchors.push(flowOutAnchor);
+    // 数据进入当前节点的锚点
+    const dataInAnchor = this.generateAnchorConfig(1, 'in', parseType(properties.type), 'data-in');
+    if (dataInAnchor) anchors.push(dataInAnchor);
 
     return anchors;
   }

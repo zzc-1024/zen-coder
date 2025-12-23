@@ -2,6 +2,13 @@
 import LogicFlow, { HtmlNodeModel, type BaseNodeModel, type Model } from '@logicflow/core';
 import { BUILTIN_BASIC_FLOW_TYPE, type AnchorType, type DerectType } from './typeDifination';
 
+export type AnchorSide = 'left' | 'right' | 'both' | 'none';
+
+export type BasicNodeProperties = {
+  title: string;
+  showAnchorSide?: AnchorSide;
+};
+
 abstract class BasicNodeModel extends HtmlNodeModel {
   initNodeData(data: LogicFlow.NodeConfig<LogicFlow.PropertiesType>) {
     super.initNodeData(data);
@@ -60,7 +67,8 @@ abstract class BasicNodeModel extends HtmlNodeModel {
         sourceAnchor?: Model.AnchorConfig,
       ) => {
         const outgoingEdges = this.graphModel.getAnchorOutgoingEdge(sourceAnchor?.id as string);
-        if (sourceAnchor?.type === BUILTIN_BASIC_FLOW_TYPE && outgoingEdges.length > 0) return false;
+        if (sourceAnchor?.type === BUILTIN_BASIC_FLOW_TYPE && outgoingEdges.length > 0)
+          return false;
         return true;
       },
     });
@@ -84,9 +92,19 @@ abstract class BasicNodeModel extends HtmlNodeModel {
     direction: DerectType,
     type: AnchorType,
     anchorName: string,
-  ): Model.AnchorConfig {
+  ): Model.AnchorConfig | undefined {
+    // 先判断该锚点是否有必要展示
+    const properties = this.properties as BasicNodeProperties;
+    const showAnchorSide: AnchorSide = properties.showAnchorSide || 'right'; // 默认展示右侧锚点
+    if (showAnchorSide === 'none') return undefined;
+    if (showAnchorSide === 'left' && direction === 'out') return undefined;
+    if (showAnchorSide === 'right' && direction === 'in') return undefined;
+
+    // 判断该锚点是否合法
     if (index < 0) throw new Error('index must be non-negative');
     if (index >= this.rowCount) throw new Error('index out of range');
+
+    // 验证通过后再开始正常的逻辑
     const { height, y } = this;
     const headerHeight = 34;
     const rowHeight = 32;

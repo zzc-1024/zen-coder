@@ -1,10 +1,8 @@
 // src/components/LF/BaseNode/model.ts
 import { type Model } from '@logicflow/core';
-import BasicNodeModel from '../basicNodeModel';
+import BasicNodeModel, { type BasicNodeProperties } from '../basicNodeModel';
 
-export type EntryNodeProperties = {
-  title: string;
-};
+export type EntryNodeProperties = BasicNodeProperties;
 
 class EntryNodeModel extends BasicNodeModel {
   /**
@@ -21,9 +19,12 @@ class EntryNodeModel extends BasicNodeModel {
    * 让每个字段的左右两侧都能连线
    */
   getDefaultAnchor() {
+    // 先定义需要的数据
     const anchors: Model.AnchorConfig[] = [];
 
-    anchors.push(this.generateAnchorConfig(0, 'out', 'builtin:basic:flow', 'flow-out'));
+    // 一切流程开始的地方
+    const flowOutAnchor = this.generateAnchorConfig(0, 'out', 'builtin:basic:flow', 'flow-out');
+    if (flowOutAnchor) anchors.push(flowOutAnchor);
 
     return anchors;
   }

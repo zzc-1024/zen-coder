@@ -18,13 +18,14 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { getTeleport } from '@logicflow/vue-node-registry';
-import LogicFlow, { BezierEdge } from '@logicflow/core';
+import LogicFlow, { BezierEdge, EventType } from '@logicflow/core';
 import { DndPanel, MiniMap } from '@logicflow/extension';
 import { BaseType, BasicType } from '@/nodes/basic/typeDifination';
 import { batchRegisterVueNode } from '@/utils/editor';
 import {
   basicEditorNode,
   dndPanelItem,
+  setBasicEditorEvent,
   SetVariableNodeType,
 } from '@/nodes/basic/basicEditorConfig';
 import ToolBar from '@/components/ToolBar.vue';
@@ -56,6 +57,7 @@ const renderData = ref<LogicFlow.GraphConfigData>({
 const variables = ref<Variable[]>([]);
 
 onMounted(() => {
+  // 初始化
   if (containerRef.value === null) {
     return;
   }
@@ -63,7 +65,8 @@ onMounted(() => {
     container: containerRef.value,
     plugins: [MiniMap],
   });
-  // 注册自定义边
+
+  // 注册自定义边和节点
   lf.register({
     type: 'builtin:basic:edge',
     view: BezierEdge,
@@ -71,9 +74,20 @@ onMounted(() => {
   });
   lf.setDefaultEdgeType('builtin:basic:edge');
   batchRegisterVueNode(lf, basicEditorNode);
+
+  // 设置拖拽面板
   if (lf.extension.dndPanel instanceof DndPanel) {
     lf.extension.dndPanel.setPatternItems(dndPanelItem);
   }
+
+  // 设置事件
+  lf.on(EventType.GRAPH_RENDERED, ({ graphModel }) => {
+    // flowId 内聚在当前文件，因此单独设置事件
+    flowId.value = graphModel.flowId!;
+  });
+  setBasicEditorEvent(lf);
+
+  // 绘制画布并配置显示设置
   lf.render(renderData.value);
   lf.translateCenter();
   if (lf.extension.miniMap instanceof MiniMap) {
