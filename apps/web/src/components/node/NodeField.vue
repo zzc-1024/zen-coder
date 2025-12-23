@@ -16,7 +16,7 @@
 </template>
 
 <script setup lang="ts">
-import { parseType } from '@/nodes/basic/typeDifination';
+import { BUILTIN_BASIC_FLOW_TYPE, parseType } from '@/nodes/basic/typeDifination';
 import { computed } from 'vue';
 
 const props = defineProps<{
@@ -29,8 +29,12 @@ const fieldType = computed(() => {
   if (props.type === 'blank') {
     return '未知类型';
   }
+  if (props.type === BUILTIN_BASIC_FLOW_TYPE) {
+    return '流程';
+  }
+  // 解析类型字符串并返回显示字符串
   const parsedType = parseType(props.type);
-  return parsedType.toString();
+  return parsedType.toDisplayString();
 });
 </script>
 

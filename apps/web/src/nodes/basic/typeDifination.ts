@@ -20,6 +20,7 @@ export type DataStructureType = 'basic' | 'list' | 'dict';
 export abstract class BaseType {
   abstract dataStructureType: DataStructureType;
   abstract toString(): string;
+  abstract toDisplayString(): string;
 }
 
 export type AnchorType = BaseType | BuiltinBasicFlowType;
@@ -32,6 +33,13 @@ export class BasicType extends BaseType {
   toString() {
     return this.type;
   }
+  toDisplayString() {
+    if (this.type === 'builtin:basic:boolean') return '布尔值';
+    else if (this.type === 'builtin:basic:float') return '浮点数';
+    else if (this.type === 'builtin:basic:string') return '字符串';
+    else if (this.type === 'builtin:basic:integer') return '整数';
+    throw new Error(`Unknown basic type: ${this.type}`);
+  }
 }
 
 export class ListType extends BaseType {
@@ -41,6 +49,9 @@ export class ListType extends BaseType {
   }
   toString() {
     return `list<${this.itemType.toString()}>`;
+  }
+  toDisplayString() {
+    return `列表<${this.itemType.toDisplayString()}>`;
   }
 }
 
@@ -55,6 +66,9 @@ export class DictType extends BaseType {
   toString() {
     return `dict<${this.keyType.toString()}, ${this.valueType.toString()}>`;
   }
+  toDisplayString() {
+    return `字典<${this.keyType.toDisplayString()}, ${this.valueType.toDisplayString()}>`;
+  }
 }
 
 export function parseType(type: string): BaseType {
@@ -64,7 +78,6 @@ export function parseType(type: string): BaseType {
     return new ListType(parseType(itemType));
   } else if (trimType.startsWith('dict<')) {
     const inner = trimType.slice(5, -1);
-    // ✅ 正确分割顶层逗号
     let depth = 0;
     let commaIndex = -1;
     for (let i = 0; i < inner.length; i++) {
