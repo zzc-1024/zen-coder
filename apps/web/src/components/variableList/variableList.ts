@@ -1,4 +1,4 @@
-import { SetVariableNodeType } from '@/nodes/basic/basicEditorConfig';
+import { GetVariableNodeType, SetVariableNodeType } from '@/nodes/basic/basicEditorConfig';
 import type { BaseType } from '@/nodes/basic/typeDifination';
 import type LogicFlow from '@logicflow/core';
 
@@ -15,9 +15,17 @@ export function dragVariable(
 ) {
   if (dragType === 'get') {
     lf.dnd.startDrag({
+      type: GetVariableNodeType,
+      properties: {
+        title: `获取${variableName}`,
+        type: variableType.toString(),
+      },
+    });
+  } else if (dragType === 'set') {
+    lf.dnd.startDrag({
       type: SetVariableNodeType,
       properties: {
-        title: `设置${variableName}`,
+        title: `修改${variableName}`,
         type: variableType.toString(),
       },
     });
