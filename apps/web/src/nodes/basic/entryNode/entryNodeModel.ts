@@ -13,7 +13,7 @@ class EntryNodeModel extends BasicNodeModel {
    */
   setAttributes() {
     super.setAttributes();
-    this.setNodeHeightByRowCount(2);
+    this.setNodeHeightByRowCount(1);
   }
 
   /**

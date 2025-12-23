@@ -1,6 +1,6 @@
 // src/components/LF/BaseNode/model.ts
 import LogicFlow, { HtmlNodeModel, type BaseNodeModel, type Model } from '@logicflow/core';
-import type { AnchorType, DerectType } from './typeDifination';
+import { BUILTIN_BASIC_FLOW_TYPE, type AnchorType, type DerectType } from './typeDifination';
 
 abstract class BasicNodeModel extends HtmlNodeModel {
   initNodeData(data: LogicFlow.NodeConfig<LogicFlow.PropertiesType>) {
@@ -40,7 +40,7 @@ abstract class BasicNodeModel extends HtmlNodeModel {
           return false;
         }
         // 先验证 type 字段
-        if (sourceAnchor?.type !== targetAnchor?.type) {
+        if (sourceAnchor?.type?.toString() !== targetAnchor?.type?.toString()) {
           return false;
         }
         // 只能从左侧连接到右侧
@@ -48,7 +48,7 @@ abstract class BasicNodeModel extends HtmlNodeModel {
           return false;
         }
         // 其他类型直接比较是否相同
-        return sourceAnchor?.type === targetAnchor?.type;
+        return sourceAnchor?.type?.toString() === targetAnchor?.type?.toString();
       },
     });
     // 配置锚点数量规则
@@ -60,7 +60,7 @@ abstract class BasicNodeModel extends HtmlNodeModel {
         sourceAnchor?: Model.AnchorConfig,
       ) => {
         const outgoingEdges = this.graphModel.getAnchorOutgoingEdge(sourceAnchor?.id as string);
-        if (sourceAnchor?.type === 'flow' && outgoingEdges.length > 0) return false;
+        if (sourceAnchor?.type === BUILTIN_BASIC_FLOW_TYPE && outgoingEdges.length > 0) return false;
         return true;
       },
     });

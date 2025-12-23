@@ -1,10 +1,11 @@
-type BUILTIN_BASIC_FIELD_PREFIX = 'builtin:basic';
+type BuiltinBasicTypePrefix = 'builtin:basic';
 
-export type BuiltinBasicIntegerType = `${BUILTIN_BASIC_FIELD_PREFIX}:integer`;
-export type BuiltinBasicFloatType = `${BUILTIN_BASIC_FIELD_PREFIX}:float`;
-export type BuiltinBasicStringType = `${BUILTIN_BASIC_FIELD_PREFIX}:string`;
-export type BuiltinBasicBooleanType = `${BUILTIN_BASIC_FIELD_PREFIX}:boolean`;
-export type BuiltinBasicFlowType = `${BUILTIN_BASIC_FIELD_PREFIX}:flow`;
+export type BuiltinBasicIntegerType = `${BuiltinBasicTypePrefix}:integer`;
+export type BuiltinBasicFloatType = `${BuiltinBasicTypePrefix}:float`;
+export type BuiltinBasicStringType = `${BuiltinBasicTypePrefix}:string`;
+export type BuiltinBasicBooleanType = `${BuiltinBasicTypePrefix}:boolean`;
+export type BuiltinBasicFlowType = `${BuiltinBasicTypePrefix}:flow`;
+export const BUILTIN_BASIC_FLOW_TYPE: BuiltinBasicFlowType = 'builtin:basic:flow';
 
 export type BasicTypeName =
   | BuiltinBasicIntegerType
