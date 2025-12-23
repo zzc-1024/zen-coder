@@ -6,6 +6,7 @@ export type BuiltinBasicStringType = `${BuiltinBasicTypePrefix}:string`;
 export type BuiltinBasicBooleanType = `${BuiltinBasicTypePrefix}:boolean`;
 export type BuiltinBasicFlowType = `${BuiltinBasicTypePrefix}:flow`;
 export const BUILTIN_BASIC_FLOW_TYPE: BuiltinBasicFlowType = 'builtin:basic:flow';
+export const BUILTIN_BASIC_FLOW_TYPE_DISPLAY = '流程';
 
 export type BasicTypeName =
   | BuiltinBasicIntegerType
