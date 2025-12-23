@@ -32,6 +32,8 @@ class GetNodeModel extends BasicNodeModel {
 }
 ```
 
+设计好的节点，需要在`apps\web\src\nodes\basic\basicEditorConfig.ts`中注册。如果需要在变量列表中拖拽的话，需要在`apps\web\src\components\variableList\variableList.ts`中注册。
+
 # 关于类型系统
 
 类型系统使用字符串传参，构造时需要使用类的`toString`方法构造，如：
@@ -46,4 +48,4 @@ const type = new BasicType('builtin:basic:string').toString();
 const type = parseType('builtin:basic:string');
 ```
 
-平时默认使用字符串传递参数，当需要使用类型对象时在组件内部自行转换，不要在组件之间传递，如：
+平时默认使用字符串传递参数，当需要使用类型对象时在组件内部自行转换，不要在组件之间传递。

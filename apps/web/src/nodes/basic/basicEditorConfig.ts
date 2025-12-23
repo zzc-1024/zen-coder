@@ -4,14 +4,18 @@ import EntryNodeModel from '@/nodes/basic/entryNode/entryNodeModel';
 import SetNodeModel from '@/nodes/basic/setNode/setNodeModel';
 import SetNodeView from '@/nodes/basic/setNode/SetNodeView.vue';
 
+export const BasicEditorNodeTypePrefix = 'builtin:basic';
+export const EntryNodeType = `${BasicEditorNodeTypePrefix}:entry`;
+export const SetVariableNodeType = `${BasicEditorNodeTypePrefix}:set`;
+
 export const basicEditorNode: VueNodeConfig[] = [
   {
-    type: 'builtin:basic:entry',
+    type: EntryNodeType,
     component: EntryNodeView,
     model: EntryNodeModel,
   },
   {
-    type: 'builtin:basic:set',
+    type: SetVariableNodeType,
     component: SetNodeView,
     model: SetNodeModel,
   },

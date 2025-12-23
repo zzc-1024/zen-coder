@@ -20,12 +20,16 @@ import { onMounted, ref } from 'vue';
 import { getTeleport } from '@logicflow/vue-node-registry';
 import LogicFlow from '@logicflow/core';
 import { DndPanel, MiniMap } from '@logicflow/extension';
-import { BasicType } from '@/nodes/basic/typeDifination';
+import { BaseType, BasicType } from '@/nodes/basic/typeDifination';
 import { batchRegisterVueNode } from '@/utils/editor';
-import { basicEditorNode, dndPanelItem } from '@/nodes/basic/basicEditorConfig';
+import {
+  basicEditorNode,
+  dndPanelItem,
+  SetVariableNodeType,
+} from '@/nodes/basic/basicEditorConfig';
 import ToolBar from '@/components/ToolBar.vue';
 import VariableList from '@/components/variableList/VariableList.vue';
-import type { Variable } from './variableList/variableList';
+import { dragVariable, type Variable } from './variableList/variableList';
 
 // LogicFlow 相关的必要变量
 const containerRef = ref(null);
@@ -36,7 +40,7 @@ const renderData = ref<LogicFlow.GraphConfigData>({
   nodes: [
     {
       id: '1',
-      type: 'builtin:basic:set',
+      type: SetVariableNodeType,
       x: 100,
       y: 100,
       properties: {
@@ -69,9 +73,21 @@ onMounted(() => {
   }
 });
 
-function onPointerDown() {}
-function onAddVariable() {}
-function onDeleteVariable() {}
+function onPointerDown(dragType: string, variableName: string, variableType: BaseType) {
+  if (lf === null) {
+    return;
+  }
+  dragVariable(lf, dragType, variableName, variableType);
+}
+function onAddVariable(variableName: string, variableType: BaseType) {
+  variables.value.push({
+    name: variableName,
+    type: variableType,
+  });
+}
+function onDeleteVariable(variableName: string) {
+  variables.value = variables.value.filter((v) => v.name !== variableName);
+}
 </script>
 
 <style scoped lang="scss">

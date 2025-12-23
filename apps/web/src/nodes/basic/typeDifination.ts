@@ -14,17 +14,17 @@ export type BasicTypeName =
 
 export type DerectType = 'in' | 'out';
 
-export type DatasourceType = 'basic' | 'list' | 'dict';
+export type DataStructureType = 'basic' | 'list' | 'dict';
 
 export abstract class BaseType {
-  abstract dataStructureType: DatasourceType;
+  abstract dataStructureType: DataStructureType;
   abstract toString(): string;
 }
 
 export type AnchorType = BaseType | BuiltinBasicFlowType;
 
 export class BasicType extends BaseType {
-  dataStructureType: DatasourceType = 'basic';
+  dataStructureType: DataStructureType = 'basic';
   constructor(public type: BasicTypeName) {
     super();
   }
@@ -34,7 +34,7 @@ export class BasicType extends BaseType {
 }
 
 export class ListType extends BaseType {
-  dataStructureType: DatasourceType = 'list';
+  dataStructureType: DataStructureType = 'list';
   constructor(public itemType: BaseType) {
     super();
   }
@@ -44,7 +44,7 @@ export class ListType extends BaseType {
 }
 
 export class DictType extends BaseType {
-  dataStructureType: DatasourceType = 'dict';
+  dataStructureType: DataStructureType = 'dict';
   constructor(
     public keyType: BaseType,
     public valueType: BaseType,

@@ -73,22 +73,17 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import type { Variable } from './variableList';
-import { BaseType, BasicType, type DatasourceType } from '@/nodes/basic/typeDifination';
+import { BaseType, BasicType, type DataStructureType } from '@/nodes/basic/typeDifination';
 const props = defineProps<{
   variables: Variable[];
 }>();
 const emits = defineEmits<{
   onDeleteVariable: [variableName: string];
-  onPointerDown: [
-    event: PointerEvent,
-    dragType: string,
-    variableName: string,
-    variableType: BaseType,
-  ];
-  onAddVariable: [dataStructureType: DatasourceType, variableName: string, variableType: BaseType];
+  onPointerDown: [dragType: string, variableName: string, variableType: BaseType];
+  onAddVariable: [variableName: string, variableType: BaseType];
 }>();
 
-const variableDataStructureType = ref<DatasourceType>('basic');
+const variableDataStructureType = ref<DataStructureType>('basic');
 const newVariableName = ref('hello');
 const newVariableType = ref('int');
 
@@ -103,7 +98,7 @@ function onPointerDown(
   variableType: BaseType,
 ) {
   event.preventDefault();
-  emits('onPointerDown', event, dragType, variableName, variableType);
+  emits('onPointerDown', dragType, variableName, variableType);
 }
 
 function onAddVariable() {
@@ -121,17 +116,19 @@ function onAddVariable() {
   }
 
   let type: BaseType;
-  if (newVariableType.value === 'bool') {
-    type = new BasicType('builtin:basic:boolean');
-  } else if (newVariableType.value === 'int') {
-    type = new BasicType('builtin:basic:integer');
-  } else if (newVariableType.value === 'float') {
-    type = new BasicType('builtin:basic:float');
-  } else if (newVariableType.value === 'string') {
-    type = new BasicType('builtin:basic:string');
-  } else throw new Error(`Unknown variable type: ${newVariableType.value}`);
+  if (variableDataStructureType.value === 'basic') {
+    if (newVariableType.value === 'bool') {
+      type = new BasicType('builtin:basic:boolean');
+    } else if (newVariableType.value === 'int') {
+      type = new BasicType('builtin:basic:integer');
+    } else if (newVariableType.value === 'float') {
+      type = new BasicType('builtin:basic:float');
+    } else if (newVariableType.value === 'string') {
+      type = new BasicType('builtin:basic:string');
+    } else throw new Error(`Unknown variable type: ${newVariableType.value}`);
+  } else throw new Error(`Unknown data structure type: ${variableDataStructureType.value}`);
 
-  emits('onAddVariable', variableDataStructureType.value, newVariableName.value, type);
+  emits('onAddVariable', newVariableName.value, type);
   newVariableName.value = '';
 }
 </script>
