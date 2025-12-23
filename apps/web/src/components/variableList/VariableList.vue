@@ -1,0 +1,339 @@
+<template>
+  <div class="variable-manager">
+    <!-- Title Bar -->
+    <div class="list-title-bar">
+      <span class="title-text">变量列表</span>
+    </div>
+
+    <!-- List Body -->
+    <div class="list-body">
+      <!-- Variable Item -->
+      <div v-for="(variable, index) in props.variables" :key="index" class="variable-item">
+        <!-- Variable Info -->
+        <div class="variable-header">
+          <span class="variable-name">{{ variable.name }}</span>
+          <span class="variable-type">{{ variable.type }}</span>
+          <button
+            class="delete-button"
+            @click="onDeleteVariable(variable.name)"
+            title="Delete Variable"
+          >
+            ✕
+          </button>
+        </div>
+
+        <!-- Variable Nodes -->
+        <div class="variable-nodes">
+          <div
+            class="node get-node"
+            data-node-type="get-variable"
+            @pointerdown="onPointerDown($event, 'get', variable.name, variable.type)"
+          >
+            <span class="node-label">获取</span>
+          </div>
+          <div
+            class="node set-node"
+            data-node-type="set-variable"
+            @pointerdown="onPointerDown($event, 'set', variable.name, variable.type)"
+          >
+            <span class="node-label">设置</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Add New Variable Form -->
+      <div class="add-variable-form">
+        <select v-model="variableDataStructureType" class="type-selector">
+          <option value="basic">普通变量</option>
+          <!-- <option value="list">列表 list</option> -->
+          <!-- <option value="dict">映射 dict</option> -->
+          <!-- <option value="set">集合 set</option> -->
+        </select>
+        <input
+          v-model="newVariableName"
+          type="text"
+          placeholder="新增变量的名称"
+          class="variable-input"
+          @keyup.enter="onAddVariable"
+        />
+        <select v-model="newVariableType" class="type-selector">
+          <option value="bool">布尔值 bool</option>
+          <option value="int">整数 int</option>
+          <option value="float">浮点数 float</option>
+          <option value="string">字符串 string</option>
+        </select>
+        <button class="add-button" @click="onAddVariable" :disabled="!newVariableName.trim()">
+          添加变量
+        </button>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue';
+import type { Variable } from './variableList';
+import { BaseType, BasicType, type DatasourceType } from '@/nodes/basic/typeDifination';
+const props = defineProps<{
+  variables: Variable[];
+}>();
+const emits = defineEmits<{
+  onDeleteVariable: [variableName: string];
+  onPointerDown: [
+    event: PointerEvent,
+    dragType: string,
+    variableName: string,
+    variableType: BaseType,
+  ];
+  onAddVariable: [dataStructureType: DatasourceType, variableName: string, variableType: BaseType];
+}>();
+
+const variableDataStructureType = ref<DatasourceType>('basic');
+const newVariableName = ref('hello');
+const newVariableType = ref('int');
+
+function onDeleteVariable(variableName: string) {
+  emits('onDeleteVariable', variableName);
+}
+
+function onPointerDown(
+  event: PointerEvent,
+  dragType: string,
+  variableName: string,
+  variableType: BaseType,
+) {
+  event.preventDefault();
+  emits('onPointerDown', event, dragType, variableName, variableType);
+}
+
+function onAddVariable() {
+  // 验证变量名是否存在
+  if (props.variables.some((v) => v.name === newVariableName.value)) {
+    alert('Variable name already exists!');
+    return;
+  }
+  // 验证变量名是否合法，并且长度在1到32之间
+  if (!/^[a-zA-Z_][a-zA-Z0-9_]{0,31}$/.test(newVariableName.value)) {
+    alert(
+      'Variable name must start with a letter and contain only letters, numbers, and underscores, and must be between 1 and 32 characters long!',
+    );
+    return;
+  }
+
+  let type: BaseType;
+  if (newVariableType.value === 'bool') {
+    type = new BasicType('builtin:basic:boolean');
+  } else if (newVariableType.value === 'int') {
+    type = new BasicType('builtin:basic:integer');
+  } else if (newVariableType.value === 'float') {
+    type = new BasicType('builtin:basic:float');
+  } else if (newVariableType.value === 'string') {
+    type = new BasicType('builtin:basic:string');
+  } else throw new Error(`Unknown variable type: ${newVariableType.value}`);
+
+  emits('onAddVariable', variableDataStructureType.value, newVariableName.value, type);
+  newVariableName.value = '';
+}
+</script>
+
+<style scoped lang="scss">
+.variable-manager {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 250px;
+  min-width: 200px; /* 最小宽度限制 */
+  background-color: #2a2a2a; /* Dark background */
+  color: #e0e0e0; /* Light text */
+  font-family: 'Roboto Mono', monospace;
+  border: 1px solid #444;
+  border-radius: 4px;
+  overflow: hidden;
+  user-select: none; /* Prevent text selection */
+}
+
+.list-title-bar {
+  background-color: #1a1a1a; /* Slightly darker title bar */
+  padding: 8px 12px;
+  border-bottom: 1px solid #444;
+}
+
+.title-text {
+  font-size: 14px;
+  font-weight: bold;
+  color: #b0b0b0;
+}
+
+.list-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* --- Variable Item --- */
+.variable-item {
+  background-color: #333;
+  border: 1px solid #555;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.variable-header {
+  display: flex;
+  align-items: center;
+  padding: 6px 8px;
+  background-color: #444;
+  position: relative;
+}
+
+.variable-name {
+  flex-grow: 1;
+  font-weight: bold;
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.variable-type {
+  font-size: 11px;
+  color: #aaa;
+  background-color: #555;
+  padding: 2px 6px;
+  border-radius: 3px;
+  margin-right: 24px; /* Space for delete button */
+}
+
+.delete-button {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: 1px solid transparent;
+  color: #999;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  padding: 0;
+}
+
+.delete-button:hover {
+  background-color: #e57373;
+  color: #fff;
+  border-color: #e57373;
+}
+
+/* --- Variable Nodes --- */
+.variable-nodes {
+  display: flex;
+  padding: 8px;
+  gap: 8px;
+  background-color: #3a3a3a;
+}
+
+.node {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  padding: 6px 8px;
+  background-color: #555;
+  border: 1px solid #777;
+  border-radius: 3px;
+  cursor: grab;
+  position: relative;
+  min-height: 30px;
+  box-sizing: border-box;
+}
+
+.node:active {
+  cursor: grabbing;
+}
+
+.node-label {
+  flex-grow: 1;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.get-node {
+  background-color: #2c5a7b; /* Blue-ish for Get */
+  border-color: #3d7ca8;
+}
+
+.get-node .node-label {
+  color: #a0d0f0;
+}
+
+.set-node {
+  background-color: #7b5a2c; /* Orange-ish for Set */
+  border-color: #a87c3d;
+}
+
+.set-node .node-label {
+  color: #f0d0a0;
+}
+
+/* --- Add Variable Form --- */
+.add-variable-form {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px;
+  background-color: #333;
+  border: 1px solid #555;
+  border-radius: 4px;
+}
+
+.variable-input,
+.type-selector {
+  padding: 6px 8px;
+  background-color: #444;
+  border: 1px solid #666;
+  border-radius: 3px;
+  color: #e0e0e0;
+  font-family: inherit;
+  font-size: 12px;
+}
+
+.variable-input::placeholder {
+  color: #999;
+}
+
+.variable-input:focus,
+.type-selector:focus {
+  outline: none;
+  border-color: #4299e1;
+  box-shadow: 0 0 0 1px #4299e1;
+}
+
+.add-button {
+  align-self: flex-end;
+  padding: 4px 10px;
+  background-color: #444;
+  color: #e0e0e0;
+  border: 1px solid #666;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.add-button:hover:not(:disabled) {
+  background-color: #555;
+  border-color: #888;
+}
+
+.add-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+</style>

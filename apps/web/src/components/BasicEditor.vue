@@ -2,7 +2,14 @@
   <div class="wrapper">
     <ToolBar />
     <div class="lf-container">
-      <div ref="containerRef" style="height: 100%"></div>
+      <VariableList
+        class="variable-list"
+        :variables="variables"
+        @onPointerDown="onPointerDown"
+        @onAddVariable="onAddVariable"
+        @onDeleteVariable="onDeleteVariable"
+      />
+      <div ref="containerRef" class="lf-object"></div>
       <TeleportContainer :flow-id="flowId" />
     </div>
   </div>
@@ -17,6 +24,8 @@ import { BasicType } from '@/nodes/basic/typeDifination';
 import { batchRegisterVueNode } from '@/utils/editor';
 import { basicEditorNode, dndPanelItem } from '@/nodes/basic/basicEditorConfig';
 import ToolBar from '@/components/ToolBar.vue';
+import VariableList from '@/components/variableList/VariableList.vue';
+import type { Variable } from './variableList/variableList';
 
 // LogicFlow 相关的必要变量
 const containerRef = ref(null);
@@ -37,6 +46,10 @@ const renderData = ref<LogicFlow.GraphConfigData>({
     },
   ],
 });
+
+// LogicFlow外部数据
+const variables = ref<Variable[]>([]);
+
 onMounted(() => {
   if (containerRef.value === null) {
     return;
@@ -55,6 +68,10 @@ onMounted(() => {
     lf.extension.miniMap.show();
   }
 });
+
+function onPointerDown() {}
+function onAddVariable() {}
+function onDeleteVariable() {}
 </script>
 
 <style scoped lang="scss">
@@ -62,6 +79,18 @@ onMounted(() => {
   height: 100%;
   .lf-container {
     height: calc(99% - 49px);
+    width: 100vw;
+    display: flex;
+    flex-direction: row;
+
+    .variable-list {
+      min-width: 230px;
+    }
+
+    .lf-object {
+      height: 100%;
+      width: 100%;
+    }
   }
 }
 </style>
