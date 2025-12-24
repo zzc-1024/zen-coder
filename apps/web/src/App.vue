@@ -18,7 +18,7 @@ import { RouterLink, RouterView } from 'vue-router';
 <style scoped lang="scss">
 .app-container {
   // 根据屏幕高度自动获取
-  height: 100dvh;
+  height: 100lvh;
   display: flex;
   flex-direction: column;
   main {

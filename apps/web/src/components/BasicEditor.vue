@@ -20,14 +20,14 @@ import { onMounted, ref } from 'vue';
 import { getTeleport } from '@logicflow/vue-node-registry';
 import LogicFlow, { BezierEdge, EventType } from '@logicflow/core';
 import { DndPanel, MiniMap } from '@logicflow/extension';
-import { BaseType, BasicType } from '@/nodes/basic/typeDifination';
+import { BaseType } from '@/nodes/basic/typeDifination';
 import { batchRegisterVueNode } from '@/utils/editor';
 import {
   basicEditorNode,
   BasicToolBarConfig,
   dndPanelItem,
   setBasicEditorEvent,
-  SetVariableNodeType,
+  EntryNodeType,
 } from '@/nodes/basic/basicEditorConfig';
 import ToolBar from './toolBar/ToolBar.vue';
 import VariableList from './variableList/VariableList.vue';
@@ -43,12 +43,11 @@ const renderData = ref<LogicFlow.GraphConfigData>({
   nodes: [
     {
       id: '1',
-      type: SetVariableNodeType,
+      type: EntryNodeType,
       x: 100,
       y: 100,
       properties: {
-        title: 'test',
-        type: new BasicType('builtin:basic:string').toString(),
+        title: '欢迎光临^_^',
       },
     },
   ],
@@ -67,6 +66,9 @@ onMounted(() => {
   }
   lf = new LogicFlow({
     container: containerRef.value,
+    keyboard: {
+      enabled: true,
+    },
     plugins: [MiniMap],
   });
 

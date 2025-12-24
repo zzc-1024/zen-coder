@@ -37,9 +37,22 @@
       </div>
     </header>
 
+    <!-- QQ群加入图片与链接 -->
+    <section id="qq-group" class="qq-group">
+      <h2>加入QQ群</h2>
+      <div class="group-info">
+        <img src="/QQGroup.jpg" alt="QQ群二维码" class="group-qrcode" />
+        <p>
+          点击链接加入群聊：<a href="https://qm.qq.com/q/IsapeVj0s2" target="_blank"
+            >https://qm.qq.com/q/IsapeVj0s2</a
+          >
+        </p>
+      </div>
+    </section>
+
     <!-- 特性介绍 -->
     <section id="features" class="features">
-      <h2>核心特性</h2>
+      <h2>核心特性(下面是AI生成的，还没完工)</h2>
       <div class="feature-grid">
         <div class="feature-card">
           <div class="icon">📋</div>
@@ -378,6 +391,36 @@ body {
 .connector {
   font-size: 1.5rem;
   font-weight: bold;
+}
+
+/* QQ群加入图片与链接样式 */
+.qq-group {
+  padding: 5rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+  h2 {
+    font-size: 2.5rem;
+    margin-bottom: 3rem;
+    color: #1e293b;
+  }
+
+  .group-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    p {
+      font-size: 1.2rem;
+      color: #64748b;
+    }
+  }
+
+  .group-qrcode {
+    width: 400px;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  }
 }
 
 /* 特性区域样式 */
