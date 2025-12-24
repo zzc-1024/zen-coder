@@ -8,6 +8,9 @@ import GetNodeModel from '@/nodes/basic/getNode/getNodeModel';
 import type LogicFlow from '@logicflow/core';
 import { EventType } from '@logicflow/core';
 import { BUILTIN_BASIC_FLOW_TYPE } from './typeDifination';
+import { ToolBarConfig } from '@/components/toolBar/toolBar';
+import router from '@/router';
+import type { Variable } from '@/components/variableList/variableList';
 
 // 节点配置区域
 export const BasicEditorNodeTypePrefix = 'builtin:basic';
@@ -69,4 +72,22 @@ export function setBasicEditorEvent(lf: LogicFlow) {
       node.deleteProperty('showAnchorSide');
     });
   });
+}
+
+// 工具栏配置
+export class BasicToolBarConfig extends ToolBarConfig {
+  constructor(public lf: LogicFlow, public variables: Variable[]) {
+    super();
+  }
+
+  onSave: undefined;
+  onImport: undefined;
+  onUndo: undefined;
+  onRedo: undefined;
+  onExecute: undefined;
+  onGenerate: undefined;
+  onLanguageChange: undefined;
+  onGotoHome = () => {
+    router.push('/');
+  };
 }

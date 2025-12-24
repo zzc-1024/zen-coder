@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <ToolBar />
+    <ToolBar :config="toolBarConfig" />
     <div class="lf-container">
       <VariableList
         class="variable-list"
@@ -24,12 +24,13 @@ import { BaseType, BasicType } from '@/nodes/basic/typeDifination';
 import { batchRegisterVueNode } from '@/utils/editor';
 import {
   basicEditorNode,
+  BasicToolBarConfig,
   dndPanelItem,
   setBasicEditorEvent,
   SetVariableNodeType,
 } from '@/nodes/basic/basicEditorConfig';
-import ToolBar from '@/components/ToolBar.vue';
-import VariableList from '@/components/variableList/VariableList.vue';
+import ToolBar from './toolBar/ToolBar.vue';
+import VariableList from './variableList/VariableList.vue';
 import { dragVariable, type Variable } from './variableList/variableList';
 import BasicEdgeModel from '@/edges/BasicEdgeModel';
 
@@ -54,7 +55,10 @@ const renderData = ref<LogicFlow.GraphConfigData>({
 });
 
 // LogicFlow外部数据
+// 变量列表配置
 const variables = ref<Variable[]>([]);
+// 工具栏配置
+const toolBarConfig = ref<BasicToolBarConfig>(new BasicToolBarConfig(lf!, variables.value));
 
 onMounted(() => {
   // 初始化
