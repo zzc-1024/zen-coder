@@ -12,7 +12,7 @@
         <!-- Variable Info -->
         <div class="variable-header">
           <span class="variable-name">{{ variable.name }}</span>
-          <span class="variable-type">{{ variable.type }}</span>
+          <span class="variable-type">{{ variable.type.toDisplayString() }}</span>
           <button
             class="delete-button"
             @click="onDeleteVariable(variable.name)"
