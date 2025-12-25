@@ -249,6 +249,7 @@ function onAddVariable() {
   position: relative;
   min-height: 30px;
   box-sizing: border-box;
+  touch-action: none;
 }
 
 .node:active {
