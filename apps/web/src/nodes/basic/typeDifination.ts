@@ -1,9 +1,17 @@
 type BuiltinBasicTypePrefix = 'builtin:basic';
 
 export type BuiltinBasicIntegerType = `${BuiltinBasicTypePrefix}:integer`;
+export const BUILTIN_BASIC_INTEGER_TYPE: BuiltinBasicIntegerType = 'builtin:basic:integer';
+
 export type BuiltinBasicFloatType = `${BuiltinBasicTypePrefix}:float`;
+export const BUILTIN_BASIC_FLOAT_TYPE: BuiltinBasicFloatType = 'builtin:basic:float';
+
 export type BuiltinBasicStringType = `${BuiltinBasicTypePrefix}:string`;
+export const BUILTIN_BASIC_STRING_TYPE: BuiltinBasicStringType = 'builtin:basic:string';
+
 export type BuiltinBasicBooleanType = `${BuiltinBasicTypePrefix}:boolean`;
+export const BUILTIN_BASIC_BOOLEAN_TYPE: BuiltinBasicBooleanType = 'builtin:basic:boolean';
+
 export type BuiltinBasicFlowType = `${BuiltinBasicTypePrefix}:flow`;
 export const BUILTIN_BASIC_FLOW_TYPE: BuiltinBasicFlowType = 'builtin:basic:flow';
 export const BUILTIN_BASIC_FLOW_TYPE_DISPLAY = '流程';

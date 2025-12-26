@@ -38,7 +38,7 @@ class GetNodeModel extends BasicNodeModel {
     return anchors;
   }
 
-  static generateAnchorRecommendation(): unknown[] | null {
+  static generateAnchorRecommendation(): unknown[] {
     return [];
   }
 }

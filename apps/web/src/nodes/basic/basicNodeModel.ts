@@ -133,7 +133,7 @@ abstract class BasicNodeModel extends HtmlNodeModel {
   static generateAnchorRecommendation(
     anchorType: AnchorType,
     direction: DerectType,
-  ): unknown[] | null {
+  ): unknown[] {
     throw new Error(
       // 使用一下变量以防止报错
       `generateAnchorRecommendation not implemented.${anchorType ? '' : ''}${direction ? '' : ''}`,

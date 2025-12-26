@@ -29,7 +29,7 @@ class EntryNodeModel extends BasicNodeModel {
     return anchors;
   }
 
-  static generateAnchorRecommendation(): unknown[] | null {
+  static generateAnchorRecommendation(): unknown[] {
     return [];
   }
 }
