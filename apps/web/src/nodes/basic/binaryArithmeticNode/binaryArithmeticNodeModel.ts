@@ -3,6 +3,7 @@ import { type Model } from '@logicflow/core';
 import BasicNodeModel, { type BasicNodeProperties } from '../basicNodeModel';
 import {
   BasicType,
+  BUILTIN_BASIC_FLOAT_TYPE,
   BUILTIN_BASIC_INTEGER_TYPE,
   parseType,
   type AnchorType,
@@ -34,13 +35,28 @@ class BinaryArithmeticNodeModel extends BasicNodeModel {
     const properties = this.properties as BinaryArithmeticNodeProperties;
 
     // 左操作数锚点
-    const leftOperandAnchor = this.generateAnchorConfig(0, 'in', parseType(properties.type), 'left-operand');
+    const leftOperandAnchor = this.generateAnchorConfig(
+      0,
+      'in',
+      parseType(properties.type),
+      'left-operand',
+    );
     if (leftOperandAnchor) anchors.push(leftOperandAnchor);
     // 右操作数锚点
-    const rightOperandAnchor = this.generateAnchorConfig(1, 'in', parseType(properties.type), 'right-operand');
+    const rightOperandAnchor = this.generateAnchorConfig(
+      1,
+      'in',
+      parseType(properties.type),
+      'right-operand',
+    );
     if (rightOperandAnchor) anchors.push(rightOperandAnchor);
     // 计算结果锚点
-    const dataOutAnchor = this.generateAnchorConfig(2, 'out', parseType(properties.type), 'data-out');
+    const dataOutAnchor = this.generateAnchorConfig(
+      2,
+      'out',
+      parseType(properties.type),
+      'data-out',
+    );
     if (dataOutAnchor) anchors.push(dataOutAnchor);
 
     return anchors;
@@ -48,6 +64,12 @@ class BinaryArithmeticNodeModel extends BasicNodeModel {
 
   static generateAnchorRecommendation(anchorType: AnchorType): unknown[] {
     if (!(anchorType instanceof BasicType)) {
+      return [];
+    }
+    if (
+      anchorType.type !== BUILTIN_BASIC_INTEGER_TYPE &&
+      anchorType.type !== BUILTIN_BASIC_FLOAT_TYPE
+    ) {
       return [];
     }
     const recommendations: unknown[] = [
@@ -82,21 +104,21 @@ class BinaryArithmeticNodeModel extends BasicNodeModel {
             operator: 'multiplication',
           },
         },
-        {
-          type: BinaryArithmeticNodeType,
-          label: '除法',
-          icon: 'favicon.ico',
-          properties: {
-            title: '除法运算',
-            type: anchorType.toString(), // 在 LogicFlow 中，锚点类型必须是字符串
-            operator: 'division',
-          },
-        },
       ],
     ];
 
     if (anchorType.type === BUILTIN_BASIC_INTEGER_TYPE) {
       recommendations.push([
+        {
+          type: BinaryArithmeticNodeType,
+          label: '整除',
+          icon: 'favicon.ico',
+          properties: {
+            title: '整除运算',
+            type: anchorType.toString(), // 在 LogicFlow 中，锚点类型必须是字符串
+            operator: 'floorDivision',
+          },
+        },
         {
           type: BinaryArithmeticNodeType,
           label: '取余运算',
