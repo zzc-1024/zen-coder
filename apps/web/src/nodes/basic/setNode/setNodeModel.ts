@@ -38,6 +38,10 @@ class SetNodeModel extends BasicNodeModel {
 
     return anchors;
   }
+
+  static generateAnchorRecommendation(): unknown[] | null {
+    return [];
+  }
 }
 
 export default SetNodeModel;

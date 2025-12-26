@@ -127,6 +127,18 @@ abstract class BasicNodeModel extends HtmlNodeModel {
       type,
     };
   }
+
+  // 全局锚点的生成规则，根据锚点类型判断锚点是否可推荐本节点，
+  // 如果可推荐，则返回一个节点拖拽配置数组，否则返回 null
+  static generateAnchorRecommendation(
+    anchorType: AnchorType,
+    direction: DerectType,
+  ): unknown[] | null {
+    throw new Error(
+      // 使用一下变量以防止报错
+      `generateAnchorRecommendation not implemented.${anchorType ? '' : ''}${direction ? '' : ''}`,
+    );
+  }
 }
 
 export default BasicNodeModel;
