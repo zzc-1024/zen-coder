@@ -1,10 +1,18 @@
 import { type VueNodeConfig } from '@logicflow/vue-node-registry';
+
+// 入口节点
 import EntryNodeView from '@/nodes/basic/entryNode/EntryNodeView.vue';
 import EntryNodeModel from '@/nodes/basic/entryNode/entryNodeModel';
-import SetNodeModel from '@/nodes/basic/setNode/setNodeModel';
+// 设置变量节点
 import SetNodeView from '@/nodes/basic/setNode/SetNodeView.vue';
+import SetNodeModel from '@/nodes/basic/setNode/setNodeModel';
+// 获取变量节点
 import GetNodeView from '@/nodes/basic/getNode/GetNodeView.vue';
 import GetNodeModel from '@/nodes/basic/getNode/getNodeModel';
+// 二元算术运算节点
+import BinaryArithmeticNodeView from '@/nodes/basic/binaryArithmeticNode/binaryArithmeticNodeView.vue';
+import BinaryArithmeticNodeModel from './binaryArithmeticNode/binaryArithmeticNodeModel';
+
 import type LogicFlow from '@logicflow/core';
 import { EventType } from '@logicflow/core';
 import { BUILTIN_BASIC_FLOW_TYPE } from './typeDifination';
@@ -17,6 +25,7 @@ export const BasicEditorNodeTypePrefix = 'builtin:basic';
 export const EntryNodeType = `${BasicEditorNodeTypePrefix}:entry`;
 export const SetVariableNodeType = `${BasicEditorNodeTypePrefix}:set`;
 export const GetVariableNodeType = `${BasicEditorNodeTypePrefix}:get`;
+export const BinaryArithmeticNodeType = `${BasicEditorNodeTypePrefix}:binaryArithmetic`;
 
 export const basicEditorNode: VueNodeConfig[] = [
   {
@@ -33,6 +42,11 @@ export const basicEditorNode: VueNodeConfig[] = [
     type: GetVariableNodeType,
     component: GetNodeView,
     model: GetNodeModel,
+  },
+  {
+    type: BinaryArithmeticNodeType,
+    component: BinaryArithmeticNodeView,
+    model: BinaryArithmeticNodeModel,
   },
 ];
 
@@ -76,7 +90,10 @@ export function setBasicEditorEvent(lf: LogicFlow) {
 
 // 工具栏配置
 export class BasicToolBarConfig extends ToolBarConfig {
-  constructor(public lf: LogicFlow, public variables: Variable[]) {
+  constructor(
+    public lf: LogicFlow,
+    public variables: Variable[],
+  ) {
     super();
   }
 
