@@ -1,4 +1,3 @@
-// src/components/LF/BaseNode/model.ts
 import LogicFlow, { HtmlNodeModel, type BaseNodeModel, type Model } from '@logicflow/core';
 import { BUILTIN_BASIC_FLOW_TYPE, type AnchorType, type DerectType } from './typeDifination';
 
@@ -7,6 +6,13 @@ export type AnchorSide = 'left' | 'right' | 'both' | 'none';
 export type BasicNodeProperties = {
   title: string;
   showAnchorSide?: AnchorSide;
+};
+
+export type FieldType = {
+  name: string;
+  type: AnchorType;
+  inputId: string | null;
+  outputId: string | null;
 };
 
 abstract class BasicNodeModel extends HtmlNodeModel {
@@ -30,6 +36,7 @@ abstract class BasicNodeModel extends HtmlNodeModel {
    * LogicFlow 会在初始化和属性更新时调用此方法
    */
   setAttributes() {
+    this.setNodeHeightByRowCount(this.getFields().length);
     const width = 220;
     this.width = width;
 
@@ -87,11 +94,13 @@ abstract class BasicNodeModel extends HtmlNodeModel {
     });
   }
 
+  abstract getFields(): FieldType[];
+
   generateAnchorConfig(
     index: number,
     direction: DerectType,
     type: AnchorType,
-    anchorName: string,
+    anchorId: string,
   ): Model.AnchorConfig | undefined {
     // 先判断该锚点是否有必要展示
     const properties = this.properties as BasicNodeProperties;
@@ -122,18 +131,31 @@ abstract class BasicNodeModel extends HtmlNodeModel {
     return {
       x: rowX,
       y: rowY,
-      id: `${this.id}/${anchorName}`,
+      id: `${this.id}/${anchorId}`,
       direction,
       type,
     };
   }
 
+  getDefaultAnchor() {
+    const fields = this.getFields();
+    const anchors: Model.AnchorConfig[] = [];
+    fields.forEach((field, index) => {
+      if (field.inputId) {
+        const inAnchor = this.generateAnchorConfig(index, 'in', field.type, field.inputId);
+        if (inAnchor) anchors.push(inAnchor);
+      }
+      if (field.outputId) {
+        const outAnchor = this.generateAnchorConfig(index, 'out', field.type, field.outputId);
+        if (outAnchor) anchors.push(outAnchor);
+      }
+    });
+    return anchors;
+  }
+
   // 全局锚点的生成规则，根据锚点类型判断锚点是否可推荐本节点，
   // 如果可推荐，则返回一个节点拖拽配置数组，否则返回 null
-  static generateAnchorRecommendation(
-    anchorType: AnchorType,
-    direction: DerectType,
-  ): unknown[] {
+  static generateAnchorRecommendation(anchorType: AnchorType, direction: DerectType): unknown[] {
     throw new Error(
       // 使用一下变量以防止报错
       `generateAnchorRecommendation not implemented.${anchorType ? '' : ''}${direction ? '' : ''}`,

@@ -1,6 +1,4 @@
-// src/components/LF/BaseNode/model.ts
-import { type Model } from '@logicflow/core';
-import BasicNodeModel, { type BasicNodeProperties } from '../basicNodeModel';
+import BasicNodeModel, { type BasicNodeProperties, type FieldType } from '../basicNodeModel';
 import {
   BasicType,
   BUILTIN_BASIC_FLOAT_TYPE,
@@ -16,50 +14,27 @@ export type BinaryArithmeticNodeProperties = BasicNodeProperties & {
 };
 
 class BinaryArithmeticNodeModel extends BasicNodeModel {
-  /**
-   * 设置节点的基础属性
-   * LogicFlow 会在初始化和属性更新时调用此方法
-   */
-  setAttributes() {
-    super.setAttributes();
-    this.setNodeHeightByRowCount(3);
-  }
-
-  /**
-   * 进阶：自定义锚点
-   * 让每个字段的左右两侧都能连线
-   */
-  getDefaultAnchor() {
-    // 先定义需要的数据
-    const anchors: Model.AnchorConfig[] = [];
-    const properties = this.properties as BinaryArithmeticNodeProperties;
-
-    // 左操作数锚点
-    const leftOperandAnchor = this.generateAnchorConfig(
-      0,
-      'in',
-      parseType(properties.type),
-      'left-operand',
-    );
-    if (leftOperandAnchor) anchors.push(leftOperandAnchor);
-    // 右操作数锚点
-    const rightOperandAnchor = this.generateAnchorConfig(
-      1,
-      'in',
-      parseType(properties.type),
-      'right-operand',
-    );
-    if (rightOperandAnchor) anchors.push(rightOperandAnchor);
-    // 计算结果锚点
-    const dataOutAnchor = this.generateAnchorConfig(
-      2,
-      'out',
-      parseType(properties.type),
-      'data-out',
-    );
-    if (dataOutAnchor) anchors.push(dataOutAnchor);
-
-    return anchors;
+  getFields(): FieldType[] {
+    return [
+      {
+        name: '左操作数',
+        type: parseType(this.properties.type as string),
+        inputId: 'left-operand',
+        outputId: null,
+      },
+      {
+        name: '右操作数',
+        type: parseType(this.properties.type as string),
+        inputId: 'right-operand',
+        outputId: null,
+      },
+      {
+        name: '计算结果',
+        type: parseType(this.properties.type as string),
+        inputId: null,
+        outputId: 'data-out',
+      },
+    ];
   }
 
   static generateAnchorRecommendation(anchorType: AnchorType): unknown[] {

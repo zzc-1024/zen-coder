@@ -4,8 +4,15 @@
     <NodeHeader>{{ properties?.title || 'Unknown Table' }}</NodeHeader>
 
     <!-- 2. 字段列表区域 -->
-    <div class="node-body">
-      <NodeField :hasInput="false" :hasOutput="true" name="流程入口" type="builtin:basic:flow" />
+    <div class="node-body" v-if="getNode">
+      <NodeField
+        v-for="field in getNode().getFields()"
+        :key="field.name"
+        :hasInput="field.inputId !== null"
+        :hasOutput="field.outputId !== null"
+        :name="field.name"
+        :type="field.type.toString()"
+      />
     </div>
   </div>
 </template>

@@ -4,24 +4,14 @@
     <NodeHeader>{{ properties?.title || 'Unknown Table' }}</NodeHeader>
 
     <!-- 2. 字段列表区域 -->
-    <div class="node-body">
+    <div class="node-body" v-if="getNode">
       <NodeField
-        :hasInput="true"
-        :hasOutput="false"
-        name="左操作数"
-        :type="properties?.type || 'blank'"
-      />
-      <NodeField
-        :hasInput="true"
-        :hasOutput="false"
-        name="右操作数"
-        :type="properties?.type || 'blank'"
-      />
-      <NodeField
-        :hasInput="false"
-        :hasOutput="true"
-        name="计算结果"
-        :type="properties?.type || 'blank'"
+        v-for="field in getNode().getFields()"
+        :key="field.name"
+        :hasInput="field.inputId !== null"
+        :hasOutput="field.outputId !== null"
+        :name="field.name"
+        :type="field.type.toString()"
       />
     </div>
   </div>

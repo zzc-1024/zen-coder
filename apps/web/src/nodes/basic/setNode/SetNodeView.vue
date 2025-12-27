@@ -4,13 +4,12 @@
     <NodeHeader>{{ properties?.title || 'Unknown Table' }}</NodeHeader>
 
     <!-- 2. 字段列表区域 -->
-    <div class="node-body">
-      <NodeField :hasInput="true" :hasOutput="true" name="流程" type="builtin:basic:flow" />
-      <NodeField
-        :hasInput="true"
-        :hasOutput="false"
-        name="赋值"
-        :type="properties?.type || 'blank'"
+    <div class="node-body" v-if="getNode">
+      <NodeField v-for="field in getNode().getFields()" :key="field.name"
+        :hasInput="field.inputId !== null"
+        :hasOutput="field.outputId !== null"
+        :name="field.name"
+        :type="field.type.toString()"
       />
     </div>
   </div>
