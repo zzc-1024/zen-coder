@@ -32,7 +32,16 @@ export abstract class BaseType {
   abstract toDisplayString(): string;
 }
 
-export type AnchorType = BaseType | BuiltinBasicFlowType;
+export class FlowType {
+  toString() {
+    return BUILTIN_BASIC_FLOW_TYPE;
+  }
+  toDisplayString() {
+    return BUILTIN_BASIC_FLOW_TYPE_DISPLAY;
+  }
+}
+
+export type AnchorType = BaseType | FlowType;
 
 export class BasicType extends BaseType {
   dataStructureType: DataStructureType = 'basic';
@@ -105,4 +114,8 @@ export function parseType(type: string): BaseType {
     return new DictType(parseType(keyType), parseType(valueType));
   }
   return new BasicType(trimType as BasicTypeName);
+}
+
+export function parseAnchorType(type: string): AnchorType {
+  return type === BUILTIN_BASIC_FLOW_TYPE ? new FlowType() : parseType(type);
 }

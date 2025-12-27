@@ -16,7 +16,9 @@
 </template>
 
 <script setup lang="ts">
-import { BUILTIN_BASIC_FLOW_TYPE, BUILTIN_BASIC_FLOW_TYPE_DISPLAY, parseType } from '@/nodes/basic/typeDifination';
+import {
+  parseAnchorType,
+} from '@/nodes/basic/typeDifination';
 import { computed } from 'vue';
 
 const props = defineProps<{
@@ -29,12 +31,8 @@ const fieldType = computed(() => {
   if (props.type === 'blank') {
     return '未知类型';
   }
-  if (props.type === BUILTIN_BASIC_FLOW_TYPE) {
-    return BUILTIN_BASIC_FLOW_TYPE_DISPLAY;
-  }
-  // 解析类型字符串并返回显示字符串
-  const parsedType = parseType(props.type);
-  return parsedType.toDisplayString();
+  const parsedAnchorType = parseAnchorType(props.type);
+  return parsedAnchorType.toDisplayString();
 });
 </script>
 

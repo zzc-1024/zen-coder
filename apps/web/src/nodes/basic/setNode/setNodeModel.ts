@@ -1,5 +1,5 @@
 import BasicNodeModel, { type BasicNodeProperties, type FieldType } from '../basicNodeModel';
-import { parseType } from '../typeDifination';
+import { FlowType, parseType } from '../typeDifination';
 
 export type SetNodeProperties = BasicNodeProperties & {
   type: string;
@@ -11,7 +11,7 @@ class SetNodeModel extends BasicNodeModel {
    */
   getFields(): FieldType[] {
     return [
-      { name: '流程', type: 'builtin:basic:flow', inputId: 'flow-in', outputId: 'flow-out' },
+      { name: '流程', type: new FlowType(), inputId: 'flow-in', outputId: 'flow-out' },
       {
         name: '赋值',
         type: parseType(this.properties.type as string),

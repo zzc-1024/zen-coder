@@ -74,7 +74,7 @@ abstract class BasicNodeModel extends HtmlNodeModel {
         sourceAnchor?: Model.AnchorConfig,
       ) => {
         const outgoingEdges = this.graphModel.getAnchorOutgoingEdge(sourceAnchor?.id as string);
-        if (sourceAnchor?.type === BUILTIN_BASIC_FLOW_TYPE && outgoingEdges.length > 0)
+        if (sourceAnchor?.type?.toString() === BUILTIN_BASIC_FLOW_TYPE && outgoingEdges.length > 0)
           return false;
         return true;
       },
