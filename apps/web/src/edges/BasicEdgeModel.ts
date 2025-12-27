@@ -1,6 +1,6 @@
 import LogicFlow, { BezierEdgeModel } from '@logicflow/core';
 
-class BaseIOEdgeModel extends BezierEdgeModel {
+class BasicEdgeModel extends BezierEdgeModel {
   initEdgeData(data: LogicFlow.EdgeConfig): void {
     super.initEdgeData(data);
     this.text.draggable = false;
@@ -15,4 +15,4 @@ class BaseIOEdgeModel extends BezierEdgeModel {
   }
 }
 
-export default BaseIOEdgeModel;
+export default BasicEdgeModel;
