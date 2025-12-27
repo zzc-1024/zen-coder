@@ -11,6 +11,7 @@
       />
       <div ref="containerRef" class="lf-object"></div>
       <TeleportContainer :flow-id="flowId" />
+      <AttributePanel :lf="lf" :selectedElements="selectedElements" />
     </div>
   </div>
 </template>
@@ -33,6 +34,7 @@ import ToolBar from './toolBar/ToolBar.vue';
 import VariableList from './variableList/VariableList.vue';
 import { dragVariable, type Variable } from './variableList/variableList';
 import BasicEdgeModel from '@/edges/BasicEdgeModel';
+import AttributePanel from './AttributePanel/AttributePanel.vue';
 
 // LogicFlow 相关的必要变量
 const containerRef = ref(null);
@@ -58,6 +60,11 @@ const renderData = ref<LogicFlow.GraphConfigData>({
 const variables = ref<Variable[]>([]);
 // 工具栏配置
 const toolBarConfig = ref<BasicToolBarConfig>(new BasicToolBarConfig(lf!, variables.value));
+// 选中的元素
+const selectedElements = ref<LogicFlow.GraphData>({
+  nodes: [],
+  edges: [],
+});
 
 onMounted(() => {
   // 初始化
@@ -90,6 +97,33 @@ onMounted(() => {
   lf.on(EventType.GRAPH_RENDERED, ({ graphModel }) => {
     // flowId 内聚在当前文件，因此单独设置事件
     flowId.value = graphModel.flowId!;
+  });
+  // 为属性面板定制的事件
+  lf.on(EventType.NODE_FOCUS, ({}) => {
+    selectedElements.value =
+      lf?.getSelectElements() ||
+      ({
+        nodes: [],
+        edges: [],
+      } as LogicFlow.GraphData);
+  });
+  lf.on(EventType.NODE_DELETE, () => {
+    selectedElements.value = {
+      nodes: [],
+      edges: [],
+    } as LogicFlow.GraphData;
+  });
+  lf.on(EventType.BLANK_CLICK, () => {
+    selectedElements.value = {
+      nodes: [],
+      edges: [],
+    } as LogicFlow.GraphData;
+  });
+  lf.on(EventType.EDGE_FOCUS, () => {
+    selectedElements.value = {
+      nodes: [],
+      edges: [],
+    } as LogicFlow.GraphData;
   });
   setBasicEditorEvent(lf);
 
