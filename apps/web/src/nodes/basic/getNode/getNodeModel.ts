@@ -11,7 +11,7 @@ class GetNodeModel extends BasicNodeModel {
       {
         name: '获取',
         type: parseType(this.properties.type as string),
-        inputId: 'data-in',
+        inputId: null,
         outputId: 'data-out',
       },
     ];
