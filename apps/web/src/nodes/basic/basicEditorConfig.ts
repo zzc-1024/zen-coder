@@ -86,6 +86,15 @@ export function setBasicEditorEvent(lf: LogicFlow) {
       node.deleteProperty('showAnchorSide');
     });
   });
+  // 手动聚焦
+  lf.on(EventType.NODE_FOCUS, () => {
+    if (!lf) return;
+    lf.container.focus();
+  });
+  lf.on(EventType.EDGE_FOCUS, () => {
+    if (!lf) return;
+    lf.container.focus();
+  });
 }
 
 // 工具栏配置
