@@ -16,10 +16,10 @@ class GetNodeModel extends BasicNodeModel {
       },
     ];
   }
+}
 
-  static generateAnchorRecommendation(): unknown[] {
-    return [];
-  }
+export function getNodeGenerateAnchorRecommendation(): unknown[] {
+  return [];
 }
 
 export default GetNodeModel;

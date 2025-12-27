@@ -22,7 +22,7 @@ export type BasicTypeName =
   | BuiltinBasicStringType
   | BuiltinBasicBooleanType;
 
-export type DerectType = 'in' | 'out';
+export type DirectType = 'in' | 'out';
 
 export type DataStructureType = 'basic' | 'list' | 'dict';
 

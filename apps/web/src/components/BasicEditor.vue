@@ -11,7 +11,11 @@
       />
       <div ref="containerRef" class="lf-object"></div>
       <TeleportContainer :flow-id="flowId" />
-      <AttributePanel :lf="lf" :selectedElements="selectedElements" />
+      <AttributePanel
+        :lf="lf"
+        :selectedElements="selectedElements"
+        :recommendationFunctions="recommendationFunctions"
+      />
     </div>
   </div>
 </template>
@@ -29,6 +33,7 @@ import {
   dndPanelItem,
   setBasicEditorEvent,
   EntryNodeType,
+  type RecommendationFunction,
 } from '@/nodes/basic/basicEditorConfig';
 import ToolBar from './toolBar/ToolBar.vue';
 import VariableList from './variableList/VariableList.vue';
@@ -60,11 +65,12 @@ const renderData = ref<LogicFlow.GraphConfigData>({
 const variables = ref<Variable[]>([]);
 // 工具栏配置
 const toolBarConfig = ref<BasicToolBarConfig>(new BasicToolBarConfig(lf!, variables.value));
-// 选中的元素
+// 属性面板配置
 const selectedElements = ref<LogicFlow.GraphData>({
   nodes: [],
   edges: [],
-});
+}); // 选中的元素
+const recommendationFunctions = ref<RecommendationFunction>(() => []);
 
 onMounted(() => {
   // 初始化
@@ -86,7 +92,7 @@ onMounted(() => {
     model: BasicEdgeModel,
   });
   lf.setDefaultEdgeType('builtin:basic:edge');
-  batchRegisterVueNode(lf, basicEditorNode);
+  recommendationFunctions.value = batchRegisterVueNode(lf, basicEditorNode);
 
   // 设置拖拽面板
   if (lf.extension.dndPanel instanceof DndPanel) {

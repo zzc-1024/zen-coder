@@ -36,79 +36,77 @@ class BinaryArithmeticNodeModel extends BasicNodeModel {
       },
     ];
   }
+}
 
-  static generateAnchorRecommendation(anchorType: AnchorType): unknown[] {
-    if (!(anchorType instanceof BasicType)) {
-      return [];
-    }
-    if (
-      anchorType.type !== BUILTIN_BASIC_INTEGER_TYPE &&
-      anchorType.type !== BUILTIN_BASIC_FLOAT_TYPE
-    ) {
-      return [];
-    }
-    const recommendations: unknown[] = [
-      [
-        {
-          type: BinaryArithmeticNodeType,
-          label: '加法',
-          icon: 'favicon.ico',
-          properties: {
-            title: '加法运算',
-            type: anchorType.toString(), // 在 LogicFlow 中，锚点类型必须是字符串
-            operator: 'addition',
-          },
-        },
-        {
-          type: BinaryArithmeticNodeType,
-          label: '减法',
-          icon: 'favicon.ico',
-          properties: {
-            title: '减法运算',
-            type: anchorType.toString(), // 在 LogicFlow 中，锚点类型必须是字符串
-            operator: 'subtraction',
-          },
-        },
-        {
-          type: BinaryArithmeticNodeType,
-          label: '乘法',
-          icon: 'favicon.ico',
-          properties: {
-            title: '乘法运算',
-            type: anchorType.toString(), // 在 LogicFlow 中，锚点类型必须是字符串
-            operator: 'multiplication',
-          },
-        },
-      ],
-    ];
-
-    if (anchorType.type === BUILTIN_BASIC_INTEGER_TYPE) {
-      recommendations.push([
-        {
-          type: BinaryArithmeticNodeType,
-          label: '整除',
-          icon: 'favicon.ico',
-          properties: {
-            title: '整除运算',
-            type: anchorType.toString(), // 在 LogicFlow 中，锚点类型必须是字符串
-            operator: 'floorDivision',
-          },
-        },
-        {
-          type: BinaryArithmeticNodeType,
-          label: '取余运算',
-          icon: 'favicon.ico',
-          properties: {
-            title: '取余运算',
-            type: anchorType.toString(), // 在 LogicFlow 中，锚点类型必须是字符串
-            operator: 'modulus',
-          },
-        },
-      ]);
-    }
-
-    return recommendations;
+export function binaryArithmeticNodeGenerateAnchorRecommendation(
+  anchorType: AnchorType,
+): unknown[] {
+  if (!(anchorType instanceof BasicType)) {
+    return [];
   }
+  if (
+    anchorType.type !== BUILTIN_BASIC_INTEGER_TYPE &&
+    anchorType.type !== BUILTIN_BASIC_FLOAT_TYPE
+  ) {
+    return [];
+  }
+  const recommendations: unknown[] = [
+    {
+      type: BinaryArithmeticNodeType,
+      label: '加法',
+      icon: 'favicon.ico',
+      properties: {
+        title: '加法运算',
+        type: anchorType.toString(), // 在 LogicFlow 中，锚点类型必须是字符串
+        operator: 'addition',
+      },
+    },
+    {
+      type: BinaryArithmeticNodeType,
+      label: '减法',
+      icon: 'favicon.ico',
+      properties: {
+        title: '减法运算',
+        type: anchorType.toString(), // 在 LogicFlow 中，锚点类型必须是字符串
+        operator: 'subtraction',
+      },
+    },
+    {
+      type: BinaryArithmeticNodeType,
+      label: '乘法',
+      icon: 'favicon.ico',
+      properties: {
+        title: '乘法运算',
+        type: anchorType.toString(), // 在 LogicFlow 中，锚点类型必须是字符串
+        operator: 'multiplication',
+      },
+    },
+  ];
+
+  if (anchorType.type === BUILTIN_BASIC_INTEGER_TYPE) {
+    recommendations.push({
+      type: BinaryArithmeticNodeType,
+      label: '整除',
+      icon: 'favicon.ico',
+      properties: {
+        title: '整除运算',
+        type: anchorType.toString(), // 在 LogicFlow 中，锚点类型必须是字符串
+        operator: 'floorDivision',
+      },
+    });
+    recommendations.push({
+      type: BinaryArithmeticNodeType,
+      label: '取余运算',
+      icon: 'favicon.ico',
+      properties: {
+        title: '取余运算',
+        type: anchorType.toString(), // 在 LogicFlow 中，锚点类型必须是字符串
+        operator: 'modulus',
+      },
+    });
+  }
+
+  return recommendations;
 }
 
 export default BinaryArithmeticNodeModel;

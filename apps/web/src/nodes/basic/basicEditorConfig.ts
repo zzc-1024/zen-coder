@@ -2,20 +2,28 @@ import { type VueNodeConfig } from '@logicflow/vue-node-registry';
 
 // 入口节点
 import EntryNodeView from '@/nodes/basic/entryNode/EntryNodeView.vue';
-import EntryNodeModel from '@/nodes/basic/entryNode/entryNodeModel';
+import EntryNodeModel, {
+  entryNodeGenerateAnchorRecommendation,
+} from '@/nodes/basic/entryNode/entryNodeModel';
 // 设置变量节点
 import SetNodeView from '@/nodes/basic/setNode/SetNodeView.vue';
-import SetNodeModel from '@/nodes/basic/setNode/setNodeModel';
+import SetNodeModel, {
+  setNodeGenerateAnchorRecommendation,
+} from '@/nodes/basic/setNode/setNodeModel';
 // 获取变量节点
 import GetNodeView from '@/nodes/basic/getNode/GetNodeView.vue';
-import GetNodeModel from '@/nodes/basic/getNode/getNodeModel';
+import GetNodeModel, {
+  getNodeGenerateAnchorRecommendation,
+} from '@/nodes/basic/getNode/getNodeModel';
 // 二元算术运算节点
 import BinaryArithmeticNodeView from '@/nodes/basic/binaryArithmeticNode/binaryArithmeticNodeView.vue';
-import BinaryArithmeticNodeModel from './binaryArithmeticNode/binaryArithmeticNodeModel';
+import BinaryArithmeticNodeModel, {
+  binaryArithmeticNodeGenerateAnchorRecommendation,
+} from './binaryArithmeticNode/binaryArithmeticNodeModel';
 
 import type LogicFlow from '@logicflow/core';
 import { EventType } from '@logicflow/core';
-import { BUILTIN_BASIC_FLOW_TYPE } from './typeDifination';
+import { BUILTIN_BASIC_FLOW_TYPE, type AnchorType, type DirectType } from './typeDifination';
 import { ToolBarConfig } from '@/components/toolBar/toolBar';
 import router from '@/router';
 import type { Variable } from '@/components/variableList/variableList';
@@ -27,26 +35,36 @@ export const SetVariableNodeType = `${BasicEditorNodeTypePrefix}:set`;
 export const GetVariableNodeType = `${BasicEditorNodeTypePrefix}:get`;
 export const BinaryArithmeticNodeType = `${BasicEditorNodeTypePrefix}:binaryArithmetic`;
 
-export const basicEditorNode: VueNodeConfig[] = [
+export type RecommendationFunction = (type: AnchorType, direction: DirectType) => unknown[];
+
+export type BasicEditorNodeConfig = VueNodeConfig & {
+  generateSuggestedNodes: RecommendationFunction;
+};
+
+export const basicEditorNode: BasicEditorNodeConfig[] = [
   {
     type: EntryNodeType,
     component: EntryNodeView,
     model: EntryNodeModel,
+    generateSuggestedNodes: entryNodeGenerateAnchorRecommendation,
   },
   {
     type: SetVariableNodeType,
     component: SetNodeView,
     model: SetNodeModel,
+    generateSuggestedNodes: setNodeGenerateAnchorRecommendation,
   },
   {
     type: GetVariableNodeType,
     component: GetNodeView,
     model: GetNodeModel,
+    generateSuggestedNodes: getNodeGenerateAnchorRecommendation,
   },
   {
     type: BinaryArithmeticNodeType,
     component: BinaryArithmeticNodeView,
     model: BinaryArithmeticNodeModel,
+    generateSuggestedNodes: binaryArithmeticNodeGenerateAnchorRecommendation,
   },
 ];
 

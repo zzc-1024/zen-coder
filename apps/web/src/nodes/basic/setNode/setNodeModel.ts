@@ -20,10 +20,10 @@ class SetNodeModel extends BasicNodeModel {
       },
     ];
   }
+}
 
-  static generateAnchorRecommendation(): unknown[] {
-    return [];
-  }
+export function setNodeGenerateAnchorRecommendation(): unknown[] {
+  return [];
 }
 
 export default SetNodeModel;

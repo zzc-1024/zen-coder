@@ -13,4 +13,8 @@ class EntryNodeModel extends BasicNodeModel {
   }
 }
 
+export function entryNodeGenerateAnchorRecommendation(): unknown[] {
+  return [];
+}
+
 export default EntryNodeModel;

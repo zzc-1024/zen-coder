@@ -1,5 +1,5 @@
 import LogicFlow, { HtmlNodeModel, type BaseNodeModel, type Model } from '@logicflow/core';
-import { BUILTIN_BASIC_FLOW_TYPE, type AnchorType, type DerectType } from './typeDifination';
+import { BUILTIN_BASIC_FLOW_TYPE, type AnchorType, type DirectType } from './typeDifination';
 
 export type AnchorSide = 'left' | 'right' | 'both' | 'none';
 
@@ -98,7 +98,7 @@ abstract class BasicNodeModel extends HtmlNodeModel {
 
   generateAnchorConfig(
     index: number,
-    direction: DerectType,
+    direction: DirectType,
     type: AnchorType,
     anchorId: string,
   ): Model.AnchorConfig | undefined {
@@ -151,15 +151,6 @@ abstract class BasicNodeModel extends HtmlNodeModel {
       }
     });
     return anchors;
-  }
-
-  // 全局锚点的生成规则，根据锚点类型判断锚点是否可推荐本节点，
-  // 如果可推荐，则返回一个节点拖拽配置数组，否则返回 null
-  static generateAnchorRecommendation(anchorType: AnchorType, direction: DerectType): unknown[] {
-    throw new Error(
-      // 使用一下变量以防止报错
-      `generateAnchorRecommendation not implemented.${anchorType ? '' : ''}${direction ? '' : ''}`,
-    );
   }
 }
 

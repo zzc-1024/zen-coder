@@ -47,14 +47,15 @@
           </div>
 
           <!-- Suggested Nodes -->
-          <div class="suggested-nodes" v-if="false">
+          <div class="suggested-nodes" v-if="field.inputId">
             <div
-              v-for="node in []"
-              :key="node"
+              v-for="(node, index) in recommendationFunctions(field.type, 'in')"
+              :key="index"
               class="drag-node"
               draggable="true"
+              @pointerdown="handleDragStart($event, node)"
             >
-              <span class="node-label">{{ node }}</span>
+              <span class="node-label">{{ (node as any).label }}</span>
             </div>
           </div>
 
@@ -69,14 +70,15 @@
           </div>
 
           <!-- Suggested Nodes -->
-          <div class="suggested-nodes" v-if="false">
+          <div class="suggested-nodes" v-if="field.outputId">
             <div
-              v-for="node in []"
-              :key="node"
+              v-for="(node, index) in recommendationFunctions(field.type, 'out')"
+              :key="index"
               class="drag-node"
               draggable="true"
+              @pointerdown="handleDragStart($event, node)"
             >
-              <span class="node-label">{{ node }}</span>
+              <span class="node-label">{{ (node as any).label }}</span>
             </div>
           </div>
         </div>
@@ -86,6 +88,7 @@
 </template>
 
 <script setup lang="ts">
+import type { RecommendationFunction } from '@/nodes/basic/basicEditorConfig';
 import type BasicNodeModel from '@/nodes/basic/basicNodeModel';
 import LogicFlow from '@logicflow/core';
 import { computed } from 'vue';
@@ -93,6 +96,7 @@ import { computed } from 'vue';
 const props = defineProps<{
   lf: LogicFlow | null;
   selectedElements: LogicFlow.GraphData;
+  recommendationFunctions: RecommendationFunction;
 }>();
 
 const selectedElement = computed(() => {
@@ -107,6 +111,11 @@ const fields = computed(() => {
   if (!selectedElement.value) return [];
   return selectedElement.value.getFields();
 });
+
+function handleDragStart(e: PointerEvent, node: unknown) {
+  e.preventDefault();
+  props.lf?.dnd.startDrag(node as LogicFlow.OnDragNodeConfig);
+}
 </script>
 
 <style scoped lang="scss">
@@ -267,6 +276,7 @@ const fields = computed(() => {
   font-weight: 500;
   user-select: none;
   transition: box-shadow 0.2s;
+  touch-action: none;
 
   &:hover {
     box-shadow: 0 0 0 1px rgba(0, 180, 216, 0.5);
