@@ -123,7 +123,7 @@ export const dndPanelItem: LogicFlow.OnDragNodeConfig[] = [
   {
     type: EntryNodeType,
     label: '程序入口',
-    icon: 'favicon.ico',
+    icon: 'nodeIcon/Entry.png',
     properties: {
       title: '程序入口',
     },
@@ -131,15 +131,15 @@ export const dndPanelItem: LogicFlow.OnDragNodeConfig[] = [
   {
     type: ConditionLoopNodeType,
     label: '条件循环',
-    icon: 'favicon.ico',
+    icon: 'nodeIcon/ConditionLoop.png',
     properties: {
-      title: '条件循环',
+      title: '',
     },
   },
   {
     type: RangeLoopNodeType,
     label: '范围循环',
-    icon: 'favicon.ico',
+    icon: 'nodeIcon/RangeLoop.png',
     properties: {
       title: '范围循环',
     },
@@ -147,7 +147,7 @@ export const dndPanelItem: LogicFlow.OnDragNodeConfig[] = [
   {
     type: BreakNodeType,
     label: 'break节点',
-    icon: 'favicon.ico',
+    icon: 'nodeIcon/Break.png',
     properties: {
       title: 'break节点',
     },
@@ -155,7 +155,7 @@ export const dndPanelItem: LogicFlow.OnDragNodeConfig[] = [
   {
     type: ConditionBranchNodeType,
     label: '条件分支',
-    icon: 'favicon.ico',
+    icon: 'nodeIcon/ConditionBranch.png',
     properties: {
       title: '条件分支',
     },
