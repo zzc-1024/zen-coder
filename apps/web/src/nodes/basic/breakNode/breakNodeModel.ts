@@ -2,9 +2,7 @@ import type LogicFlow from '@logicflow/core';
 import BasicNodeModel, { type BasicNodeProperties, type FieldType } from '../basicNodeModel';
 import { FlowType } from '../typeDifination';
 
-export type BreakNodeProperties = BasicNodeProperties & {
-  type: string;
-};
+export type BreakNodeProperties = BasicNodeProperties;
 
 class BreakNodeModel extends BasicNodeModel {
   /**

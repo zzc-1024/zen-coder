@@ -43,7 +43,6 @@ onMounted(() => {
     // 这里做一层合并，确保即使 props 为空也有默认值
     properties.value = {
       title: props.title,
-      type: props.type,
     };
   };
 
