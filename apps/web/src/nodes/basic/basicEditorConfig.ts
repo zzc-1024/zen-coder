@@ -133,7 +133,7 @@ export const dndPanelItem: LogicFlow.OnDragNodeConfig[] = [
     label: '条件循环',
     icon: 'nodeIcon/ConditionLoop.png',
     properties: {
-      title: '',
+      title: '条件循环',
     },
   },
   {
