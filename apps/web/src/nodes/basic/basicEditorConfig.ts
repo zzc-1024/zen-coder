@@ -35,6 +35,11 @@ import BreakNodeView from '@/nodes/basic/breakNode/BreakNodeView.vue';
 import BreakNodeModel, {
   breakNodeGenerateAnchorRecommendation,
 } from '@/nodes/basic/breakNode/breakNodeModel';
+// 条件分支节点
+import ConditionBranchNodeView from '@/nodes/basic/conditionBranchNode/ConditionBranchNodeView.vue';
+import ConditionBranchNodeModel, {
+  conditionBranchNodeGenerateAnchorRecommendation,
+} from '@/nodes/basic/conditionBranchNode/conditionBranchNodeModel';
 
 import type LogicFlow from '@logicflow/core';
 import { EventType } from '@logicflow/core';
@@ -52,6 +57,7 @@ export const BinaryArithmeticNodeType = `${BasicEditorNodeTypePrefix}:binaryArit
 export const ConditionLoopNodeType = `${BasicEditorNodeTypePrefix}:conditionLoop`;
 export const RangeLoopNodeType = `${BasicEditorNodeTypePrefix}:rangeLoop`;
 export const BreakNodeType = `${BasicEditorNodeTypePrefix}:break`;
+export const ConditionBranchNodeType = `${BasicEditorNodeTypePrefix}:conditionBranch`;
 
 export type RecommendationFunction = (
   type: AnchorType,
@@ -105,6 +111,12 @@ export const basicEditorNode: BasicEditorNodeConfig[] = [
     model: BreakNodeModel,
     generateSuggestedNodes: breakNodeGenerateAnchorRecommendation,
   },
+  {
+    type: ConditionBranchNodeType,
+    component: ConditionBranchNodeView,
+    model: ConditionBranchNodeModel,
+    generateSuggestedNodes: conditionBranchNodeGenerateAnchorRecommendation,
+  },
 ];
 
 export const dndPanelItem: LogicFlow.OnDragNodeConfig[] = [
@@ -138,6 +150,14 @@ export const dndPanelItem: LogicFlow.OnDragNodeConfig[] = [
     icon: 'favicon.ico',
     properties: {
       title: 'break节点',
+    },
+  },
+  {
+    type: ConditionBranchNodeType,
+    label: '条件分支',
+    icon: 'favicon.ico',
+    properties: {
+      title: '条件分支',
     },
   },
 ];
