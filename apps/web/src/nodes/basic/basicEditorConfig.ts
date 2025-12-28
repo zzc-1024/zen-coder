@@ -20,6 +20,21 @@ import BinaryArithmeticNodeView from '@/nodes/basic/binaryArithmeticNode/binaryA
 import BinaryArithmeticNodeModel, {
   binaryArithmeticNodeGenerateAnchorRecommendation,
 } from './binaryArithmeticNode/binaryArithmeticNodeModel';
+// 条件循环节点
+import ConditionLoopNodeView from '@/nodes/basic/conditionLoopNode/ConditionLoopNodeView.vue';
+import ConditionLoopNodeModel, {
+  conditionLoopNodeGenerateAnchorRecommendation,
+} from '@/nodes/basic/conditionLoopNode/conditionLoopNodeModel';
+// 范围循环节点
+import RangeLoopNodeView from '@/nodes/basic/rangeLoopNode/RangeLoopNodeView.vue';
+import RangeLoopNodeModel, {
+  rangeLoopNodeGenerateAnchorRecommendation,
+} from '@/nodes/basic/rangeLoopNode/rangeLoopNodeModel';
+// 中断节点
+import BreakNodeView from '@/nodes/basic/breakNode/BreakNodeView.vue';
+import BreakNodeModel, {
+  breakNodeGenerateAnchorRecommendation,
+} from '@/nodes/basic/breakNode/breakNodeModel';
 
 import type LogicFlow from '@logicflow/core';
 import { EventType } from '@logicflow/core';
@@ -34,6 +49,9 @@ export const EntryNodeType = `${BasicEditorNodeTypePrefix}:entry`;
 export const SetVariableNodeType = `${BasicEditorNodeTypePrefix}:set`;
 export const GetVariableNodeType = `${BasicEditorNodeTypePrefix}:get`;
 export const BinaryArithmeticNodeType = `${BasicEditorNodeTypePrefix}:binaryArithmetic`;
+export const ConditionLoopNodeType = `${BasicEditorNodeTypePrefix}:conditionLoop`;
+export const RangeLoopNodeType = `${BasicEditorNodeTypePrefix}:rangeLoop`;
+export const BreakNodeType = `${BasicEditorNodeTypePrefix}:break`;
 
 export type RecommendationFunction = (
   type: AnchorType,
@@ -69,6 +87,24 @@ export const basicEditorNode: BasicEditorNodeConfig[] = [
     model: BinaryArithmeticNodeModel,
     generateSuggestedNodes: binaryArithmeticNodeGenerateAnchorRecommendation,
   },
+  {
+    type: ConditionLoopNodeType,
+    component: ConditionLoopNodeView,
+    model: ConditionLoopNodeModel,
+    generateSuggestedNodes: conditionLoopNodeGenerateAnchorRecommendation,
+  },
+  {
+    type: RangeLoopNodeType,
+    component: RangeLoopNodeView,
+    model: RangeLoopNodeModel,
+    generateSuggestedNodes: rangeLoopNodeGenerateAnchorRecommendation,
+  },
+  {
+    type: BreakNodeType,
+    component: BreakNodeView,
+    model: BreakNodeModel,
+    generateSuggestedNodes: breakNodeGenerateAnchorRecommendation,
+  },
 ];
 
 export const dndPanelItem: LogicFlow.OnDragNodeConfig[] = [
@@ -78,6 +114,30 @@ export const dndPanelItem: LogicFlow.OnDragNodeConfig[] = [
     icon: 'favicon.ico',
     properties: {
       title: '程序入口',
+    },
+  },
+  {
+    type: ConditionLoopNodeType,
+    label: '条件循环',
+    icon: 'favicon.ico',
+    properties: {
+      title: '条件循环',
+    },
+  },
+  {
+    type: RangeLoopNodeType,
+    label: '范围循环',
+    icon: 'favicon.ico',
+    properties: {
+      title: '范围循环',
+    },
+  },
+  {
+    type: BreakNodeType,
+    label: 'break节点',
+    icon: 'favicon.ico',
+    properties: {
+      title: 'break节点',
     },
   },
 ];
