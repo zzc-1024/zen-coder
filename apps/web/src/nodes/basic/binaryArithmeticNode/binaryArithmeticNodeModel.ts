@@ -7,6 +7,7 @@ import {
   type AnchorType,
 } from '../typeDifination';
 import { BinaryArithmeticNodeType } from '../basicEditorConfig';
+import type LogicFlow from '@logicflow/core';
 
 export type BinaryArithmeticNodeProperties = BasicNodeProperties & {
   type: string;
@@ -40,7 +41,7 @@ class BinaryArithmeticNodeModel extends BasicNodeModel {
 
 export function binaryArithmeticNodeGenerateAnchorRecommendation(
   anchorType: AnchorType,
-): unknown[] {
+): LogicFlow.OnDragNodeConfig[] {
   if (!(anchorType instanceof BasicType)) {
     return [];
   }
@@ -50,7 +51,7 @@ export function binaryArithmeticNodeGenerateAnchorRecommendation(
   ) {
     return [];
   }
-  const recommendations: unknown[] = [
+  const recommendations: LogicFlow.OnDragNodeConfig[] = [
     {
       type: BinaryArithmeticNodeType,
       label: '加法',

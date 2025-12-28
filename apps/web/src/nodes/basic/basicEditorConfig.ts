@@ -35,7 +35,10 @@ export const SetVariableNodeType = `${BasicEditorNodeTypePrefix}:set`;
 export const GetVariableNodeType = `${BasicEditorNodeTypePrefix}:get`;
 export const BinaryArithmeticNodeType = `${BasicEditorNodeTypePrefix}:binaryArithmetic`;
 
-export type RecommendationFunction = (type: AnchorType, direction: DirectType) => unknown[];
+export type RecommendationFunction = (
+  type: AnchorType,
+  direction: DirectType,
+) => LogicFlow.OnDragNodeConfig[];
 
 export type BasicEditorNodeConfig = VueNodeConfig & {
   generateSuggestedNodes: RecommendationFunction;
@@ -68,7 +71,7 @@ export const basicEditorNode: BasicEditorNodeConfig[] = [
   },
 ];
 
-export const dndPanelItem: unknown[] = [
+export const dndPanelItem: LogicFlow.OnDragNodeConfig[] = [
   {
     type: EntryNodeType,
     label: '程序入口',

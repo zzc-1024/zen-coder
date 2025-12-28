@@ -43,7 +43,7 @@
               <label class="attribute-label">{{ field.name || `左侧锚点 ${index + 1}` }}</label>
               <span class="anchor-type input"> 输入 </span>
             </div>
-            <span class="anchor-data-type">{{ field.type }}</span>
+            <span class="anchor-data-type">{{ field.type.toDisplayString() }}</span>
           </div>
 
           <!-- Suggested Nodes -->
@@ -55,7 +55,7 @@
               draggable="true"
               @pointerdown="handleDragStart($event, node)"
             >
-              <span class="node-label">{{ (node as any).label }}</span>
+              <span class="node-label">{{ node.label }}</span>
             </div>
           </div>
 
@@ -66,7 +66,7 @@
               <label class="attribute-label">{{ field.name || `右侧锚点 ${index + 1}` }}</label>
               <span class="anchor-type output"> 输出 </span>
             </div>
-            <span class="anchor-data-type">{{ field.type }}</span>
+            <span class="anchor-data-type">{{ field.type.toDisplayString() }}</span>
           </div>
 
           <!-- Suggested Nodes -->
@@ -78,7 +78,7 @@
               draggable="true"
               @pointerdown="handleDragStart($event, node)"
             >
-              <span class="node-label">{{ (node as any).label }}</span>
+              <span class="node-label">{{ node.label }}</span>
             </div>
           </div>
         </div>
@@ -112,9 +112,9 @@ const fields = computed(() => {
   return selectedElement.value.getFields();
 });
 
-function handleDragStart(e: PointerEvent, node: unknown) {
+function handleDragStart(e: PointerEvent, node: LogicFlow.OnDragNodeConfig) {
   e.preventDefault();
-  props.lf?.dnd.startDrag(node as LogicFlow.OnDragNodeConfig);
+  props.lf?.dnd.startDrag(node);
 }
 </script>
 

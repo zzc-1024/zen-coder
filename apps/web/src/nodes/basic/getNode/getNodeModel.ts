@@ -1,3 +1,4 @@
+import type LogicFlow from '@logicflow/core';
 import BasicNodeModel, { type BasicNodeProperties, type FieldType } from '../basicNodeModel';
 import { parseType } from '../typeDifination';
 
@@ -18,7 +19,7 @@ class GetNodeModel extends BasicNodeModel {
   }
 }
 
-export function getNodeGenerateAnchorRecommendation(): unknown[] {
+export function getNodeGenerateAnchorRecommendation(): LogicFlow.OnDragNodeConfig[] {
   return [];
 }
 
