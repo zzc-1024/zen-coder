@@ -27,6 +27,10 @@
             disabled
           />
         </div>
+
+        <div class="attribute-item">
+          <button class="delete-node-btn" @click="deleteNode">删除</button>
+        </div>
       </div>
 
       <!-- Anchor Points -->
@@ -111,6 +115,11 @@ const fields = computed(() => {
   if (!selectedElement.value) return [];
   return selectedElement.value.getFields();
 });
+
+function deleteNode() {
+  if (!selectedElement.value) return;
+  props.lf?.deleteNode(selectedElement.value.id);
+}
 
 function handleDragStart(e: PointerEvent, node: LogicFlow.OnDragNodeConfig) {
   e.preventDefault();
@@ -246,6 +255,22 @@ function handleDragStart(e: PointerEvent, node: LogicFlow.OnDragNodeConfig) {
             background-color: #f9f9f9;
             color: #999;
             cursor: not-allowed;
+          }
+        }
+
+        .delete-node-btn {
+          padding: 4px 8px;
+          background-color: #ff4d4f;
+          color: #fff;
+          border: none;
+          border-radius: 3px;
+          font-size: 12px;
+          font-weight: 500;
+          cursor: pointer;
+          transition: background-color 0.2s ease;
+
+          &:hover {
+            background-color: #e63946;
           }
         }
 
