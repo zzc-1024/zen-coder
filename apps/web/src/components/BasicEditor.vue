@@ -176,5 +176,24 @@ function onDeleteVariable(variableName: string) {
       width: 100%;
     }
   }
+
+  /* 响应式布局：当屏幕宽度小于 768px 时采用纵向布局 */
+  @media (max-width: 768px) {
+    .lf-container {
+      flex-direction: column;
+
+      .variable-list,
+      .attribute-panel {
+        width: 100%;
+        height: auto;
+      }
+
+      .lf-object {
+        flex: 1;
+        width: 100%;
+        min-height: 300px;
+      }
+    }
+  }
 }
 </style>

@@ -147,191 +147,227 @@ function onAddVariable() {
   border-radius: 4px;
   overflow: hidden;
   user-select: none; /* Prevent text selection */
-}
 
-.list-title-bar {
-  background-color: #1a1a1a; /* Slightly darker title bar */
-  padding: 8px 12px;
-  border-bottom: 1px solid #444;
-}
+  /* 响应式布局：当屏幕宽度小于 768px 时，VariableList 改为横向展示 */
+  @media (max-width: 768px) {
+    width: 100%;
+    height: auto;
+    min-height: 150px;
+    max-height: 200px;
 
-.title-text {
-  font-size: 14px;
-  font-weight: bold;
-  color: #b0b0b0;
-}
+    .list-body {
+      flex-direction: row;
+      flex-wrap: wrap;
+      overflow-x: auto;
+      overflow-y: hidden;
+      padding: 8px;
 
-.list-body {
-  flex: 1;
-  overflow-y: auto;
-  padding: 8px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
+      .variable-item {
+        width: calc(33.333% - 8px);
+        min-width: 180px;
+      }
 
-/* --- Variable Item --- */
-.variable-item {
-  background-color: #333;
-  border: 1px solid #555;
-  border-radius: 4px;
-  overflow: hidden;
-}
+      .add-variable-form {
+        width: 100%;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: flex-end;
 
-.variable-header {
-  display: flex;
-  align-items: center;
-  padding: 6px 8px;
-  background-color: #444;
-  position: relative;
-}
+        .variable-input {
+          flex: 1;
+          min-width: 150px;
+        }
 
-.variable-name {
-  flex-grow: 1;
-  font-weight: bold;
-  font-size: 13px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
+        .type-selector {
+          min-width: 100px;
+        }
+      }
+    }
+  }
 
-.variable-type {
-  font-size: 11px;
-  color: #aaa;
-  background-color: #555;
-  padding: 2px 6px;
-  border-radius: 3px;
-  margin-right: 24px; /* Space for delete button */
-}
+  .list-title-bar {
+    background-color: #1a1a1a; /* Slightly darker title bar */
+    padding: 8px 12px;
+    border-bottom: 1px solid #444;
 
-.delete-button {
-  position: absolute;
-  right: 6px;
-  top: 50%;
-  transform: translateY(-50%);
-  background: none;
-  border: 1px solid transparent;
-  color: #999;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  padding: 0;
-}
+    .title-text {
+      font-size: 14px;
+      font-weight: bold;
+      color: #b0b0b0;
+    }
+  }
 
-.delete-button:hover {
-  background-color: #e57373;
-  color: #fff;
-  border-color: #e57373;
-}
+  .list-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 
-/* --- Variable Nodes --- */
-.variable-nodes {
-  display: flex;
-  padding: 8px;
-  gap: 8px;
-  background-color: #3a3a3a;
-}
+    /* --- Variable Item --- */
+    .variable-item {
+      background-color: #333;
+      border: 1px solid #555;
+      border-radius: 4px;
+      overflow: hidden;
 
-.node {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  padding: 6px 8px;
-  background-color: #555;
-  border: 1px solid #777;
-  border-radius: 3px;
-  cursor: grab;
-  position: relative;
-  min-height: 30px;
-  box-sizing: border-box;
-  touch-action: none;
-}
+      .variable-header {
+        display: flex;
+        align-items: center;
+        padding: 6px 8px;
+        background-color: #444;
+        position: relative;
 
-.node:active {
-  cursor: grabbing;
-}
+        .variable-name {
+          flex-grow: 1;
+          font-weight: bold;
+          font-size: 13px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
 
-.node-label {
-  flex-grow: 1;
-  text-align: center;
-  font-size: 12px;
-  font-weight: 500;
-}
+        .variable-type {
+          font-size: 11px;
+          color: #aaa;
+          background-color: #555;
+          padding: 2px 6px;
+          border-radius: 3px;
+          margin-right: 24px; /* Space for delete button */
+        }
 
-.get-node {
-  background-color: #2c5a7b; /* Blue-ish for Get */
-  border-color: #3d7ca8;
-}
+        .delete-button {
+          position: absolute;
+          right: 6px;
+          top: 50%;
+          transform: translateY(-50%);
+          background: none;
+          border: 1px solid transparent;
+          color: #999;
+          width: 18px;
+          height: 18px;
+          border-radius: 50%;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 12px;
+          padding: 0;
 
-.get-node .node-label {
-  color: #a0d0f0;
-}
+          &:hover {
+            background-color: #e57373;
+            color: #fff;
+            border-color: #e57373;
+          }
+        }
+      }
 
-.set-node {
-  background-color: #7b5a2c; /* Orange-ish for Set */
-  border-color: #a87c3d;
-}
+      /* --- Variable Nodes --- */
+      .variable-nodes {
+        display: flex;
+        padding: 8px;
+        gap: 8px;
+        background-color: #3a3a3a;
 
-.set-node .node-label {
-  color: #f0d0a0;
-}
+        .node {
+          flex: 1;
+          display: flex;
+          align-items: center;
+          padding: 6px 8px;
+          background-color: #555;
+          border: 1px solid #777;
+          border-radius: 3px;
+          cursor: grab;
+          position: relative;
+          min-height: 30px;
+          box-sizing: border-box;
+          touch-action: none;
 
-/* --- Add Variable Form --- */
-.add-variable-form {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding: 8px;
-  background-color: #333;
-  border: 1px solid #555;
-  border-radius: 4px;
-}
+          &:active {
+            cursor: grabbing;
+          }
 
-.variable-input,
-.type-selector {
-  padding: 6px 8px;
-  background-color: #444;
-  border: 1px solid #666;
-  border-radius: 3px;
-  color: #e0e0e0;
-  font-family: inherit;
-  font-size: 12px;
-}
+          .node-label {
+            flex-grow: 1;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 500;
+          }
 
-.variable-input::placeholder {
-  color: #999;
-}
+          &.get-node {
+            background-color: #2c5a7b; /* Blue-ish for Get */
+            border-color: #3d7ca8;
 
-.variable-input:focus,
-.type-selector:focus {
-  outline: none;
-  border-color: #4299e1;
-  box-shadow: 0 0 0 1px #4299e1;
-}
+            .node-label {
+              color: #a0d0f0;
+            }
+          }
 
-.add-button {
-  align-self: flex-end;
-  padding: 4px 10px;
-  background-color: #444;
-  color: #e0e0e0;
-  border: 1px solid #666;
-  border-radius: 3px;
-  cursor: pointer;
-  font-size: 12px;
-}
+          &.set-node {
+            background-color: #7b5a2c; /* Orange-ish for Set */
+            border-color: #a87c3d;
 
-.add-button:hover:not(:disabled) {
-  background-color: #555;
-  border-color: #888;
-}
+            .node-label {
+              color: #f0d0a0;
+            }
+          }
+        }
+      }
+    }
 
-.add-button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+    /* --- Add Variable Form --- */
+    .add-variable-form {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding: 8px;
+      background-color: #333;
+      border: 1px solid #555;
+      border-radius: 4px;
+
+      .variable-input,
+      .type-selector {
+        padding: 6px 8px;
+        background-color: #444;
+        border: 1px solid #666;
+        border-radius: 3px;
+        color: #e0e0e0;
+        font-family: inherit;
+        font-size: 12px;
+
+        &::placeholder {
+          color: #999;
+        }
+
+        &:focus {
+          outline: none;
+          border-color: #4299e1;
+          box-shadow: 0 0 0 1px #4299e1;
+        }
+      }
+
+      .add-button {
+        align-self: flex-end;
+        padding: 4px 10px;
+        background-color: #444;
+        color: #e0e0e0;
+        border: 1px solid #666;
+        border-radius: 3px;
+        cursor: pointer;
+        font-size: 12px;
+
+        &:hover:not(:disabled) {
+          background-color: #555;
+          border-color: #888;
+        }
+
+        &:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+        }
+      }
+    }
+  }
 }
 </style>
