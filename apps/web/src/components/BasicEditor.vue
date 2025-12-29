@@ -166,6 +166,7 @@ function onDeleteVariable(variableName: string) {
   height: 100%;
   .lf-container {
     height: calc(99% - 49px);
+    min-height: 686px;
     width: 100vw;
     display: flex;
     flex-direction: row;
@@ -184,6 +185,7 @@ function onDeleteVariable(variableName: string) {
   @media (max-width: 768px) {
     .lf-container {
       flex-direction: column;
+      min-height: 970px;
 
       .variable-list,
       .attribute-panel {
