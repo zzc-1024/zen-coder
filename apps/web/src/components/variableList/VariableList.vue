@@ -43,28 +43,32 @@
 
       <!-- Add New Variable Form -->
       <div class="add-variable-form">
-        <select v-model="variableDataStructureType" class="type-selector">
-          <option value="basic">普通变量</option>
-          <!-- <option value="list">列表 list</option> -->
-          <!-- <option value="dict">映射 dict</option> -->
-          <!-- <option value="set">集合 set</option> -->
-        </select>
-        <input
-          v-model="newVariableName"
-          type="text"
-          placeholder="新增变量的名称"
-          class="variable-input"
-          @keyup.enter="onAddVariable"
-        />
-        <select v-model="newVariableType" class="type-selector">
-          <option value="bool">布尔值 bool</option>
-          <option value="int">整数 int</option>
-          <option value="float">浮点数 float</option>
-          <option value="string">字符串 string</option>
-        </select>
-        <button class="add-button" @click="onAddVariable" :disabled="!newVariableName.trim()">
-          添加变量
-        </button>
+        <div class="horizontal-group">
+          <select v-model="variableDataStructureType" class="type-selector">
+            <option value="basic">普通</option>
+            <!-- <option value="list">列表 list</option> -->
+            <!-- <option value="dict">映射 dict</option> -->
+            <!-- <option value="set">集合 set</option> -->
+          </select>
+          <select v-model="newVariableType" class="type-selector">
+            <option value="bool">布尔值 bool</option>
+            <option value="int">整数 int</option>
+            <option value="float">浮点数 float</option>
+            <option value="string">字符串 string</option>
+          </select>
+        </div>
+        <div class="horizontal-group">
+          <input
+            v-model="newVariableName"
+            type="text"
+            placeholder="新增变量的名称"
+            class="variable-input"
+            @keyup.enter="onAddVariable"
+          />
+          <button class="add-button" @click="onAddVariable" :disabled="!newVariableName.trim()">
+            ➕
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -84,8 +88,8 @@ const emits = defineEmits<{
 }>();
 
 const variableDataStructureType = ref<DataStructureType>('basic');
-const newVariableName = ref('hello');
 const newVariableType = ref('int');
+const newVariableName = ref('hello');
 
 function onDeleteVariable(variableName: string) {
   emits('onDeleteVariable', variableName);
@@ -173,13 +177,17 @@ function onAddVariable() {
         flex-wrap: wrap;
         align-items: flex-end;
 
-        .variable-input {
-          flex: 1;
-          min-width: 150px;
-        }
+        .horizontal-group {
+          display: flex;
+          gap: 8px;
+          .variable-input {
+            flex: 1;
+            min-width: 150px;
+          }
 
-        .type-selector {
-          min-width: 100px;
+          .type-selector {
+            min-width: 100px;
+          }
         }
       }
     }
