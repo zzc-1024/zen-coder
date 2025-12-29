@@ -333,25 +333,28 @@ function onAddVariable() {
       background-color: #333;
       border: 1px solid #555;
       border-radius: 4px;
+      .horizontal-group {
+        display: flex;
+        gap: 8px;
+        .variable-input,
+        .type-selector {
+          padding: 6px 8px;
+          background-color: #444;
+          border: 1px solid #666;
+          border-radius: 3px;
+          color: #e0e0e0;
+          font-family: inherit;
+          font-size: 12px;
 
-      .variable-input,
-      .type-selector {
-        padding: 6px 8px;
-        background-color: #444;
-        border: 1px solid #666;
-        border-radius: 3px;
-        color: #e0e0e0;
-        font-family: inherit;
-        font-size: 12px;
+          &::placeholder {
+            color: #999;
+          }
 
-        &::placeholder {
-          color: #999;
-        }
-
-        &:focus {
-          outline: none;
-          border-color: #4299e1;
-          box-shadow: 0 0 0 1px #4299e1;
+          &:focus {
+            outline: none;
+            border-color: #4299e1;
+            box-shadow: 0 0 0 1px #4299e1;
+          }
         }
       }
 
