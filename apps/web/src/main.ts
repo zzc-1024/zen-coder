@@ -7,7 +7,7 @@ import App from './App.vue';
 import router from './router';
 
 import LogicFlow from '@logicflow/core';
-import { Control, DndPanel, MiniMap } from '@logicflow/extension';
+import { DndPanel, MiniMap } from '@logicflow/extension';
 
 const app = createApp(App);
 
@@ -15,6 +15,5 @@ app.use(router);
 
 app.mount('#app');
 
-LogicFlow.use(Control);
 LogicFlow.use(MiniMap);
 LogicFlow.use(DndPanel);

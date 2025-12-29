@@ -54,21 +54,21 @@
 import { ref } from 'vue';
 import type { ToolBarConfig } from './toolBar';
 const props = defineProps<{
-  config: ToolBarConfig;
+  config: ToolBarConfig | null;
 }>();
 
 const canUndo = ref(true);
 const canRedo = ref(true);
 const selectedLanguage = ref('python'); // 默认导出语言为Python
 
-const handleSave = () => props.config.onSave?.();
-const handleImport = () => props.config.onImport?.();
-const handleUndo = () => canUndo.value && props.config.onUndo?.();
-const handleRedo = () => canRedo.value && props.config.onRedo?.();
-const handleExecute = () => props.config.onExecute?.();
-const handleGenerate = () => props.config.onGenerate?.(selectedLanguage.value);
-const handleLanguageChange = () => props.config.onLanguageChange?.(selectedLanguage.value);
-const gotoHome = () => props.config.onGotoHome?.();
+const handleSave = () => props.config?.onSave?.();
+const handleImport = () => props.config?.onImport?.();
+const handleUndo = () => canUndo.value && props.config?.onUndo?.();
+const handleRedo = () => canRedo.value && props.config?.onRedo?.();
+const handleExecute = () => props.config?.onExecute?.();
+const handleGenerate = () => props.config?.onGenerate?.(selectedLanguage.value);
+const handleLanguageChange = () => props.config?.onLanguageChange?.(selectedLanguage.value);
+const gotoHome = () => props.config?.onGotoHome?.();
 </script>
 
 <style lang="scss" scoped>

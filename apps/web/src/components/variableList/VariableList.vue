@@ -345,7 +345,7 @@ function onAddVariable() {
   /* 响应式布局：当屏幕宽度小于 768px 时，VariableList 改为横向展示 */
   @media (max-width: 768px) {
     width: 100%;
-    height: auto;
+    height: 202px;
     min-height: 150px;
     max-height: 200px;
 

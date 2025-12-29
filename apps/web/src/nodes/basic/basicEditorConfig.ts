@@ -229,8 +229,14 @@ export class BasicToolBarConfig extends ToolBarConfig {
 
   onSave: undefined;
   onImport: undefined;
-  onUndo: undefined;
-  onRedo: undefined;
+  onUndo = () => {
+    console.log('撤销');
+    this.lf.undo();
+  };
+  onRedo = () => {
+    console.log('重做');
+    this.lf.redo();
+  };
   onExecute: undefined;
   onGenerate: undefined;
   onLanguageChange: undefined;

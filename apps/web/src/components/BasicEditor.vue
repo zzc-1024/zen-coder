@@ -64,7 +64,7 @@ const renderData = ref<LogicFlow.GraphConfigData>({
 // 变量列表配置
 const variables = ref<Variable[]>([]);
 // 工具栏配置
-const toolBarConfig = ref<BasicToolBarConfig>(new BasicToolBarConfig(lf!, variables.value));
+const toolBarConfig = ref<BasicToolBarConfig | null>(null);
 // 属性面板配置
 const selectedElements = ref<LogicFlow.GraphData>({
   nodes: [],
@@ -84,6 +84,9 @@ onMounted(() => {
     },
     plugins: [MiniMap],
   });
+
+  // 工具栏配置
+  toolBarConfig.value = new BasicToolBarConfig(lf!, variables.value);
 
   // 注册自定义边和节点
   lf.register({
