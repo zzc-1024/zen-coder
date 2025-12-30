@@ -46,8 +46,8 @@ export function binaryArithmeticNodeGenerateAnchorRecommendation(
     return [];
   }
   if (
-    anchorType.type !== BUILTIN_BASIC_INTEGER_TYPE &&
-    anchorType.type !== BUILTIN_BASIC_FLOAT_TYPE
+    anchorType.basicTypeName !== BUILTIN_BASIC_INTEGER_TYPE &&
+    anchorType.basicTypeName !== BUILTIN_BASIC_FLOAT_TYPE
   ) {
     return [];
   }
@@ -84,7 +84,7 @@ export function binaryArithmeticNodeGenerateAnchorRecommendation(
     },
   ];
 
-  if (anchorType.type === BUILTIN_BASIC_INTEGER_TYPE) {
+  if (anchorType.basicTypeName === BUILTIN_BASIC_INTEGER_TYPE) {
     recommendations.push({
       type: BinaryArithmeticNodeType,
       label: '整除',

@@ -30,6 +30,12 @@ export abstract class BaseType {
   abstract dataStructureType: DataStructureType;
   abstract toString(): string;
   abstract toDisplayString(): string;
+  static fromString(type: string): BaseType {
+    return parseType(type);
+  }
+  toJSON() {
+    return this.toString();
+  }
 }
 
 export class FlowType {
@@ -45,18 +51,18 @@ export type AnchorType = BaseType | FlowType;
 
 export class BasicType extends BaseType {
   dataStructureType: DataStructureType = 'basic';
-  constructor(public type: BasicTypeName) {
+  constructor(public basicTypeName: BasicTypeName) {
     super();
   }
   toString() {
-    return this.type;
+    return this.basicTypeName;
   }
   toDisplayString() {
-    if (this.type === 'builtin:basic:boolean') return '布尔值';
-    else if (this.type === 'builtin:basic:float') return '浮点数';
-    else if (this.type === 'builtin:basic:string') return '字符串';
-    else if (this.type === 'builtin:basic:integer') return '整数';
-    throw new Error(`Unknown basic type: ${this.type}`);
+    if (this.basicTypeName === 'builtin:basic:boolean') return '布尔值';
+    else if (this.basicTypeName === 'builtin:basic:float') return '浮点数';
+    else if (this.basicTypeName === 'builtin:basic:string') return '字符串';
+    else if (this.basicTypeName === 'builtin:basic:integer') return '整数';
+    throw new Error(`Unknown basic type: ${this.basicTypeName}`);
   }
 }
 

@@ -1,3 +1,5 @@
+import { type Ref } from 'vue';
+
 import { type VueNodeConfig } from '@logicflow/vue-node-registry';
 
 // 入口节点
@@ -48,7 +50,12 @@ import ConditionBranchNodeModel, {
 
 import type LogicFlow from '@logicflow/core';
 import { EventType } from '@logicflow/core';
-import { BUILTIN_BASIC_FLOW_TYPE, type AnchorType, type DirectType } from './typeDifination';
+import {
+  BaseType,
+  BUILTIN_BASIC_FLOW_TYPE,
+  type AnchorType,
+  type DirectType,
+} from './typeDifination';
 import { ToolBarConfig } from '@/components/toolBar/toolBar';
 import router from '@/router';
 import type { Variable } from '@/components/variableList/variableList';
@@ -222,13 +229,53 @@ export function setBasicEditorEvent(lf: LogicFlow) {
 export class BasicToolBarConfig extends ToolBarConfig {
   constructor(
     public lf: LogicFlow,
-    public variables: Variable[],
+    public variables: Ref<Variable[]>,
   ) {
     super();
   }
 
-  onSave: undefined;
-  onImport: undefined;
+  onSave = () => {
+    const graphData = this.lf.getGraphRawData();
+    // 保存为 JSON 文件
+    const json = JSON.stringify(
+      {
+        version: '0.0.0',
+        ...graphData,
+        variables: this.variables.value,
+      },
+      null,
+      2,
+    );
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `flow-${Date.now()}.json`; // 文件名为时间戳
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+  onImport = () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json';
+    input.click();
+    input.addEventListener('change', (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.readAsText(file, 'utf-8');
+      reader.onload = () => {
+        const json = reader.result as string;
+        this.lf.render(JSON.parse(json));
+        const variables = JSON.parse(json).variables.map((variable: Variable) => ({
+          ...variable,
+          type: BaseType.fromString(variable.type.toString()),
+        }));
+        this.variables.value = variables;
+      };
+    });
+    input.remove();
+  };
   onUndo = () => {
     console.log('撤销');
     this.lf.undo();

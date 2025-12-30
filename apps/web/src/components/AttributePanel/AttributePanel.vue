@@ -55,8 +55,8 @@
             <label class="attribute-label">默认值</label>
             <input
               v-if="
-                field.type.type === 'builtin:basic:integer' ||
-                field.type.type === 'builtin:basic:float'
+                field.type.basicTypeName === 'builtin:basic:integer' ||
+                field.type.basicTypeName === 'builtin:basic:float'
               "
               type="number"
               class="attribute-input"
@@ -64,14 +64,14 @@
               @input="updateDefaultValue(field.inputId!, $event)"
             />
             <input
-              v-else-if="field.type.type === 'builtin:basic:string'"
+              v-else-if="field.type.basicTypeName === 'builtin:basic:string'"
               type="text"
               class="attribute-input"
               :value="defaultValues[field.inputId] || ''"
               @input="updateDefaultValue(field.inputId!, $event)"
             />
             <select
-              v-else-if="field.type.type === 'builtin:basic:boolean'"
+              v-else-if="field.type.basicTypeName === 'builtin:basic:boolean'"
               class="attribute-input"
               :value="defaultValues[field.inputId] || 'false'"
               @change="updateDefaultValue(field.inputId!, $event)"
@@ -193,13 +193,13 @@ function updateDefaultValue(inputId: string, event: Event) {
   let value: number | string | boolean;
 
   // 根据字段类型解析输入值
-  if (field.type.type === 'builtin:basic:integer') {
+  if (field.type.basicTypeName === 'builtin:basic:integer') {
     value = parseInt(target.value, 10);
-  } else if (field.type.type === 'builtin:basic:float') {
+  } else if (field.type.basicTypeName === 'builtin:basic:float') {
     value = parseFloat(target.value);
-  } else if (field.type.type === 'builtin:basic:string') {
+  } else if (field.type.basicTypeName === 'builtin:basic:string') {
     value = target.value;
-  } else if (field.type.type === 'builtin:basic:boolean') {
+  } else if (field.type.basicTypeName === 'builtin:basic:boolean') {
     value = target.value === 'true';
   } else {
     return; // 其他类型不处理

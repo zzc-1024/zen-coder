@@ -86,7 +86,7 @@ onMounted(() => {
   });
 
   // 工具栏配置
-  toolBarConfig.value = new BasicToolBarConfig(lf!, variables.value);
+  toolBarConfig.value = new BasicToolBarConfig(lf!, variables);
 
   // 注册自定义边和节点
   lf.register({
