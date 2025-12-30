@@ -43,9 +43,7 @@ onMounted(() => {
   // --- 函数：从节点属性同步数据到 Vue 组件 ---
   const updateData = (props: EntryNodeProperties) => {
     // 这里做一层合并，确保即使 props 为空也有默认值
-    properties.value = {
-      title: props.title,
-    };
+    properties.value = { ...props };
   };
 
   // A. 初始化：首次加载时读取数据

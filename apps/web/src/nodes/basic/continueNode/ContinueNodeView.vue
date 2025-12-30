@@ -5,7 +5,9 @@
 
     <!-- 2. 字段列表区域 -->
     <div class="node-body" v-if="getNode">
-      <NodeField v-for="field in getNode().getFields()" :key="field.name"
+      <NodeField
+        v-for="field in getNode().getFields()"
+        :key="field.name"
         :hasInput="field.inputId !== null"
         :hasOutput="field.outputId !== null"
         :name="field.name"
@@ -41,9 +43,7 @@ onMounted(() => {
   // --- 函数：从节点属性同步数据到 Vue 组件 ---
   const updateData = (props: ContinueNodeProperties) => {
     // 这里做一层合并，确保即使 props 为空也有默认值
-    properties.value = {
-      title: props.title,
-    };
+    properties.value = { ...props };
   };
 
   // A. 初始化：首次加载时读取数据
