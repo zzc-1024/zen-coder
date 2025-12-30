@@ -50,6 +50,37 @@
             <span class="anchor-data-type">{{ field.type.toDisplayString() }}</span>
           </div>
 
+          <!-- Default Value Input (Only for BasicType Input Anchors) -->
+          <div class="default-value-input" v-if="field.inputId && field.type instanceof BasicType">
+            <label class="attribute-label">默认值</label>
+            <input
+              v-if="
+                field.type.type === 'builtin:basic:integer' ||
+                field.type.type === 'builtin:basic:float'
+              "
+              type="number"
+              class="attribute-input"
+              :value="defaultValues[field.inputId] || '0'"
+              @input="updateDefaultValue(field.inputId!, $event)"
+            />
+            <input
+              v-else-if="field.type.type === 'builtin:basic:string'"
+              type="text"
+              class="attribute-input"
+              :value="defaultValues[field.inputId] || ''"
+              @input="updateDefaultValue(field.inputId!, $event)"
+            />
+            <select
+              v-else-if="field.type.type === 'builtin:basic:boolean'"
+              class="attribute-input"
+              :value="defaultValues[field.inputId] || 'false'"
+              @change="updateDefaultValue(field.inputId!, $event)"
+            >
+              <option value="true">True</option>
+              <option value="false">False</option>
+            </select>
+          </div>
+
           <!-- Suggested Nodes -->
           <div class="suggested-nodes" v-if="field.inputId">
             <div
@@ -96,6 +127,8 @@ import type { RecommendationFunction } from '@/nodes/basic/basicEditorConfig';
 import type BasicNodeModel from '@/nodes/basic/basicNodeModel';
 import LogicFlow from '@logicflow/core';
 import { computed } from 'vue';
+import { BasicType } from '@/nodes/basic/typeDifination';
+import type { BasicNodePropertiesWithDefaultValues, DefaultValueMap } from '@/nodes/basic/basicNodeModel';
 
 const props = defineProps<{
   lf: LogicFlow | null;
@@ -111,6 +144,20 @@ const selectedElement = computed(() => {
   return props.lf?.getNodeModelById(node!.id) as BasicNodeModel;
 });
 
+const defaultValues = computed(() => {
+  if (!selectedElement.value) return {};
+  const properties = selectedElement.value.properties;
+  // 提高容错性，防止没有这个字段
+  if (!properties.defaultValues) {
+    properties.defaultValues = {} as DefaultValueMap;
+    selectedElement.value.setProperties({
+      ...selectedElement.value.getProperties(),
+      defaultValues: properties.defaultValues,
+    });
+  }
+  return properties.defaultValues as DefaultValueMap;
+});
+
 const fields = computed(() => {
   if (!selectedElement.value) return [];
   return selectedElement.value.getFields();
@@ -124,6 +171,48 @@ function deleteNode() {
 function handleDragStart(e: PointerEvent, node: LogicFlow.OnDragNodeConfig) {
   e.preventDefault();
   props.lf?.dnd.startDrag(node);
+}
+
+function updateDefaultValue(inputId: string, event: Event) {
+  if (!selectedElement.value) return;
+
+  const target = event.target as HTMLInputElement | HTMLSelectElement;
+  const properties = selectedElement.value.properties as BasicNodePropertiesWithDefaultValues;
+
+  // 确保默认值映射表存在
+  if (!properties.defaultValues) {
+    throw new Error('默认值映射表未定义');
+  }
+
+  // 获取对应的字段类型
+  const field = fields.value.find((f) => f.inputId === inputId);
+  if (!field || !(field.type instanceof BasicType)) {
+    return;
+  }
+
+  let value: number | string | boolean;
+
+  // 根据字段类型解析输入值
+  if (field.type.type === 'builtin:basic:integer') {
+    value = parseInt(target.value, 10);
+  } else if (field.type.type === 'builtin:basic:float') {
+    value = parseFloat(target.value);
+  } else if (field.type.type === 'builtin:basic:string') {
+    value = target.value;
+  } else if (field.type.type === 'builtin:basic:boolean') {
+    value = target.value === 'true';
+  } else {
+    return; // 其他类型不处理
+  }
+
+  // 更新默认值映射表
+  properties.defaultValues[inputId] = value;
+
+  // 更新字段类型的默认值
+  selectedElement.value.setProperties({
+    ...selectedElement.value.getProperties(),
+    defaultValues: properties.defaultValues,
+  });
 }
 </script>
 

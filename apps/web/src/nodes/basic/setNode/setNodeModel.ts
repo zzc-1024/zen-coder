@@ -1,8 +1,8 @@
 import type LogicFlow from '@logicflow/core';
-import BasicNodeModel, { type BasicNodeProperties, type FieldType } from '../basicNodeModel';
+import BasicNodeModel, { type BasicNodePropertiesWithDefaultValues, type FieldType } from '../basicNodeModel';
 import { FlowType, parseType } from '../typeDifination';
 
-export type SetNodeProperties = BasicNodeProperties & {
+export type SetNodeProperties = BasicNodePropertiesWithDefaultValues & {
   type: string;
 };
 

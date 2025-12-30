@@ -1,4 +1,4 @@
-import BasicNodeModel, { type BasicNodeProperties, type FieldType } from '../basicNodeModel';
+import BasicNodeModel, { type BasicNodePropertiesWithDefaultValues, type FieldType } from '../basicNodeModel';
 import {
   BasicType,
   BUILTIN_BASIC_FLOAT_TYPE,
@@ -9,7 +9,7 @@ import {
 import { BinaryArithmeticNodeType } from '../basicEditorConfig';
 import type LogicFlow from '@logicflow/core';
 
-export type BinaryArithmeticNodeProperties = BasicNodeProperties & {
+export type BinaryArithmeticNodeProperties = BasicNodePropertiesWithDefaultValues & {
   type: string;
   operator: string;
 };

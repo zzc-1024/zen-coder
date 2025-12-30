@@ -1,8 +1,8 @@
 import type LogicFlow from '@logicflow/core';
-import BasicNodeModel, { type BasicNodeProperties, type FieldType } from '../basicNodeModel';
+import BasicNodeModel, { type BasicNodePropertiesWithDefaultValues, type FieldType } from '../basicNodeModel';
 import { BasicType, FlowType } from '../typeDifination';
 
-export type ConditionLoopNodeProperties = BasicNodeProperties;
+export type ConditionLoopNodeProperties = BasicNodePropertiesWithDefaultValues;
 
 class ConditionLoopNodeModel extends BasicNodeModel {
   /**

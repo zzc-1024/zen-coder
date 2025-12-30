@@ -8,6 +8,12 @@ export type BasicNodeProperties = {
   showAnchorSide?: AnchorSide;
 };
 
+export type DefaultValueMap = Record<string, number | string | boolean>;
+
+export type BasicNodePropertiesWithDefaultValues = BasicNodeProperties & {
+  defaultValues: DefaultValueMap;
+};
+
 export type FieldType = {
   name: string;
   type: AnchorType;
