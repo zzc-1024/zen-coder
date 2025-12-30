@@ -3,10 +3,11 @@
     <!-- Title Bar -->
     <div class="list-title-bar">
       <span class="title-text">变量列表</span>
+      <button class="add-button" @click="addVariablePopup.open()">➕添加</button>
     </div>
 
     <!-- Add New Variable Form (Fixed) -->
-    <div class="add-variable-form">
+    <PopupDialog title="新增变量" ref="addVariablePopup" class="add-variable-form">
       <div class="horizontal-group">
         <select v-model="variableDataStructureType" class="type-selector">
           <option value="basic">普通</option>
@@ -33,7 +34,7 @@
           ➕
         </button>
       </div>
-    </div>
+    </PopupDialog>
 
     <!-- List Body -->
     <div class="list-body">
@@ -78,6 +79,7 @@
 import { ref } from 'vue';
 import type { Variable } from './variableList';
 import { BaseType, BasicType, type DataStructureType } from '@/nodes/basic/typeDifination';
+import PopupDialog from '../ui/PopupDialog.vue';
 const props = defineProps<{
   variables: Variable[];
 }>();
@@ -87,6 +89,7 @@ const emits = defineEmits<{
   onAddVariable: [variableName: string, variableType: BaseType];
 }>();
 
+const addVariablePopup = ref();
 const variableDataStructureType = ref<DataStructureType>('basic');
 const newVariableType = ref('int');
 const newVariableName = ref('hello');
@@ -162,185 +165,199 @@ function onAddVariable() {
       font-weight: bold;
       color: #b0b0b0;
     }
+
+    .add-button {
+      font-size: 14px;
+      color: #b0b0b0;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px 8px;
+      border-radius: 4px;
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+    }
   }
 
   .add-variable-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    .horizontal-group {
       display: flex;
-      flex-direction: column;
-      gap: 6px;
-      padding: 8px;
+      gap: 12px;
+      .variable-input,
+      .type-selector {
+        padding: 10px 12px;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        color: #333;
+        font-family: inherit;
+        font-size: 14px;
+
+        &::placeholder {
+          color: #999;
+        }
+
+        &:focus {
+          outline: none;
+          border-color: #4299e1;
+          box-shadow: 0 0 0 2px rgba(66, 153, 225, 0.2);
+        }
+      }
+    }
+
+    .add-button {
+      align-self: flex-end;
+      padding: 8px 16px;
+      background-color: #4299e1;
+      color: #fff;
+      border: 1px solid #4299e1;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+
+      &:hover:not(:disabled) {
+        background-color: #3182ce;
+        border-color: #3182ce;
+      }
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  .list-body {
+    flex: 1;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-height: 0; /* 确保flex子元素能正确处理溢出 */
+
+    /* --- Variable Item --- */
+    .variable-item {
       background-color: #333;
       border: 1px solid #555;
       border-radius: 4px;
-      .horizontal-group {
+      overflow: hidden;
+      flex-shrink: 0;
+
+      .variable-header {
         display: flex;
-        gap: 8px;
-        .variable-input,
-        .type-selector {
-          padding: 6px 8px;
-          background-color: #444;
-          border: 1px solid #666;
-          border-radius: 3px;
-          color: #e0e0e0;
-          font-family: inherit;
-          font-size: 12px;
-
-          &::placeholder {
-            color: #999;
-          }
-
-          &:focus {
-            outline: none;
-            border-color: #4299e1;
-            box-shadow: 0 0 0 1px #4299e1;
-          }
-        }
-      }
-
-      .add-button {
-        align-self: flex-end;
-        padding: 4px 10px;
+        align-items: center;
+        padding: 6px 8px;
         background-color: #444;
-        color: #e0e0e0;
-        border: 1px solid #666;
-        border-radius: 3px;
-        cursor: pointer;
-        font-size: 12px;
+        position: relative;
 
-        &:hover:not(:disabled) {
-          background-color: #555;
-          border-color: #888;
+        .variable-name {
+          flex-grow: 1;
+          font-weight: bold;
+          font-size: 13px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
 
-        &:disabled {
-          opacity: 0.5;
-          cursor: not-allowed;
+        .variable-type {
+          font-size: 11px;
+          color: #aaa;
+          background-color: #555;
+          padding: 2px 6px;
+          border-radius: 3px;
+          margin-right: 24px; /* Space for delete button */
+        }
+
+        .delete-button {
+          position: absolute;
+          right: 6px;
+          top: 50%;
+          transform: translateY(-50%);
+          background: none;
+          border: 1px solid transparent;
+          color: #999;
+          width: 18px;
+          height: 18px;
+          border-radius: 50%;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 12px;
+          padding: 0;
+
+          &:hover {
+            background-color: #e57373;
+            color: #fff;
+            border-color: #e57373;
+          }
         }
       }
-    }
 
-    .list-body {
-      flex: 1;
-      overflow-x: hidden;
-      overflow-y: auto;
-      padding: 8px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      min-height: 0; /* 确保flex子元素能正确处理溢出 */
+      /* --- Variable Nodes --- */
+      .variable-nodes {
+        display: flex;
+        padding: 8px;
+        gap: 8px;
+        background-color: #3a3a3a;
 
-      /* --- Variable Item --- */
-      .variable-item {
-        background-color: #333;
-        border: 1px solid #555;
-        border-radius: 4px;
-        overflow: hidden;
-        flex-shrink: 0;
-
-        .variable-header {
+        .node {
+          flex: 1;
           display: flex;
           align-items: center;
           padding: 6px 8px;
-          background-color: #444;
+          background-color: #555;
+          border: 1px solid #777;
+          border-radius: 3px;
+          cursor: grab;
           position: relative;
+          min-height: 30px;
+          box-sizing: border-box;
+          touch-action: none;
 
-          .variable-name {
+          &:active {
+            cursor: grabbing;
+          }
+
+          .node-label {
             flex-grow: 1;
-            font-weight: bold;
-            font-size: 13px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-          }
-
-          .variable-type {
-            font-size: 11px;
-            color: #aaa;
-            background-color: #555;
-            padding: 2px 6px;
-            border-radius: 3px;
-            margin-right: 24px; /* Space for delete button */
-          }
-
-          .delete-button {
-            position: absolute;
-            right: 6px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: 1px solid transparent;
-            color: #999;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            text-align: center;
             font-size: 12px;
-            padding: 0;
-
-            &:hover {
-              background-color: #e57373;
-              color: #fff;
-              border-color: #e57373;
-            }
+            font-weight: 500;
           }
-        }
 
-        /* --- Variable Nodes --- */
-        .variable-nodes {
-          display: flex;
-          padding: 8px;
-          gap: 8px;
-          background-color: #3a3a3a;
-
-          .node {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            padding: 6px 8px;
-            background-color: #555;
-            border: 1px solid #777;
-            border-radius: 3px;
-            cursor: grab;
-            position: relative;
-            min-height: 30px;
-            box-sizing: border-box;
-            touch-action: none;
-
-            &:active {
-              cursor: grabbing;
-            }
+          &.get-node {
+            background-color: #2c5a7b; /* Blue-ish for Get */
+            border-color: #3d7ca8;
 
             .node-label {
-              flex-grow: 1;
-              text-align: center;
-              font-size: 12px;
-              font-weight: 500;
+              color: #a0d0f0;
             }
+          }
 
-            &.get-node {
-              background-color: #2c5a7b; /* Blue-ish for Get */
-              border-color: #3d7ca8;
+          &.set-node {
+            background-color: #7b5a2c; /* Orange-ish for Set */
+            border-color: #a87c3d;
 
-              .node-label {
-                color: #a0d0f0;
-              }
-            }
-
-            &.set-node {
-              background-color: #7b5a2c; /* Orange-ish for Set */
-              border-color: #a87c3d;
-
-              .node-label {
-                color: #f0d0a0;
-              }
+            .node-label {
+              color: #f0d0a0;
             }
           }
         }
       }
     }
+  }
 
   /* 响应式布局：当屏幕宽度小于 768px 时，VariableList 改为横向展示 */
   @media (max-width: 768px) {
@@ -350,24 +367,51 @@ function onAddVariable() {
     max-height: 200px;
 
     .add-variable-form {
-      min-width: 200px;
+      min-width: 300px;
       flex-shrink: 0;
       flex-direction: column;
       flex-wrap: nowrap;
-      width: auto;
+      padding: 16px;
+      background-color: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
 
       .horizontal-group {
         display: flex;
-        gap: 8px;
+        gap: 12px;
         flex-wrap: wrap;
         .variable-input {
           flex: 1;
-          min-width: 120px;
+          min-width: 140px;
+          padding: 10px 12px;
+          background-color: #fff;
+          border: 1px solid #ddd;
+          border-radius: 4px;
+          color: #333;
+          font-family: inherit;
+          font-size: 14px;
         }
 
         .type-selector {
-          min-width: 80px;
+          min-width: 100px;
+          padding: 10px 12px;
+          background-color: #fff;
+          border: 1px solid #ddd;
+          border-radius: 4px;
+          color: #333;
+          font-family: inherit;
+          font-size: 14px;
         }
+      }
+
+      .add-button {
+        padding: 8px 16px;
+        background-color: #4299e1;
+        color: #fff;
+        border: 1px solid #4299e1;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
       }
     }
 
