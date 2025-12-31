@@ -3,9 +3,9 @@ import { EntryNodeType, type BasicEditorNodeConfig } from '../basicEditorConfig'
 import EntryNodeView from './EntryNodeView.vue';
 import EntryNodeModel, { entryNodeGenerateAnchorRecommendation } from './entryNodeModel';
 
-export default {
+export const entryNodeConfig: BasicEditorNodeConfig = {
   type: EntryNodeType,
   component: EntryNodeView,
   model: EntryNodeModel,
   generateSuggestedNodes: entryNodeGenerateAnchorRecommendation,
-} as BasicEditorNodeConfig;
+};

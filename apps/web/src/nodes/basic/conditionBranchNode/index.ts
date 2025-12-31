@@ -4,9 +4,9 @@ import ConditionBranchNodeModel, {
   conditionBranchNodeGenerateAnchorRecommendation,
 } from './conditionBranchNodeModel';
 
-export default {
+export const conditionBranchNodeConfig: BasicEditorNodeConfig = {
   type: ConditionBranchNodeType,
   component: ConditionBranchNodeView,
   model: ConditionBranchNodeModel,
   generateSuggestedNodes: conditionBranchNodeGenerateAnchorRecommendation,
-} as BasicEditorNodeConfig;
+};

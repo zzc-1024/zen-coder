@@ -1,10 +1,12 @@
 import { GetVariableNodeType, type BasicEditorNodeConfig } from '../basicEditorConfig';
-import GetNodeView from './GetNodeView.vue';
-import GetNodeModel, { getNodeGenerateAnchorRecommendation } from './getNodeModel';
+import GetVariableNodeView from './GetVariableNodeView.vue';
+import GetVariableNodeModel, {
+  getVariableNodeGenerateAnchorRecommendation,
+} from './getVariableNodeModel';
 
-export default {
+export const getVariableNodeConfig: BasicEditorNodeConfig = {
   type: GetVariableNodeType,
-  component: GetNodeView,
-  model: GetNodeModel,
-  generateSuggestedNodes: getNodeGenerateAnchorRecommendation,
-} as BasicEditorNodeConfig;
+  component: GetVariableNodeView,
+  model: GetVariableNodeModel,
+  generateSuggestedNodes: getVariableNodeGenerateAnchorRecommendation,
+};

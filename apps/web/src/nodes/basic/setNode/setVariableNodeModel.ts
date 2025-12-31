@@ -2,11 +2,11 @@ import type LogicFlow from '@logicflow/core';
 import BasicNodeModel, { type BasicNodePropertiesWithDefaultValues, type FieldType } from '../basicNodeModel';
 import { FlowType, parseType } from '../typeDifination';
 
-export type SetNodeProperties = BasicNodePropertiesWithDefaultValues & {
+export type SetVariableNodeProperties = BasicNodePropertiesWithDefaultValues & {
   type: string;
 };
 
-class SetNodeModel extends BasicNodeModel {
+class SetVariableNodeModel extends BasicNodeModel {
   /**
    * 定义节点的字段
    */
@@ -23,8 +23,8 @@ class SetNodeModel extends BasicNodeModel {
   }
 }
 
-export function setNodeGenerateAnchorRecommendation(): LogicFlow.OnDragNodeConfig[] {
+export function setVariableNodeGenerateAnchorRecommendation(): LogicFlow.OnDragNodeConfig[] {
   return [];
 }
 
-export default SetNodeModel;
+export default SetVariableNodeModel;

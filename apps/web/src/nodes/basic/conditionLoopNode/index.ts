@@ -4,9 +4,9 @@ import ConditionLoopNodeModel, {
   conditionLoopNodeGenerateAnchorRecommendation,
 } from './conditionLoopNodeModel';
 
-export default {
+export const conditionLoopNodeConfig: BasicEditorNodeConfig = {
   type: ConditionLoopNodeType,
   component: ConditionLoopNodeView,
   model: ConditionLoopNodeModel,
   generateSuggestedNodes: conditionLoopNodeGenerateAnchorRecommendation,
-} as BasicEditorNodeConfig;
+};

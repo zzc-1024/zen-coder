@@ -4,9 +4,9 @@ import RangeLoopNodeModel, {
   rangeLoopNodeGenerateAnchorRecommendation,
 } from './rangeLoopNodeModel';
 
-export default {
+export const rangeLoopNodeConfig: BasicEditorNodeConfig = {
   type: RangeLoopNodeType,
   component: RangeLoopNodeView,
   model: RangeLoopNodeModel,
   generateSuggestedNodes: rangeLoopNodeGenerateAnchorRecommendation,
-} as BasicEditorNodeConfig;
+};

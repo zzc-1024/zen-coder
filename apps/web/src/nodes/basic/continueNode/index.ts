@@ -2,9 +2,9 @@ import { ContinueNodeType, type BasicEditorNodeConfig } from '../basicEditorConf
 import ContinueNodeView from './ContinueNodeView.vue';
 import ContinueNodeModel, { continueNodeGenerateAnchorRecommendation } from './continueNodeModel';
 
-export default {
+export const continueNodeConfig: BasicEditorNodeConfig = {
   type: ContinueNodeType,
   component: ContinueNodeView,
   model: ContinueNodeModel,
   generateSuggestedNodes: continueNodeGenerateAnchorRecommendation,
-} as BasicEditorNodeConfig;
+};

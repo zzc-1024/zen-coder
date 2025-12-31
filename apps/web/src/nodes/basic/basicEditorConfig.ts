@@ -8,15 +8,15 @@ import EntryNodeModel, {
   entryNodeGenerateAnchorRecommendation,
 } from '@/nodes/basic/entryNode/entryNodeModel';
 // 设置变量节点
-import SetNodeView from '@/nodes/basic/setNode/SetNodeView.vue';
-import SetNodeModel, {
-  setNodeGenerateAnchorRecommendation,
-} from '@/nodes/basic/setNode/setNodeModel';
+import SetVariableNodeView from '@/nodes/basic/setNode/SetVariableNodeView.vue';
+import SetVariableNodeModel, {
+  setVariableNodeGenerateAnchorRecommendation,
+} from '@/nodes/basic/setNode/setVariableNodeModel';
 // 获取变量节点
-import GetNodeView from '@/nodes/basic/getNode/GetNodeView.vue';
-import GetNodeModel, {
-  getNodeGenerateAnchorRecommendation,
-} from '@/nodes/basic/getNode/getNodeModel';
+import GetVariableNodeView from '@/nodes/basic/getNode/GetVariableNodeView.vue';
+import GetVariableNodeModel, {
+  getVariableNodeGenerateAnchorRecommendation,
+} from '@/nodes/basic/getNode/getVariableNodeModel';
 // 二元算术运算节点
 import BinaryArithmeticNodeView from '@/nodes/basic/binaryArithmeticNode/binaryArithmeticNodeView.vue';
 import BinaryArithmeticNodeModel, {
@@ -90,15 +90,15 @@ export const basicEditorNode: BasicEditorNodeConfig[] = [
   },
   {
     type: SetVariableNodeType,
-    component: SetNodeView,
-    model: SetNodeModel,
-    generateSuggestedNodes: setNodeGenerateAnchorRecommendation,
+    component: SetVariableNodeView,
+    model: SetVariableNodeModel,
+    generateSuggestedNodes: setVariableNodeGenerateAnchorRecommendation,
   },
   {
     type: GetVariableNodeType,
-    component: GetNodeView,
-    model: GetNodeModel,
-    generateSuggestedNodes: getNodeGenerateAnchorRecommendation,
+    component: GetVariableNodeView,
+    model: GetVariableNodeModel,
+    generateSuggestedNodes: getVariableNodeGenerateAnchorRecommendation,
   },
   {
     type: BinaryArithmeticNodeType,

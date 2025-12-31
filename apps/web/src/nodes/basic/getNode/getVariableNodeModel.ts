@@ -2,11 +2,11 @@ import type LogicFlow from '@logicflow/core';
 import BasicNodeModel, { type BasicNodeProperties, type FieldType } from '../basicNodeModel';
 import { parseType } from '../typeDifination';
 
-export type GetNodeProperties = BasicNodeProperties & {
+export type GetVariableNodeProperties = BasicNodeProperties & {
   type: string;
 };
 
-class GetNodeModel extends BasicNodeModel {
+class GetVariableNodeModel extends BasicNodeModel {
   getFields(): FieldType[] {
     return [
       {
@@ -19,8 +19,8 @@ class GetNodeModel extends BasicNodeModel {
   }
 }
 
-export function getNodeGenerateAnchorRecommendation(): LogicFlow.OnDragNodeConfig[] {
+export function getVariableNodeGenerateAnchorRecommendation(): LogicFlow.OnDragNodeConfig[] {
   return [];
 }
 
-export default GetNodeModel;
+export default GetVariableNodeModel;
