@@ -38,6 +38,7 @@ export type BasicEditorNodeConfig = VueNodeConfig & {
   description: string;
   generateSuggestedNodes: RecommendationFunction;
   iconPath: string;
+  demoDndData: LogicFlow.OnDragNodeConfig;
 };
 
 export const basicEditorNode: BasicEditorNodeConfig[] = [

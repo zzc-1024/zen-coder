@@ -25,10 +25,11 @@
         </div>
 
         <div class="detail-preview">
-          <div v-if="selectedNode" class="preview-placeholder">
-            <div class="preview-icon">{{ selectedNode.iconPath }}</div>
+          <div v-show="selectedNode" class="preview-placeholder">
+            <div class="lf-container" ref="lfContainerRef"></div>
+            <TeleportContainer :flow-id="flowId" />
           </div>
-          <div v-else class="preview-empty">
+          <div v-if="!selectedNode" class="preview-empty">
             <p>选择一个节点查看详细信息</p>
           </div>
         </div>
@@ -46,9 +47,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import BookCard from './ui/BookCard.vue';
-import type { BasicEditorNodeConfig } from '@/nodes/basic/basicEditorConfig';
+import { setBasicEditorEvent, type BasicEditorNodeConfig } from '@/nodes/basic/basicEditorConfig';
+import LogicFlow, { BezierEdge, EventType } from '@logicflow/core';
+import BasicEdgeModel from '@/edges/BasicEdgeModel';
+import { getTeleport } from '@logicflow/vue-node-registry';
+import { batchRegisterVueNode } from '@/utils/editor';
 
 const props = defineProps<{
   nodes: BasicEditorNodeConfig[];
@@ -62,7 +67,62 @@ const selectedNode = computed(() => {
 
 const handleNodeSelect = (selectedTypeName: string) => {
   selectedNodeType.value = selectedTypeName;
+  renderData.value = {
+    nodes: [
+      {
+        id: '1',
+        type: selectedTypeName,
+        x: 100,
+        y: 100,
+        properties: {
+          ...selectedNode.value?.demoDndData.properties,
+        },
+      },
+    ],
+    edges: [],
+  };
+  console.log(renderData.value);
+  lf!.render(renderData.value);
+  lf!.fitView();
 };
+
+const lfContainerRef = ref();
+let lf: LogicFlow | null = null;
+const TeleportContainer = getTeleport();
+const flowId = ref('');
+const renderData = ref<LogicFlow.GraphConfigData>({
+  nodes: [],
+  edges: [],
+});
+onMounted(() => {
+  if (lfContainerRef.value === null) {
+    return;
+  }
+  lf = new LogicFlow({
+    container: lfContainerRef.value,
+    keyboard: {
+      enabled: true,
+    },
+  });
+  // 注册自定义边和节点
+  lf.register({
+    type: 'builtin:basic:edge',
+    view: BezierEdge,
+    model: BasicEdgeModel,
+  });
+  lf.setDefaultEdgeType('builtin:basic:edge');
+  batchRegisterVueNode(lf, props.nodes);
+  // 设置事件
+  lf.on(EventType.GRAPH_RENDERED, ({ graphModel }) => {
+    // flowId 内聚在当前文件，因此单独设置事件
+    flowId.value = graphModel.flowId!;
+  });
+  setBasicEditorEvent(lf);
+
+  // 绘制画布并配置显示设置
+  lf.render(renderData.value);
+  lf.translateCenter();
+});
 </script>
 
 <style scoped lang="scss">
@@ -87,7 +147,7 @@ const handleNodeSelect = (selectedTypeName: string) => {
   gap: 20px;
 
   @media (max-width: 768px) {
-    flex-direction: column;
+    flex-direction: column-reverse;
   }
 }
 
@@ -129,6 +189,7 @@ const handleNodeSelect = (selectedTypeName: string) => {
 /* 预览区域 */
 .detail-preview {
   height: 150px;
+  min-height: 300px;
   border-radius: 8px;
   border: 2px dashed #ddd;
   display: flex;
@@ -145,8 +206,9 @@ const handleNodeSelect = (selectedTypeName: string) => {
     background-color: #e8f5e9;
     border-radius: 6px;
 
-    .preview-icon {
-      font-size: 48px;
+    .lf-container {
+      height: 100%;
+      width: 100%;
     }
   }
 
@@ -175,10 +237,6 @@ const handleNodeSelect = (selectedTypeName: string) => {
 
   .detail-header h2 {
     font-size: 18px;
-  }
-
-  .preview-icon {
-    font-size: 36px !important;
   }
 }
 

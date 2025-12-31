@@ -1,10 +1,12 @@
 import { type BasicEditorNodeConfig } from '../basicEditorConfig';
+import { BasicType } from '../typeDifination';
 import GetVariableNodeView from './GetVariableNodeView.vue';
 import GetVariableNodeModel, {
   getVariableNodeGenerateAnchorRecommendation,
   GetVariableNodeType,
 } from './getVariableNodeModel';
 
+const iconPath = 'nodeIcon/GetVariable.png';
 export const getVariableNodeConfig: BasicEditorNodeConfig = {
   type: GetVariableNodeType,
   component: GetVariableNodeView,
@@ -13,5 +15,14 @@ export const getVariableNodeConfig: BasicEditorNodeConfig = {
   banter: '以不变应万变',
   description: '获取指定变量的值，当变量变化后，该节点获取的变量也会变化。',
   generateSuggestedNodes: getVariableNodeGenerateAnchorRecommendation,
-  iconPath: 'nodeIcon/GetVariable.png',
+  iconPath: iconPath,
+  demoDndData: {
+    type: GetVariableNodeType,
+    label: '获取变量',
+    icon: iconPath,
+    properties: {
+      title: '获取变量',
+      type: new BasicType('builtin:basic:integer'),
+    },
+  },
 };

@@ -5,6 +5,7 @@ import ContinueNodeModel, {
   ContinueNodeType,
 } from './continueNodeModel';
 
+const iconPath = 'nodeIcon/Continue.png';
 export const continueNodeConfig: BasicEditorNodeConfig = {
   type: ContinueNodeType,
   component: ContinueNodeView,
@@ -13,5 +14,13 @@ export const continueNodeConfig: BasicEditorNodeConfig = {
   banter: '“山的后面还是山！”。继续节点坚定地说着。',
   description: '跳过当前循环体，继续下一次循环。',
   generateSuggestedNodes: continueNodeGenerateAnchorRecommendation,
-  iconPath: 'nodeIcon/Continue.png',
+  iconPath: iconPath,
+  demoDndData: {
+    type: ContinueNodeType,
+    label: '继续节点',
+    icon: iconPath,
+    properties: {
+      title: '继续节点',
+    },
+  },
 };

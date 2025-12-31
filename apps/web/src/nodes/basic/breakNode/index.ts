@@ -2,6 +2,7 @@ import { type BasicEditorNodeConfig } from '../basicEditorConfig';
 import BreakNodeView from './BreakNodeView.vue';
 import BreakNodeModel, { breakNodeGenerateAnchorRecommendation, BreakNodeType } from './breakNodeModel';
 
+const iconPath = 'nodeIcon/Break.png'
 export const breakNodeConfig: BasicEditorNodeConfig = {
   type: BreakNodeType,
   component: BreakNodeView,
@@ -10,5 +11,13 @@ export const breakNodeConfig: BasicEditorNodeConfig = {
   banter: '“山的后面就是大海了啊，哪里还有山？”。Break节点觉得，是继续节点想让自己困在循环里。',
   description: '提前退出循环体。',
   generateSuggestedNodes: breakNodeGenerateAnchorRecommendation,
-  iconPath: 'nodeIcon/Break.png',
+  iconPath: iconPath,
+  demoDndData: {
+    type: BreakNodeType,
+    label: 'break节点',
+    icon: iconPath,
+    properties: {
+      title: 'break节点',
+    },
+  },
 };

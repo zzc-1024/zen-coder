@@ -6,6 +6,7 @@ import EntryNodeModel, {
   EntryNodeType,
 } from './entryNodeModel';
 
+const iconPath = 'nodeIcon/Entry.png';
 export const entryNodeConfig: BasicEditorNodeConfig = {
   type: EntryNodeType,
   component: EntryNodeView,
@@ -14,5 +15,13 @@ export const entryNodeConfig: BasicEditorNodeConfig = {
   banter: '欢迎光临^_^',
   description: '程序的开始节点，所有流程必须从这里开始。',
   generateSuggestedNodes: entryNodeGenerateAnchorRecommendation,
-  iconPath: 'nodeIcon/Entry.png',
+  iconPath: iconPath,
+  demoDndData: {
+    type: EntryNodeType,
+    label: '程序入口',
+    icon: iconPath,
+    properties: {
+      title: '祝大家2026年快乐！',
+    },
+  },
 };
