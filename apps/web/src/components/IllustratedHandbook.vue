@@ -2,6 +2,7 @@
   <div class="book-container">
     <div class="book-header">
       <h1>节点图鉴</h1>
+      <div class="back-btn" @click="handleBackClick">返回</div>
     </div>
 
     <div class="book-content">
@@ -54,6 +55,7 @@ import LogicFlow, { BezierEdge, EventType } from '@logicflow/core';
 import BasicEdgeModel from '@/edges/BasicEdgeModel';
 import { getTeleport } from '@logicflow/vue-node-registry';
 import { batchRegisterVueNode } from '@/utils/editor';
+import router from '@/router';
 
 const props = defineProps<{
   nodes: BasicEditorNodeConfig[];
@@ -65,12 +67,25 @@ const selectedNode = computed(() => {
   return props.nodes.find((node) => node.type === selectedNodeType.value);
 });
 
+function handleBackClick() {
+  router.back();
+}
+
+const lfContainerRef = ref();
+let lf: LogicFlow | null = null;
+const TeleportContainer = getTeleport();
+const flowId = ref('');
+const renderData = ref<LogicFlow.GraphConfigData>({
+  nodes: [],
+  edges: [],
+});
+let id = 1;
 const handleNodeSelect = (selectedTypeName: string) => {
   selectedNodeType.value = selectedTypeName;
   renderData.value = {
     nodes: [
       {
-        id: '1',
+        id: (id++).toString(),
         type: selectedTypeName,
         x: 100,
         y: 100,
@@ -86,14 +101,6 @@ const handleNodeSelect = (selectedTypeName: string) => {
   lf!.fitView();
 };
 
-const lfContainerRef = ref();
-let lf: LogicFlow | null = null;
-const TeleportContainer = getTeleport();
-const flowId = ref('');
-const renderData = ref<LogicFlow.GraphConfigData>({
-  nodes: [],
-  edges: [],
-});
 onMounted(() => {
   if (lfContainerRef.value === null) {
     return;
@@ -134,7 +141,20 @@ onMounted(() => {
 }
 
 .book-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
   margin-bottom: 20px;
+  .back-btn {
+    font-size: 16px;
+    color: #333;
+    margin: 0;
+    cursor: pointer;
+    &:hover {
+      color: #007bff;
+    }
+  }
   h1 {
     font-size: 28px;
     color: #333;
