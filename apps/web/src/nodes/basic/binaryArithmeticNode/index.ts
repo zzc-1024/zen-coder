@@ -1,5 +1,5 @@
 import { type BasicEditorNodeConfig } from '../basicEditorConfig';
-import BinaryArithmeticNodeView from './binaryArithmeticNodeView.vue';
+import BinaryArithmeticNodeView from './BinaryArithmeticNodeView.vue';
 import BinaryArithmeticNodeModel, {
   binaryArithmeticNodeGenerateAnchorRecommendation,
   BinaryArithmeticNodeType,

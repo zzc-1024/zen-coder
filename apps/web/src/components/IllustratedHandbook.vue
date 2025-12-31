@@ -9,11 +9,11 @@
       <div class="card-list">
         <BookCard
           v-for="node in nodes"
-          :key="node.id"
-          :id="node.id"
+          :key="node.type"
+          :type="node.type"
           :name="node.name"
-          :icon="node.icon"
-          :selected="selectedNodeId === node.id"
+          :icon="node.iconPath"
+          :selected="selectedNodeType === node.type"
           @select="handleNodeSelect"
         />
       </div>
@@ -26,15 +26,15 @@
 
         <div class="detail-preview">
           <div v-if="selectedNode" class="preview-placeholder">
-            <div class="preview-icon">{{ selectedNode.icon }}</div>
+            <div class="preview-icon">{{ selectedNode.iconPath }}</div>
           </div>
           <div v-else class="preview-empty">
             <p>选择一个节点查看详细信息</p>
-            1lI
           </div>
         </div>
 
         <div class="detail-description">
+          <p class="banter" v-if="selectedNode?.banter">{{ selectedNode.banter }}</p>
           <p v-if="selectedNode">{{ selectedNode.description }}</p>
           <p v-else class="empty-description">
             点击左侧的节点卡片，右侧将显示该节点的详细信息，包括节点功能、使用方法等内容。
@@ -48,76 +48,20 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import BookCard from './ui/BookCard.vue';
+import type { BasicEditorNodeConfig } from '@/nodes/basic/basicEditorConfig';
 
-interface Node {
-  id: string;
-  name: string;
-  icon: string;
-  description: string;
-}
+const props = defineProps<{
+  nodes: BasicEditorNodeConfig[];
+}>();
 
-// 示例节点数据
-const nodes = ref<Node[]>([
-  {
-    id: 'node-1',
-    name: '整数节点',
-    icon: '/nodeIcon/Entry.png',
-    description:
-      '整数节点用于处理整数类型的数据，可以进行加减乘除等数学运算，支持默认值设置和范围限制。',
-  },
-  {
-    id: 'node-2',
-    name: '字符串节点',
-    icon: '/nodeIcon/StringNode.png',
-    description:
-      '字符串节点用于处理文本数据，支持字符串拼接、截取、替换等操作，可设置默认文本内容。',
-  },
-  {
-    id: 'node-3',
-    name: '布尔节点',
-    icon: '/nodeIcon/BooleanNode.png',
-    description: '布尔节点用于处理逻辑值，支持true/false两种状态，常用于条件判断和开关控制。',
-  },
-  {
-    id: 'node-4',
-    name: '列表节点',
-    icon: '/nodeIcon/ListNode.png',
-    description: '列表节点用于存储多个数据元素，支持添加、删除、排序等操作，可包含不同类型的数据。',
-  },
-  {
-    id: 'node-5',
-    name: '字典节点',
-    icon: '/nodeIcon/DictNode.png',
-    description: '字典节点用于存储键值对数据，支持通过键快速查找值，适合表示复杂的数据结构。',
-  },
-  {
-    id: 'node-6',
-    name: '浮点数节点',
-    icon: '/nodeIcon/FloatNode.png',
-    description: '浮点数节点用于处理小数类型的数据，支持高精度计算，适用于科学计算和数据分析场景。',
-  },
-  {
-    id: 'node-7',
-    name: '日期节点',
-    icon: '/nodeIcon/DateNode.png',
-    description: '日期节点用于处理时间和日期数据，支持日期格式化、比较和计算等功能。',
-  },
-  {
-    id: 'node-8',
-    name: '文件节点',
-    icon: '/nodeIcon/FileNode.png',
-    description: '文件节点用于处理文件操作，支持文件读取、写入和上传下载等功能。',
-  },
-]);
-
-const selectedNodeId = ref<string>('');
+const selectedNodeType = ref<string>('');
 
 const selectedNode = computed(() => {
-  return nodes.value.find((node) => node.id === selectedNodeId.value);
+  return props.nodes.find((node) => node.type === selectedNodeType.value);
 });
 
-const handleNodeSelect = (id: string) => {
-  selectedNodeId.value = id;
+const handleNodeSelect = (selectedTypeName: string) => {
+  selectedNodeType.value = selectedTypeName;
 };
 </script>
 
@@ -241,10 +185,17 @@ const handleNodeSelect = (id: string) => {
 /* 描述区域 */
 .detail-description {
   flex: 1;
+
   p {
     color: #555;
     line-height: 1.6;
     margin: 0;
+  }
+
+  .banter {
+    color: #ff6600;
+    font-weight: bold;
+    margin-bottom: 8px;
   }
 
   .empty-description {

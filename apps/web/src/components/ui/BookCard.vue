@@ -1,9 +1,5 @@
 <template>
-  <div
-    class="book-card"
-    :class="{ 'is-selected': selected }"
-    @click="handleClick"
-  >
+  <div class="book-card" :class="{ 'is-selected': selected }" @click="handleClick">
     <div class="card-icon">
       <img :src="icon" alt="" class="icon-image" />
     </div>
@@ -13,23 +9,23 @@
 
 <script setup lang="ts">
 interface Props {
-  id: string
-  name: string
-  icon: string
-  selected?: boolean
+  type: string;
+  name: string;
+  icon: string;
+  selected?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  selected: false
-})
+  selected: false,
+});
 
 const emit = defineEmits<{
-  (e: 'select', id: string): void
-}>()
+  (e: 'select', type: string): void;
+}>();
 
 const handleClick = () => {
-  emit('select', props.id)
-}
+  emit('select', props.type);
+};
 </script>
 
 <style scoped lang="scss">
@@ -45,7 +41,9 @@ const handleClick = () => {
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), inset 0 0 6px rgba(255, 255, 255, 0.6);
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.2),
+    inset 0 0 6px rgba(255, 255, 255, 0.6);
   position: relative;
 
   /* 纸质纹理效果 */
@@ -56,7 +54,9 @@ const handleClick = () => {
 
   &:hover {
     transform: translateY(-2px) scale(1.05);
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3), inset 0 0 6px rgba(255, 255, 255, 0.6);
+    box-shadow:
+      0 3px 6px rgba(0, 0, 0, 0.3),
+      inset 0 0 6px rgba(255, 255, 255, 0.6);
   }
 
   &.is-selected {

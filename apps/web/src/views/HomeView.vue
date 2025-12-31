@@ -9,7 +9,7 @@
         <ul class="nav-menu">
           <li><RouterLink to="/">首页</RouterLink></li>
           <li><RouterLink to="/editor">编辑器</RouterLink></li>
-          <li><RouterLink to="/handbook">使用手册</RouterLink></li>
+          <li><RouterLink to="/handbook">节点图鉴</RouterLink></li>
         </ul>
         <div class="nav-button">
           <button class="btn-primary">登录功能敬请期待</button>
