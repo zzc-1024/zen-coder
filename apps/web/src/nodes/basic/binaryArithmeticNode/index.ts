@@ -4,9 +4,9 @@ import BinaryArithmeticNodeModel, {
   binaryArithmeticNodeGenerateAnchorRecommendation,
 } from './binaryArithmeticNodeModel';
 
-export default {
+export const binaryArithmeticNodeConfig: BasicEditorNodeConfig = {
   type: BinaryArithmeticNodeType,
   component: BinaryArithmeticNodeView,
   model: BinaryArithmeticNodeModel,
   generateSuggestedNodes: binaryArithmeticNodeGenerateAnchorRecommendation,
-} as BasicEditorNodeConfig;
+};

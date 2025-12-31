@@ -2,52 +2,6 @@ import { type Ref } from 'vue';
 
 import { type VueNodeConfig } from '@logicflow/vue-node-registry';
 
-// 入口节点
-import EntryNodeView from '@/nodes/basic/entryNode/EntryNodeView.vue';
-import EntryNodeModel, {
-  entryNodeGenerateAnchorRecommendation,
-} from '@/nodes/basic/entryNode/entryNodeModel';
-// 设置变量节点
-import SetVariableNodeView from '@/nodes/basic/setNode/SetVariableNodeView.vue';
-import SetVariableNodeModel, {
-  setVariableNodeGenerateAnchorRecommendation,
-} from '@/nodes/basic/setNode/setVariableNodeModel';
-// 获取变量节点
-import GetVariableNodeView from '@/nodes/basic/getNode/GetVariableNodeView.vue';
-import GetVariableNodeModel, {
-  getVariableNodeGenerateAnchorRecommendation,
-} from '@/nodes/basic/getNode/getVariableNodeModel';
-// 二元算术运算节点
-import BinaryArithmeticNodeView from '@/nodes/basic/binaryArithmeticNode/binaryArithmeticNodeView.vue';
-import BinaryArithmeticNodeModel, {
-  binaryArithmeticNodeGenerateAnchorRecommendation,
-} from './binaryArithmeticNode/binaryArithmeticNodeModel';
-// 条件循环节点
-import ConditionLoopNodeView from '@/nodes/basic/conditionLoopNode/ConditionLoopNodeView.vue';
-import ConditionLoopNodeModel, {
-  conditionLoopNodeGenerateAnchorRecommendation,
-} from '@/nodes/basic/conditionLoopNode/conditionLoopNodeModel';
-// 范围循环节点
-import RangeLoopNodeView from '@/nodes/basic/rangeLoopNode/RangeLoopNodeView.vue';
-import RangeLoopNodeModel, {
-  rangeLoopNodeGenerateAnchorRecommendation,
-} from '@/nodes/basic/rangeLoopNode/rangeLoopNodeModel';
-// 中断节点
-import BreakNodeView from '@/nodes/basic/breakNode/BreakNodeView.vue';
-import BreakNodeModel, {
-  breakNodeGenerateAnchorRecommendation,
-} from '@/nodes/basic/breakNode/breakNodeModel';
-// 继续节点
-import ContinueNodeView from '@/nodes/basic/continueNode/ContinueNodeView.vue';
-import ContinueNodeModel, {
-  continueNodeGenerateAnchorRecommendation,
-} from '@/nodes/basic/continueNode/continueNodeModel';
-// 条件分支节点
-import ConditionBranchNodeView from '@/nodes/basic/conditionBranchNode/ConditionBranchNodeView.vue';
-import ConditionBranchNodeModel, {
-  conditionBranchNodeGenerateAnchorRecommendation,
-} from '@/nodes/basic/conditionBranchNode/conditionBranchNodeModel';
-
 import type LogicFlow from '@logicflow/core';
 import { EventType } from '@logicflow/core';
 import {
@@ -59,6 +13,17 @@ import {
 import { ToolBarConfig } from '@/components/toolBar/toolBar';
 import router from '@/router';
 import type { Variable } from '@/components/variableList/variableList';
+
+// 导入节点
+import { entryNodeConfig } from './entryNode'; // 入口节点
+import { setVariableNodeConfig } from './setVariableNode'; // 设置变量节点
+import { getVariableNodeConfig } from './getVariableNode'; // 获取变量节点
+import { binaryArithmeticNodeConfig } from './binaryArithmeticNode'; // 二元算术运算节点
+import { conditionLoopNodeConfig } from './conditionLoopNode'; // 条件循环节点
+import { rangeLoopNodeConfig } from './rangeLoopNode'; // 范围循环节点
+import { breakNodeConfig } from './breakNode'; // 中断节点
+import { continueNodeConfig } from './continueNode'; // 继续节点
+import { conditionBranchNodeConfig } from './conditionBranchNode'; // 条件分支节点
 
 // 节点配置区域
 export const BasicEditorNodeTypePrefix = 'builtin:basic';
@@ -82,60 +47,15 @@ export type BasicEditorNodeConfig = VueNodeConfig & {
 };
 
 export const basicEditorNode: BasicEditorNodeConfig[] = [
-  {
-    type: EntryNodeType,
-    component: EntryNodeView,
-    model: EntryNodeModel,
-    generateSuggestedNodes: entryNodeGenerateAnchorRecommendation,
-  },
-  {
-    type: SetVariableNodeType,
-    component: SetVariableNodeView,
-    model: SetVariableNodeModel,
-    generateSuggestedNodes: setVariableNodeGenerateAnchorRecommendation,
-  },
-  {
-    type: GetVariableNodeType,
-    component: GetVariableNodeView,
-    model: GetVariableNodeModel,
-    generateSuggestedNodes: getVariableNodeGenerateAnchorRecommendation,
-  },
-  {
-    type: BinaryArithmeticNodeType,
-    component: BinaryArithmeticNodeView,
-    model: BinaryArithmeticNodeModel,
-    generateSuggestedNodes: binaryArithmeticNodeGenerateAnchorRecommendation,
-  },
-  {
-    type: ConditionLoopNodeType,
-    component: ConditionLoopNodeView,
-    model: ConditionLoopNodeModel,
-    generateSuggestedNodes: conditionLoopNodeGenerateAnchorRecommendation,
-  },
-  {
-    type: RangeLoopNodeType,
-    component: RangeLoopNodeView,
-    model: RangeLoopNodeModel,
-    generateSuggestedNodes: rangeLoopNodeGenerateAnchorRecommendation,
-  },
-  {
-    type: BreakNodeType,
-    component: BreakNodeView,
-    model: BreakNodeModel,
-    generateSuggestedNodes: breakNodeGenerateAnchorRecommendation,
-  },
-  {
-    type: ContinueNodeType,
-    component: ContinueNodeView,
-    model: ContinueNodeModel,
-    generateSuggestedNodes: continueNodeGenerateAnchorRecommendation,
-  },
-  {
-    type: ConditionBranchNodeType,
-    component: ConditionBranchNodeView,
-    model: ConditionBranchNodeModel,
-    generateSuggestedNodes: conditionBranchNodeGenerateAnchorRecommendation,
-  },
+  entryNodeConfig,
+  setVariableNodeConfig,
+  getVariableNodeConfig,
+  binaryArithmeticNodeConfig,
+  conditionLoopNodeConfig,
+  rangeLoopNodeConfig,
+  breakNodeConfig,
+  continueNodeConfig,
+  conditionBranchNodeConfig,
 ];
 
 export const dndPanelItem: LogicFlow.OnDragNodeConfig[] = [
