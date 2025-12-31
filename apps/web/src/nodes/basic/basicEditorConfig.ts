@@ -192,11 +192,9 @@ export class BasicToolBarConfig extends ToolBarConfig {
     input.remove();
   };
   onUndo = () => {
-    console.log('撤销');
     this.lf.undo();
   };
   onRedo = () => {
-    console.log('重做');
     this.lf.redo();
   };
   onExecute: undefined;

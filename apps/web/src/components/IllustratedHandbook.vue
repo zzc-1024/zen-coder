@@ -96,7 +96,6 @@ const handleNodeSelect = (selectedTypeName: string) => {
     ],
     edges: [],
   };
-  console.log(renderData.value);
   lf!.render(renderData.value);
   lf!.fitView();
 };

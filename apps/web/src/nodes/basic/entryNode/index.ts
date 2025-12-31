@@ -21,7 +21,7 @@ export const entryNodeConfig: BasicEditorNodeConfig = {
     label: '程序入口',
     icon: iconPath,
     properties: {
-      title: '祝大家2026年快乐！',
+      title: '祝大家2026新年快乐！',
     },
   },
 };
