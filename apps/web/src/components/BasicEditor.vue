@@ -32,9 +32,9 @@ import {
   BasicToolBarConfig,
   dndPanelItem,
   setBasicEditorEvent,
-  EntryNodeType,
   type RecommendationFunction,
 } from '@/nodes/basic/basicEditorConfig';
+import { EntryNodeType } from '@/nodes/basic/entryNode/entryNodeModel';
 import ToolBar from './toolBar/ToolBar.vue';
 import VariableList from './variableList/VariableList.vue';
 import { dragVariable, type Variable } from './variableList/variableList';

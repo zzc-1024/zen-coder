@@ -1,7 +1,8 @@
 import type LogicFlow from '@logicflow/core';
 import BasicNodeModel, { type BasicNodeProperties, type FieldType } from '../basicNodeModel';
-import { FlowType } from '../typeDifination';
+import { BasicEditorNodeTypePrefix, FlowType } from '../typeDifination';
 
+export const ContinueNodeType = `${BasicEditorNodeTypePrefix}:continue`;
 export type ContinueNodeProperties = BasicNodeProperties;
 
 class ContinueNodeModel extends BasicNodeModel {

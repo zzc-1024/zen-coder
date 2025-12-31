@@ -1,7 +1,8 @@
 import type LogicFlow from '@logicflow/core';
 import BasicNodeModel, { type BasicNodeProperties, type FieldType } from '../basicNodeModel';
-import { FlowType } from '../typeDifination';
+import { BasicEditorNodeTypePrefix, FlowType } from '../typeDifination';
 
+export const BreakNodeType = `${BasicEditorNodeTypePrefix}:break`;
 export type BreakNodeProperties = BasicNodeProperties;
 
 class BreakNodeModel extends BasicNodeModel {

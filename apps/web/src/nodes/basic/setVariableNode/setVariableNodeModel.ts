@@ -1,7 +1,8 @@
 import type LogicFlow from '@logicflow/core';
 import BasicNodeModel, { type BasicNodePropertiesWithDefaultValues, type FieldType } from '../basicNodeModel';
-import { FlowType, parseType } from '../typeDifination';
+import { BasicEditorNodeTypePrefix, FlowType, parseType } from '../typeDifination';
 
+export const SetVariableNodeType = `${BasicEditorNodeTypePrefix}:set`;
 export type SetVariableNodeProperties = BasicNodePropertiesWithDefaultValues & {
   type: string;
 };

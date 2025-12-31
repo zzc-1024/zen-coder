@@ -1,14 +1,15 @@
 import BasicNodeModel, { type BasicNodePropertiesWithDefaultValues, type FieldType } from '../basicNodeModel';
 import {
+  BasicEditorNodeTypePrefix,
   BasicType,
   BUILTIN_BASIC_FLOAT_TYPE,
   BUILTIN_BASIC_INTEGER_TYPE,
   parseType,
   type AnchorType,
 } from '../typeDifination';
-import { BinaryArithmeticNodeType } from '../basicEditorConfig';
 import type LogicFlow from '@logicflow/core';
 
+export const BinaryArithmeticNodeType = `${BasicEditorNodeTypePrefix}:binaryArithmetic`;
 export type BinaryArithmeticNodeProperties = BasicNodePropertiesWithDefaultValues & {
   type: string;
   operator: string;

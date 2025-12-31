@@ -1,4 +1,5 @@
-import { GetVariableNodeType, SetVariableNodeType } from '@/nodes/basic/basicEditorConfig';
+import { GetVariableNodeType } from '@/nodes/basic/getVariableNode/getVariableNodeModel';
+import { SetVariableNodeType } from '@/nodes/basic/setVariableNode/setVariableNodeModel';
 import type { BaseType } from '@/nodes/basic/typeDifination';
 import type LogicFlow from '@logicflow/core';
 

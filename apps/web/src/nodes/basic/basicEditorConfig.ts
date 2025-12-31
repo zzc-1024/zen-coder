@@ -26,16 +26,6 @@ import { continueNodeConfig } from './continueNode'; // 继续节点
 import { conditionBranchNodeConfig } from './conditionBranchNode'; // 条件分支节点
 
 // 节点配置区域
-export const BasicEditorNodeTypePrefix = 'builtin:basic';
-export const EntryNodeType = `${BasicEditorNodeTypePrefix}:entry`;
-export const SetVariableNodeType = `${BasicEditorNodeTypePrefix}:set`;
-export const GetVariableNodeType = `${BasicEditorNodeTypePrefix}:get`;
-export const BinaryArithmeticNodeType = `${BasicEditorNodeTypePrefix}:binaryArithmetic`;
-export const ConditionLoopNodeType = `${BasicEditorNodeTypePrefix}:conditionLoop`;
-export const RangeLoopNodeType = `${BasicEditorNodeTypePrefix}:rangeLoop`;
-export const BreakNodeType = `${BasicEditorNodeTypePrefix}:break`;
-export const ContinueNodeType = `${BasicEditorNodeTypePrefix}:continue`;
-export const ConditionBranchNodeType = `${BasicEditorNodeTypePrefix}:conditionBranch`;
 
 export type RecommendationFunction = (
   type: AnchorType,
@@ -44,6 +34,7 @@ export type RecommendationFunction = (
 
 export type BasicEditorNodeConfig = VueNodeConfig & {
   generateSuggestedNodes: RecommendationFunction;
+  iconPath: string;
 };
 
 export const basicEditorNode: BasicEditorNodeConfig[] = [
@@ -60,49 +51,49 @@ export const basicEditorNode: BasicEditorNodeConfig[] = [
 
 export const dndPanelItem: LogicFlow.OnDragNodeConfig[] = [
   {
-    type: EntryNodeType,
+    type: entryNodeConfig.type,
     label: '程序入口',
-    icon: 'nodeIcon/Entry.png',
+    icon: entryNodeConfig.iconPath,
     properties: {
       title: '程序入口',
     },
   },
   {
-    type: ConditionLoopNodeType,
+    type: conditionLoopNodeConfig.type,
     label: '条件循环',
-    icon: 'nodeIcon/ConditionLoop.png',
+    icon: conditionLoopNodeConfig.iconPath,
     properties: {
       title: '条件循环',
     },
   },
   {
-    type: RangeLoopNodeType,
+    type: rangeLoopNodeConfig.type,
     label: '范围循环',
-    icon: 'nodeIcon/RangeLoop.png',
+    icon: rangeLoopNodeConfig.iconPath,
     properties: {
       title: '范围循环',
     },
   },
   {
-    type: BreakNodeType,
+    type: breakNodeConfig.type,
     label: 'break节点',
-    icon: 'nodeIcon/Break.png',
+    icon: breakNodeConfig.iconPath,
     properties: {
       title: 'break节点',
     },
   },
   {
-    type: ContinueNodeType,
+    type: continueNodeConfig.type,
     label: '继续节点',
-    icon: 'nodeIcon/Continue.png',
+    icon: continueNodeConfig.iconPath,
     properties: {
       title: '继续节点',
     },
   },
   {
-    type: ConditionBranchNodeType,
+    type: conditionBranchNodeConfig.type,
     label: '条件分支',
-    icon: 'nodeIcon/ConditionBranch.png',
+    icon: conditionBranchNodeConfig.iconPath,
     properties: {
       title: '条件分支',
     },

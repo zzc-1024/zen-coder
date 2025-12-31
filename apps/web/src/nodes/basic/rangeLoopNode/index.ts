@@ -1,7 +1,8 @@
-import { RangeLoopNodeType, type BasicEditorNodeConfig } from '../basicEditorConfig';
+import { type BasicEditorNodeConfig } from '../basicEditorConfig';
 import RangeLoopNodeView from './RangeLoopNodeView.vue';
 import RangeLoopNodeModel, {
   rangeLoopNodeGenerateAnchorRecommendation,
+  RangeLoopNodeType,
 } from './rangeLoopNodeModel';
 
 export const rangeLoopNodeConfig: BasicEditorNodeConfig = {
@@ -9,4 +10,5 @@ export const rangeLoopNodeConfig: BasicEditorNodeConfig = {
   component: RangeLoopNodeView,
   model: RangeLoopNodeModel,
   generateSuggestedNodes: rangeLoopNodeGenerateAnchorRecommendation,
+  iconPath: 'nodeIcon/RangeLoop.png',
 };
