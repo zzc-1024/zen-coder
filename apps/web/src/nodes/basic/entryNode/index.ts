@@ -10,6 +10,9 @@ export const entryNodeConfig: BasicEditorNodeConfig = {
   type: EntryNodeType,
   component: EntryNodeView,
   model: EntryNodeModel,
+  name: '程序入口',
+  banter: '欢迎光临^_^',
+  description: '程序的开始节点，所有流程必须从这里开始。',
   generateSuggestedNodes: entryNodeGenerateAnchorRecommendation,
   iconPath: 'nodeIcon/Entry.png',
 };

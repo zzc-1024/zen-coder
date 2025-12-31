@@ -9,6 +9,9 @@ export const conditionBranchNodeConfig: BasicEditorNodeConfig = {
   type: ConditionBranchNodeType,
   component: ConditionBranchNodeView,
   model: ConditionBranchNodeModel,
+  name: '条件分支',
+  banter: '虽然脚踏三条船，但是两条腿最多只能踩住两条船',
+  description: '根据条件选择不同的流程路径。',
   generateSuggestedNodes: conditionBranchNodeGenerateAnchorRecommendation,
   iconPath: 'nodeIcon/ConditionBranch.png',
 };

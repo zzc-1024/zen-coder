@@ -33,6 +33,9 @@ export type RecommendationFunction = (
 ) => LogicFlow.OnDragNodeConfig[];
 
 export type BasicEditorNodeConfig = VueNodeConfig & {
+  name: string;
+  banter: string;
+  description: string;
   generateSuggestedNodes: RecommendationFunction;
   iconPath: string;
 };
