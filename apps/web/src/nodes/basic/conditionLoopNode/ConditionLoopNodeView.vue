@@ -64,7 +64,6 @@ onMounted(() => {
   /* 宽度需要和 Model 中定义的 width 一致 */
   width: var(--zencoder-node-width);
   background: #2b2b2b;
-  border: 1px solid #444;
   border-radius: 6px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
   font-family: 'Consolas', 'Monaco', monospace; /* 代码风格字体 */
