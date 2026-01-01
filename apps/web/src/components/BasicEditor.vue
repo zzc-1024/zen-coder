@@ -54,7 +54,7 @@ const renderData = ref<LogicFlow.GraphConfigData>({
       x: 100,
       y: 100,
       properties: {
-        title: '祝大家2026新年快乐！',
+        title: '2026新年快乐！',
       },
     },
   ],

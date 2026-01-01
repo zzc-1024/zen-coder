@@ -64,7 +64,7 @@ onMounted(() => {
 <style scoped style="scss">
 .node {
   /* 宽度需要和 Model 中定义的 width 一致 */
-  width: 220px;
+  width: var(--zencoder-node-width);
   background: #2b2b2b;
   border: 1px solid #444;
   border-radius: 6px;

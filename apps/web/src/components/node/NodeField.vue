@@ -107,18 +107,14 @@ const fieldType = computed(() => {
   height: 6px;
   border-radius: 50%;
   background-color: #666;
-  display: inline-block;
+  position: absolute;
 }
 
 .anchor-indicator.left {
-  margin-right: 6px;
-  /* 视觉上让它看起来在边框上 */
-  margin-left: -13px;
+  left: -13px;
 }
 
 .anchor-indicator.right {
-  margin-left: 6px;
-  /* 视觉上让它看起来在边框上 */
-  margin-right: -13px;
+  right: -13px;
 }
 </style>

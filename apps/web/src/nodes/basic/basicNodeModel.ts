@@ -1,5 +1,6 @@
 import LogicFlow, { HtmlNodeModel, type BaseNodeModel, type Model } from '@logicflow/core';
 import { BUILTIN_BASIC_FLOW_TYPE, type AnchorType, type DirectType } from './typeDifination';
+import { getThemeVar } from '@/utils/theme';
 
 export type AnchorSide = 'left' | 'right' | 'both' | 'none';
 
@@ -43,7 +44,7 @@ abstract class BasicNodeModel extends HtmlNodeModel {
    */
   setAttributes() {
     this.setNodeHeightByRowCount(this.getFields().length);
-    const width = 220;
+    const width = Number(getThemeVar('--zencoder-node-width').replace('px', ''));
     this.width = width;
 
     // 类型校验规则
