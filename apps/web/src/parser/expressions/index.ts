@@ -1,10 +1,4 @@
-import { Expression, type CommonType } from '../defination';
-
-export class ConstantExpression extends Expression {
-  constructor(public value: CommonType) {
-    super();
-  }
-}
+import { Expression } from '../defination';
 
 export class VariableExpression extends Expression {
   constructor(public name: string) {
