@@ -6,3 +6,7 @@ export abstract class Statement {
   // abstract toString(): string
   // abstract toJSON(): string
 }
+
+export abstract class CompilerBackend {
+  abstract generateCode(statements: Statement[]): string;
+}

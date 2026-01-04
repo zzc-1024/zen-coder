@@ -1,6 +1,12 @@
 import { Expression, Statement } from '../defination';
 import type { VariableExpression } from '../expressions';
 
+export class VariableStatement extends Statement {
+  constructor(public variable: VariableExpression) {
+    super();
+  }
+}
+
 export class AssignmentStatement extends Statement {
   constructor(
     public variable: VariableExpression,
