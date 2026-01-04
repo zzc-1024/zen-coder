@@ -3,6 +3,7 @@ import ContinueNodeView from './ContinueNodeView.vue';
 import ContinueNodeModel, {
   continueNodeGenerateAnchorRecommendation,
   ContinueNodeType,
+  type ContinueNodeProperties,
 } from './continueNodeModel';
 
 const iconPath = 'nodeIcon/Continue.png';
@@ -21,6 +22,6 @@ export const continueNodeConfig: BasicEditorNodeConfig = {
     icon: iconPath,
     properties: {
       title: '继续节点',
-    },
+    } satisfies ContinueNodeProperties,
   },
 };

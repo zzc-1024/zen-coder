@@ -1,4 +1,8 @@
-import BasicNodeModel, { type BasicNodePropertiesWithDefaultValues, type FieldType } from '../basicNodeModel';
+import type { Expression, Statement } from '@/parser/defination';
+import BasicNodeModel, {
+  type BasicNodePropertiesWithDefaultValues,
+  type FieldType,
+} from '../basicNodeModel';
 import {
   BasicEditorNodeTypePrefix,
   BasicType,
@@ -8,11 +12,18 @@ import {
   type AnchorType,
 } from '../typeDifination';
 import type LogicFlow from '@logicflow/core';
+import { BinaryExpression } from '@/parser/expressions';
 
 export const BinaryArithmeticNodeType = `${BasicEditorNodeTypePrefix}:binaryArithmetic`;
 export type BinaryArithmeticNodeProperties = BasicNodePropertiesWithDefaultValues & {
   type: string;
   operator: string;
+};
+
+export const BinaryArithmeticNodeAnchorIds = {
+  LEFT_OPERAND: 'left-operand',
+  RIGHT_OPERAND: 'right-operand',
+  DATA_OUT: 'data-out',
 };
 
 class BinaryArithmeticNodeModel extends BasicNodeModel {
@@ -21,22 +32,63 @@ class BinaryArithmeticNodeModel extends BasicNodeModel {
       {
         name: '左操作数',
         type: parseType(this.properties.type as string),
-        inputId: 'left-operand',
+        inputId: BinaryArithmeticNodeAnchorIds.LEFT_OPERAND,
         outputId: null,
       },
       {
         name: '右操作数',
         type: parseType(this.properties.type as string),
-        inputId: 'right-operand',
+        inputId: BinaryArithmeticNodeAnchorIds.RIGHT_OPERAND,
         outputId: null,
       },
       {
         name: '计算结果',
         type: parseType(this.properties.type as string),
         inputId: null,
-        outputId: 'data-out',
+        outputId: BinaryArithmeticNodeAnchorIds.DATA_OUT,
       },
     ];
+  }
+
+  parseFlowIn(anchorId: string): Statement[] {
+    throw new Error(`BinaryArithmeticNodeModel parseFlowIn anchorId ${anchorId} not supported`);
+  }
+
+  parseDataOut(anchorId: string): Expression {
+    const dataOutId = anchorId.split(':')[1];
+    if (dataOutId !== BinaryArithmeticNodeAnchorIds.DATA_OUT) {
+      throw new Error(`BinaryArithmeticNodeModel parseDataOut anchorId ${anchorId} not supported`);
+    }
+    const properties = this.properties as BinaryArithmeticNodeProperties;
+
+    // 获取左右操作数表达式
+    let leftOperandExpression = this.getDataInExpression(
+      `${this.id}:${BinaryArithmeticNodeAnchorIds.LEFT_OPERAND}`,
+    );
+    let rightOperandExpression = this.getDataInExpression(
+      `${this.id}:${BinaryArithmeticNodeAnchorIds.RIGHT_OPERAND}`,
+    );
+    if (!leftOperandExpression) {
+      const defaultValue = properties.defaultValues[BinaryArithmeticNodeAnchorIds.LEFT_OPERAND];
+      leftOperandExpression = this.parseTypeStringToDefaultExpression(
+        properties.type,
+        defaultValue,
+      );
+    }
+    if (!rightOperandExpression) {
+      const defaultValue = properties.defaultValues[BinaryArithmeticNodeAnchorIds.RIGHT_OPERAND];
+      rightOperandExpression = this.parseTypeStringToDefaultExpression(
+        properties.type,
+        defaultValue,
+      );
+    }
+    if (!leftOperandExpression || !rightOperandExpression) {
+      throw new Error(
+        'BinaryArithmeticNodeModel parseDataOut left or right operand expression is null',
+      );
+    }
+
+    return new BinaryExpression(properties.operator, leftOperandExpression, rightOperandExpression);
   }
 }
 

@@ -4,6 +4,7 @@ import EntryNodeView from './EntryNodeView.vue';
 import EntryNodeModel, {
   entryNodeGenerateAnchorRecommendation,
   EntryNodeType,
+  type EntryNodeProperties,
 } from './entryNodeModel';
 
 const iconPath = 'nodeIcon/Entry.png';
@@ -22,6 +23,6 @@ export const entryNodeConfig: BasicEditorNodeConfig = {
     icon: iconPath,
     properties: {
       title: '2026新年快乐！',
-    },
+    } satisfies EntryNodeProperties,
   },
 };

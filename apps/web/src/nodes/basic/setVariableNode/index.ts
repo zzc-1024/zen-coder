@@ -4,6 +4,7 @@ import SetVariableNodeView from './SetVariableNodeView.vue';
 import SetVariableNodeModel, {
   setVariableNodeGenerateAnchorRecommendation,
   SetVariableNodeType,
+  type SetVariableNodeProperties,
 } from './setVariableNodeModel';
 
 const iconPath = 'nodeIcon/SetVariable.png';
@@ -22,7 +23,9 @@ export const setVariableNodeConfig: BasicEditorNodeConfig = {
     icon: iconPath,
     properties: {
       title: '设置变量',
-      type: new BasicType('builtin:basic:integer'),
-    },
+      type: new BasicType('builtin:basic:integer').toString(),
+      variable: 'Hello',
+      defaultValues: {},
+    } satisfies SetVariableNodeProperties,
   },
 };

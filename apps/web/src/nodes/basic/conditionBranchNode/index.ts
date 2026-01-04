@@ -3,6 +3,7 @@ import ConditionBranchNodeView from './ConditionBranchNodeView.vue';
 import ConditionBranchNodeModel, {
   conditionBranchNodeGenerateAnchorRecommendation,
   ConditionBranchNodeType,
+  type ConditionBranchNodeProperties,
 } from './conditionBranchNodeModel';
 
 const iconPath = 'nodeIcon/ConditionBranch.png';
@@ -21,6 +22,7 @@ export const conditionBranchNodeConfig: BasicEditorNodeConfig = {
     icon: iconPath,
     properties: {
       title: '条件分支',
-    },
+      defaultValues: {},
+    } satisfies ConditionBranchNodeProperties,
   },
 };

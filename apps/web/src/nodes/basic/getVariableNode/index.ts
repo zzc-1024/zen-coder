@@ -4,6 +4,7 @@ import GetVariableNodeView from './GetVariableNodeView.vue';
 import GetVariableNodeModel, {
   getVariableNodeGenerateAnchorRecommendation,
   GetVariableNodeType,
+  type GetVariableNodeProperties,
 } from './getVariableNodeModel';
 
 const iconPath = 'nodeIcon/GetVariable.png';
@@ -22,7 +23,8 @@ export const getVariableNodeConfig: BasicEditorNodeConfig = {
     icon: iconPath,
     properties: {
       title: '获取变量',
-      type: new BasicType('builtin:basic:integer'),
-    },
+      type: new BasicType('builtin:basic:integer').toString(),
+      variable: 'Hello',
+    } satisfies GetVariableNodeProperties,
   },
 };

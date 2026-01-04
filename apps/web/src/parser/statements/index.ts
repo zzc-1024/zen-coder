@@ -10,12 +10,6 @@ export class AssignmentStatement extends Statement {
   }
 }
 
-export class PrintStatement extends Statement {
-  constructor(public expression: Expression) {
-    super();
-  }
-}
-
 export class IfStatement extends Statement {
   constructor(
     public condition: Expression,
@@ -197,6 +191,15 @@ export class DoWhileStatement extends Statement {
   constructor(
     public statements: Statement[],
     public condition: Expression,
+  ) {
+    super();
+  }
+}
+
+export class CountLoopStatement extends Statement {
+  constructor(
+    public timesExpression: Expression,
+    public statements: Statement[],
   ) {
     super();
   }

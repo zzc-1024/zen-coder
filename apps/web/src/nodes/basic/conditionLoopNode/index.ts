@@ -3,6 +3,7 @@ import ConditionLoopNodeView from './ConditionLoopNodeView.vue';
 import ConditionLoopNodeModel, {
   conditionLoopNodeGenerateAnchorRecommendation,
   ConditionLoopNodeType,
+  type ConditionLoopNodeProperties,
 } from './conditionLoopNodeModel';
 
 const iconPath = 'nodeIcon/ConditionLoop.png';
@@ -21,6 +22,7 @@ export const conditionLoopNodeConfig: BasicEditorNodeConfig = {
     icon: iconPath,
     properties: {
       title: '条件循环',
-    },
+      defaultValues: {},
+    } satisfies ConditionLoopNodeProperties,
   },
 };

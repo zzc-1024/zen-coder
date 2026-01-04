@@ -14,6 +14,14 @@ import { ToolBarConfig } from '@/components/toolBar/toolBar';
 import router from '@/router';
 import type { Variable } from '@/components/variableList/variableList';
 
+// 节点属性
+import type { BasicNodeProperties } from './basicNodeModel';
+import type { ConditionLoopNodeProperties } from './conditionLoopNode/conditionLoopNodeModel';
+import type { RangeLoopNodeProperties } from './rangeLoopNode/rangeLoopNodeModel';
+import type { BreakNodeProperties } from './breakNode/breakNodeModel';
+import type { ContinueNodeProperties } from './continueNode/continueNodeModel';
+import type { ConditionBranchNodeProperties } from './conditionBranchNode/conditionBranchNodeModel';
+
 // 导入节点
 import { entryNodeConfig } from './entryNode'; // 入口节点
 import { setVariableNodeConfig } from './setVariableNode'; // 设置变量节点
@@ -60,7 +68,7 @@ export const dndPanelItem: LogicFlow.OnDragNodeConfig[] = [
     icon: entryNodeConfig.iconPath,
     properties: {
       title: '程序入口',
-    },
+    } satisfies BasicNodeProperties,
   },
   {
     type: conditionLoopNodeConfig.type,
@@ -68,7 +76,8 @@ export const dndPanelItem: LogicFlow.OnDragNodeConfig[] = [
     icon: conditionLoopNodeConfig.iconPath,
     properties: {
       title: '条件循环',
-    },
+      defaultValues: {},
+    } satisfies ConditionLoopNodeProperties,
   },
   {
     type: rangeLoopNodeConfig.type,
@@ -76,7 +85,8 @@ export const dndPanelItem: LogicFlow.OnDragNodeConfig[] = [
     icon: rangeLoopNodeConfig.iconPath,
     properties: {
       title: '范围循环',
-    },
+      defaultValues: {},
+    } satisfies RangeLoopNodeProperties,
   },
   {
     type: breakNodeConfig.type,
@@ -84,7 +94,7 @@ export const dndPanelItem: LogicFlow.OnDragNodeConfig[] = [
     icon: breakNodeConfig.iconPath,
     properties: {
       title: 'break节点',
-    },
+    } satisfies BreakNodeProperties,
   },
   {
     type: continueNodeConfig.type,
@@ -92,7 +102,7 @@ export const dndPanelItem: LogicFlow.OnDragNodeConfig[] = [
     icon: continueNodeConfig.iconPath,
     properties: {
       title: '继续节点',
-    },
+    } satisfies ContinueNodeProperties,
   },
   {
     type: conditionBranchNodeConfig.type,
@@ -100,7 +110,8 @@ export const dndPanelItem: LogicFlow.OnDragNodeConfig[] = [
     icon: conditionBranchNodeConfig.iconPath,
     properties: {
       title: '条件分支',
-    },
+      defaultValues: {},
+    } satisfies ConditionBranchNodeProperties,
   },
 ];
 

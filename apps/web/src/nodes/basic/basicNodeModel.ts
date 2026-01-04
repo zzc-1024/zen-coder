@@ -1,6 +1,18 @@
 import LogicFlow, { HtmlNodeModel, type BaseNodeModel, type Model } from '@logicflow/core';
-import { BUILTIN_BASIC_FLOW_TYPE, type AnchorType, type DirectType } from './typeDifination';
+import {
+  BasicType,
+  BUILTIN_BASIC_FLOW_TYPE,
+  type AnchorType,
+  type DirectType,
+} from './typeDifination';
 import { getThemeVar } from '@/utils/theme';
+import type { Expression, Statement } from '@/parser/defination';
+import {
+  BooleanExpression,
+  FloatExpression,
+  IntegerExpression,
+  StringExpression,
+} from '@/parser/expressions';
 
 export type AnchorSide = 'left' | 'right' | 'both' | 'none';
 
@@ -138,7 +150,7 @@ abstract class BasicNodeModel extends HtmlNodeModel {
     return {
       x: rowX,
       y: rowY,
-      id: `${this.id}/${anchorId}`,
+      id: `${this.id}:${anchorId}`,
       direction,
       type,
     };
@@ -159,6 +171,55 @@ abstract class BasicNodeModel extends HtmlNodeModel {
     });
     return anchors;
   }
+
+  protected parseTypeStringToDefaultExpression(
+    typeString: string,
+    defaultValue?: unknown,
+  ): Expression | null {
+    switch (typeString) {
+      case new BasicType('builtin:basic:boolean').toString():
+        return new BooleanExpression(defaultValue as boolean ?? false);
+      case new BasicType('builtin:basic:float').toString():
+        return new FloatExpression(defaultValue as number ?? 0.0);
+      case new BasicType('builtin:basic:integer').toString():
+        return new IntegerExpression(defaultValue as number ?? 0);
+      case new BasicType('builtin:basic:string').toString():
+        return new StringExpression(defaultValue as string ?? '');
+      default:
+        return null;
+    }
+  }
+  getFlowOutStatement(anchorId: string): Statement[] {
+    const outgoingEdges = this.graphModel.getAnchorOutgoingEdge(anchorId);
+    if (outgoingEdges.length === 0) return [];
+    if (outgoingEdges.length > 1)
+      throw new Error(
+        `BasicNodeModel getFlowOutStatement anchorId ${anchorId} can't have more than one outgoing edge`,
+      );
+    const edge = outgoingEdges[0]!;
+    const targetNodeId = edge.targetNodeId;
+    const targetNodeModel = this.graphModel.getNodeModelById(targetNodeId) as BasicNodeModel;
+    const flowOutStatements = targetNodeModel.parseFlowIn(edge.targetAnchorId!);
+    return flowOutStatements;
+  }
+  getDataInExpression(anchorId: string): Expression | null {
+    const incomingEdges = this.graphModel.getAnchorIncomingEdge(anchorId);
+    if (incomingEdges.length === 0) return null;
+    if (incomingEdges.length > 1)
+      throw new Error(
+        `BasicNodeModel getDataInExpression anchorId ${anchorId} can't have more than one incoming edge`,
+      );
+    const edge = incomingEdges[0]!;
+    const sourceNodeId = edge.sourceNodeId;
+    const sourceNodeModel = this.graphModel.getNodeModelById(sourceNodeId) as BasicNodeModel;
+    const dataInExpression = sourceNodeModel.parseDataOut(edge.sourceAnchorId!);
+    return dataInExpression;
+  }
+
+  // 处理流程入锚点
+  abstract parseFlowIn(anchorId: string): Statement[];
+  // 处理数据出锚点
+  abstract parseDataOut(anchorId: string): Expression;
 }
 
 export default BasicNodeModel;

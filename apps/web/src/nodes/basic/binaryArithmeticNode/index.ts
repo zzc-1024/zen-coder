@@ -4,6 +4,7 @@ import BinaryArithmeticNodeView from './BinaryArithmeticNodeView.vue';
 import BinaryArithmeticNodeModel, {
   binaryArithmeticNodeGenerateAnchorRecommendation,
   BinaryArithmeticNodeType,
+  type BinaryArithmeticNodeProperties,
 } from './binaryArithmeticNodeModel';
 
 const iconPath = 'nodeIcon/BinaryArithmetic.png';
@@ -24,6 +25,7 @@ export const binaryArithmeticNodeConfig: BasicEditorNodeConfig = {
       title: '加法运算',
       type: new BasicType('builtin:basic:integer').toString(),
       operator: 'addition',
-    },
+      defaultValues: {},
+    } satisfies BinaryArithmeticNodeProperties,
   },
 };
