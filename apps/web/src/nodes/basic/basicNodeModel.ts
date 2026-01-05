@@ -178,13 +178,13 @@ abstract class BasicNodeModel extends HtmlNodeModel {
   ): Expression | null {
     switch (typeString) {
       case new BasicType('builtin:basic:boolean').toString():
-        return new BooleanExpression(defaultValue as boolean ?? false);
+        return new BooleanExpression((defaultValue as boolean) ?? false);
       case new BasicType('builtin:basic:float').toString():
-        return new FloatExpression(defaultValue as number ?? 0.0);
+        return new FloatExpression((defaultValue as number) ?? 0.0);
       case new BasicType('builtin:basic:integer').toString():
-        return new IntegerExpression(defaultValue as number ?? 0);
+        return new IntegerExpression((defaultValue as number) ?? 0);
       case new BasicType('builtin:basic:string').toString():
-        return new StringExpression(defaultValue as string ?? '');
+        return new StringExpression((defaultValue as string) ?? '');
       default:
         return null;
     }
