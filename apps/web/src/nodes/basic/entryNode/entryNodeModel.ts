@@ -16,8 +16,8 @@ class EntryNodeModel extends BasicNodeModel {
       { name: '流程', type: new FlowType(), inputId: null, outputId: EntryNodeAnchorIds.FLOW_OUT },
     ];
   }
-  parseFlowIn(anchorId: string): Statement[] {
-    throw new Error(`EntryNodeModel parseFlowIn anchorId ${anchorId} not supported`);
+  parseFlowIn(): Statement[] {
+    return this.getFlowOutStatement(`${this.id}:${EntryNodeAnchorIds.FLOW_OUT}`);
   }
   parseDataOut(anchorId: string): Expression {
     throw new Error(`EntryNodeModel parseDataOut anchorId ${anchorId} not supported`);

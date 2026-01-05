@@ -32,9 +32,9 @@ import { rangeLoopNodeConfig } from './rangeLoopNode'; // 范围循环节点
 import { breakNodeConfig } from './breakNode'; // 中断节点
 import { continueNodeConfig } from './continueNode'; // 继续节点
 import { conditionBranchNodeConfig } from './conditionBranchNode'; // 条件分支节点
+import EntryNodeModel, { EntryNodeType } from './entryNode/entryNodeModel';
 
 // 节点配置区域
-
 export type RecommendationFunction = (
   type: AnchorType,
   direction: DirectType,
@@ -209,7 +209,18 @@ export class BasicToolBarConfig extends ToolBarConfig {
     this.lf.redo();
   };
   onExecute: undefined;
-  onGenerate: undefined;
+  onGenerate = () => {
+    const entryNodes = this.lf.graphModel.nodes.filter(
+      (node) => (node.type as string) === EntryNodeType,
+    );
+    if (entryNodes.length !== 1) {
+      alert('入口节点有且仅能有一个');
+      return;
+    }
+    const entryNode = entryNodes[0]! as EntryNodeModel;
+    const statements = entryNode.parseFlowIn();
+    console.log(statements);
+  };
   onLanguageChange: undefined;
   onGotoHome = () => {
     router.push('/');
