@@ -40,6 +40,11 @@ export abstract class BaseType {
   }
 }
 
+export type Variable = {
+  name: string;
+  type: BaseType;
+};
+
 export class FlowType {
   toString() {
     return BUILTIN_BASIC_FLOW_TYPE;

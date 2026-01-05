@@ -1,12 +1,13 @@
-import { GetVariableNodeType, type GetVariableNodeProperties } from '@/nodes/basic/getVariableNode/getVariableNodeModel';
-import { SetVariableNodeType, type SetVariableNodeProperties } from '@/nodes/basic/setVariableNode/setVariableNodeModel';
+import {
+  GetVariableNodeType,
+  type GetVariableNodeProperties,
+} from '@/nodes/basic/getVariableNode/getVariableNodeModel';
+import {
+  SetVariableNodeType,
+  type SetVariableNodeProperties,
+} from '@/nodes/basic/setVariableNode/setVariableNodeModel';
 import type { BaseType } from '@/nodes/basic/typeDifination';
 import type LogicFlow from '@logicflow/core';
-
-export type Variable = {
-  name: string;
-  type: BaseType;
-};
 
 export function dragVariable(
   lf: LogicFlow,

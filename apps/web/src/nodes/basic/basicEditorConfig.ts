@@ -12,7 +12,7 @@ import {
 } from './typeDifination';
 import { ToolBarConfig } from '@/components/toolBar/toolBar';
 import router from '@/router';
-import type { Variable } from '@/components/variableList/variableList';
+import type { Variable } from './typeDifination';
 
 // 节点属性
 import type { BasicNodeProperties } from './basicNodeModel';

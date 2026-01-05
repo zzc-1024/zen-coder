@@ -25,7 +25,7 @@ import { onMounted, ref } from 'vue';
 import { getTeleport } from '@logicflow/vue-node-registry';
 import LogicFlow, { BezierEdge, EventType } from '@logicflow/core';
 import { DndPanel, MiniMap } from '@logicflow/extension';
-import { BaseType } from '@/nodes/basic/typeDifination';
+import { BaseType, type Variable } from '@/nodes/basic/typeDifination';
 import { batchRegisterVueNode } from '@/utils/editor';
 import {
   basicEditorNode,
@@ -37,7 +37,7 @@ import {
 import { EntryNodeType } from '@/nodes/basic/entryNode/entryNodeModel';
 import ToolBar from './toolBar/ToolBar.vue';
 import VariableList from './variableList/VariableList.vue';
-import { dragVariable, type Variable } from './variableList/variableList';
+import { dragVariable } from './variableList/variableList';
 import BasicEdgeModel from '@/edges/BasicEdgeModel';
 import AttributePanel from './AttributePanel/AttributePanel.vue';
 
