@@ -33,6 +33,7 @@ import { breakNodeConfig } from './breakNode'; // 中断节点
 import { continueNodeConfig } from './continueNode'; // 继续节点
 import { conditionBranchNodeConfig } from './conditionBranchNode'; // 条件分支节点
 import EntryNodeModel, { EntryNodeType } from './entryNode/entryNodeModel';
+import { PythonBackend } from '@/parser/backends/pythonBackends';
 
 // 节点配置区域
 export type RecommendationFunction = (
@@ -219,7 +220,9 @@ export class BasicToolBarConfig extends ToolBarConfig {
     }
     const entryNode = entryNodes[0]! as EntryNodeModel;
     const statements = entryNode.parseFlowIn();
-    console.log(statements);
+    const pythonBackend: PythonBackend = new PythonBackend();
+    const code = pythonBackend.generateCode(this.variables.value, statements);
+    console.log(code);
   };
   onLanguageChange: undefined;
   onGotoHome = () => {

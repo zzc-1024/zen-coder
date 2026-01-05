@@ -16,7 +16,10 @@ export class FunctionCallExpression extends Expression {
 }
 
 export class IndexExpression extends Expression {
-  constructor(public base: Expression, public index: Expression) {
+  constructor(
+    public base: Expression,
+    public index: Expression,
+  ) {
     super();
   }
 }
@@ -46,19 +49,50 @@ export class SetExpression extends Expression {
 }
 
 export class RangeExpression extends Expression {
-  constructor(public start: Expression, public end: Expression) {
+  constructor(
+    public start: Expression,
+    public end: Expression,
+  ) {
     super();
   }
 }
 
 export class UnaryExpression extends Expression {
-  constructor(public operator: string, public operand: Expression) {
+  constructor(
+    public operator: string,
+    public operand: Expression,
+  ) {
     super();
   }
 }
 
+export type BinaryOperator =
+  // 算术运算
+  | 'addition'
+  | 'subtraction'
+  | 'multiplication'
+  | 'division'
+  | 'floor_division'
+  | 'modulus'
+  | 'exponentiation'
+  // 比较运算
+  | 'less_than'
+  | 'less_than_or_equal'
+  | 'greater_than'
+  | 'greater_than_or_equal'
+  | 'equal'
+  | 'not_equal'
+  // 逻辑运算
+  | 'and'
+  | 'or'
+  | 'xor'
+  | 'xnor';
 export class BinaryExpression extends Expression {
-  constructor(public operator: string, public left: Expression, public right: Expression) {
+  constructor(
+    public operator: BinaryOperator,
+    public left: Expression,
+    public right: Expression,
+  ) {
     super();
   }
 }

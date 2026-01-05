@@ -12,12 +12,12 @@ import {
   type AnchorType,
 } from '../typeDifination';
 import type LogicFlow from '@logicflow/core';
-import { BinaryExpression } from '@/parser/expressions';
+import { BinaryExpression, type BinaryOperator } from '@/parser/expressions';
 
 export const BinaryArithmeticNodeType = `${BasicEditorNodeTypePrefix}:binaryArithmetic`;
 export type BinaryArithmeticNodeProperties = BasicNodePropertiesWithDefaultValues & {
   type: string;
-  operator: string;
+  operator: BinaryOperator;
 };
 
 export const BinaryArithmeticNodeAnchorIds = {
@@ -145,7 +145,7 @@ export function binaryArithmeticNodeGenerateAnchorRecommendation(
       properties: {
         title: '整除运算',
         type: anchorType.toString(), // 在 LogicFlow 中，锚点类型必须是字符串
-        operator: 'floorDivision',
+        operator: 'floor_division',
       },
     });
     recommendations.push({

@@ -1,4 +1,4 @@
-import type { Variable } from "@/nodes/basic/typeDifination";
+import type { Variable } from '@/nodes/basic/typeDifination';
 
 export abstract class Expression {
   // abstract toString(): string
@@ -10,6 +10,5 @@ export abstract class Statement {
 }
 
 export abstract class CompilerBackend {
-  variables: Variable[] = [];
-  abstract generateCode(statements: Statement[]): string;
+  abstract generateCode(variables: Variable[], statements: Statement[]): string;
 }
