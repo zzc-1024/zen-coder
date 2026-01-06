@@ -1,5 +1,12 @@
 type ThemeVars = {
+  /* 节点 */
   '--zencoder-node-width': string;
+  /* 边 */
+  '--zencoder-edge-flow-color': string;
+  '--zencoder-edge-boolean-color': string;
+  '--zencoder-edge-integer-color': string;
+  '--zencoder-edge-float-color': string;
+  '--zencoder-edge-string-color': string;
 };
 
 export const setThemeVar = (key: keyof ThemeVars, value: string) => {

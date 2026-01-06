@@ -1,3 +1,13 @@
+/* 节点 */
 :root {
   --zencoder-node-width: 180px;
+}
+
+/* 边 */
+:root {
+  --zencoder-edge-flow-color: black;
+  --zencoder-edge-boolean-color: darkred;
+  --zencoder-edge-integer-color: darkblue;
+  --zencoder-edge-float-color: darkgreen;
+  --zencoder-edge-string-color: fuchsia;
 }

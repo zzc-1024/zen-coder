@@ -16,21 +16,16 @@
 </template>
 
 <script setup lang="ts">
-import {
-  parseAnchorType,
-} from '@/nodes/basic/typeDifination';
+import { parseAnchorType } from '@/nodes/basic/typeDifination';
 import { computed } from 'vue';
 
 const props = defineProps<{
   hasInput: boolean;
   hasOutput: boolean;
   name: string;
-  type: string | 'blank';
+  type: string;
 }>();
 const fieldType = computed(() => {
-  if (props.type === 'blank') {
-    return '未知类型';
-  }
   const parsedAnchorType = parseAnchorType(props.type);
   return parsedAnchorType.toDisplayString();
 });
