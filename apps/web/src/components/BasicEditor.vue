@@ -91,6 +91,10 @@ onMounted(() => {
     keyboard: {
       enabled: true,
     },
+    themeMode: 'dark',
+    background: {
+      color: '#111',
+    },
     plugins: [MiniMap],
   });
 

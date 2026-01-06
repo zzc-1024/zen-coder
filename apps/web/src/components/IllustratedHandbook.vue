@@ -109,6 +109,10 @@ onMounted(() => {
     keyboard: {
       enabled: true,
     },
+    themeMode: 'dark',
+    background: {
+      color: '#111',
+    },
   });
   // 注册自定义边和节点
   lf.register({
