@@ -106,12 +106,12 @@ const fieldType = computed(() => {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background-color: #666;
+  background-color: #61afef;
   position: absolute;
 }
 
 .anchor-indicator.left {
-  left: -13px;
+  left: -3px;
 }
 
 .anchor-indicator.right {
