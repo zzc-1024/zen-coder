@@ -113,7 +113,8 @@ export function binaryArithmeticNodeGenerateAnchorRecommendation(
         title: '加法运算',
         type: anchorType.toString(), // 在 LogicFlow 中，锚点类型必须是字符串
         operator: 'addition',
-      },
+        defaultValues: {},
+      } satisfies BinaryArithmeticNodeProperties,
     },
     {
       type: BinaryArithmeticNodeType,
@@ -123,7 +124,8 @@ export function binaryArithmeticNodeGenerateAnchorRecommendation(
         title: '减法运算',
         type: anchorType.toString(), // 在 LogicFlow 中，锚点类型必须是字符串
         operator: 'subtraction',
-      },
+        defaultValues: {},
+      } satisfies BinaryArithmeticNodeProperties,
     },
     {
       type: BinaryArithmeticNodeType,
@@ -133,7 +135,8 @@ export function binaryArithmeticNodeGenerateAnchorRecommendation(
         title: '乘法运算',
         type: anchorType.toString(), // 在 LogicFlow 中，锚点类型必须是字符串
         operator: 'multiplication',
-      },
+        defaultValues: {},
+      } satisfies BinaryArithmeticNodeProperties,
     },
   ];
 
@@ -144,9 +147,10 @@ export function binaryArithmeticNodeGenerateAnchorRecommendation(
       icon: 'favicon.ico',
       properties: {
         title: '整除运算',
+        defaultValues: {},
         type: anchorType.toString(), // 在 LogicFlow 中，锚点类型必须是字符串
         operator: 'floor_division',
-      },
+      } satisfies BinaryArithmeticNodeProperties,
     });
     recommendations.push({
       type: BinaryArithmeticNodeType,
@@ -154,9 +158,10 @@ export function binaryArithmeticNodeGenerateAnchorRecommendation(
       icon: 'favicon.ico',
       properties: {
         title: '取余运算',
+        defaultValues: {},
         type: anchorType.toString(), // 在 LogicFlow 中，锚点类型必须是字符串
         operator: 'modulus',
-      },
+      } satisfies BinaryArithmeticNodeProperties,
     });
   }
 
