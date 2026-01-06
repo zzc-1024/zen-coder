@@ -22,7 +22,6 @@ export const binaryArithmeticNodeConfig: BasicEditorNodeConfig = {
     label: '加法',
     icon: iconPath,
     properties: {
-      title: '加法运算',
       type: new BasicType('builtin:basic:integer').toString(),
       operator: 'addition',
       defaultValues: {},

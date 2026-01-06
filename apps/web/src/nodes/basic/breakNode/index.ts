@@ -1,8 +1,12 @@
 import { type BasicEditorNodeConfig } from '../basicEditorConfig';
 import BreakNodeView from './BreakNodeView.vue';
-import BreakNodeModel, { breakNodeGenerateAnchorRecommendation, BreakNodeType, type BreakNodeProperties } from './breakNodeModel';
+import BreakNodeModel, {
+  breakNodeGenerateAnchorRecommendation,
+  BreakNodeType,
+  type BreakNodeProperties,
+} from './breakNodeModel';
 
-const iconPath = 'nodeIcon/Break.png'
+const iconPath = 'nodeIcon/Break.png';
 export const breakNodeConfig: BasicEditorNodeConfig = {
   type: BreakNodeType,
   component: BreakNodeView,
@@ -16,8 +20,6 @@ export const breakNodeConfig: BasicEditorNodeConfig = {
     type: BreakNodeType,
     label: 'break节点',
     icon: iconPath,
-    properties: {
-      title: 'break节点',
-    } satisfies BreakNodeProperties,
+    properties: {} satisfies BreakNodeProperties,
   },
 };

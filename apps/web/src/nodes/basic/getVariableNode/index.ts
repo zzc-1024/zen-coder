@@ -22,7 +22,6 @@ export const getVariableNodeConfig: BasicEditorNodeConfig = {
     label: '获取变量',
     icon: iconPath,
     properties: {
-      title: '获取变量',
       type: new BasicType('builtin:basic:integer').toString(),
       variable: 'Hello',
     } satisfies GetVariableNodeProperties,

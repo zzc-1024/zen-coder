@@ -20,8 +20,6 @@ export const continueNodeConfig: BasicEditorNodeConfig = {
     type: ContinueNodeType,
     label: '继续节点',
     icon: iconPath,
-    properties: {
-      title: '继续节点',
-    } satisfies ContinueNodeProperties,
+    properties: {} satisfies ContinueNodeProperties,
   },
 };

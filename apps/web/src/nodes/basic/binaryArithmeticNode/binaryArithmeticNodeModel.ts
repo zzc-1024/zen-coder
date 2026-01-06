@@ -110,7 +110,6 @@ export function binaryArithmeticNodeGenerateAnchorRecommendation(
       label: '加法',
       icon: 'favicon.ico',
       properties: {
-        title: '加法运算',
         type: anchorType.toString(), // 在 LogicFlow 中，锚点类型必须是字符串
         operator: 'addition',
         defaultValues: {},
@@ -121,7 +120,6 @@ export function binaryArithmeticNodeGenerateAnchorRecommendation(
       label: '减法',
       icon: 'favicon.ico',
       properties: {
-        title: '减法运算',
         type: anchorType.toString(), // 在 LogicFlow 中，锚点类型必须是字符串
         operator: 'subtraction',
         defaultValues: {},
@@ -132,7 +130,6 @@ export function binaryArithmeticNodeGenerateAnchorRecommendation(
       label: '乘法',
       icon: 'favicon.ico',
       properties: {
-        title: '乘法运算',
         type: anchorType.toString(), // 在 LogicFlow 中，锚点类型必须是字符串
         operator: 'multiplication',
         defaultValues: {},
@@ -146,7 +143,6 @@ export function binaryArithmeticNodeGenerateAnchorRecommendation(
       label: '整除',
       icon: 'favicon.ico',
       properties: {
-        title: '整除运算',
         defaultValues: {},
         type: anchorType.toString(), // 在 LogicFlow 中，锚点类型必须是字符串
         operator: 'floor_division',
@@ -157,7 +153,6 @@ export function binaryArithmeticNodeGenerateAnchorRecommendation(
       label: '取余运算',
       icon: 'favicon.ico',
       properties: {
-        title: '取余运算',
         defaultValues: {},
         type: anchorType.toString(), // 在 LogicFlow 中，锚点类型必须是字符串
         operator: 'modulus',

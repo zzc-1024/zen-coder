@@ -21,7 +21,6 @@ export const conditionBranchNodeConfig: BasicEditorNodeConfig = {
     label: '条件分支',
     icon: iconPath,
     properties: {
-      title: '条件分支',
       defaultValues: {},
     } satisfies ConditionBranchNodeProperties,
   },

@@ -17,7 +17,6 @@ import {
 export type AnchorSide = 'left' | 'right' | 'both' | 'none';
 
 export type BasicNodeProperties = {
-  title: string;
   showAnchorSide?: AnchorSide;
 };
 

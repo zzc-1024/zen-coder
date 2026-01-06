@@ -1,11 +1,13 @@
 <template>
   <div class="node">
     <!-- 1. 表头区域：显示表名 -->
-    <NodeHeader>{{ properties?.title || 'Unknown Table' }}</NodeHeader>
+    <NodeHeader>条件循环</NodeHeader>
 
     <!-- 2. 字段列表区域 -->
     <div class="node-body" v-if="getNode">
-      <NodeField v-for="field in getNode().getFields()" :key="field.name"
+      <NodeField
+        v-for="field in getNode().getFields()"
+        :key="field.name"
         :hasInput="field.inputId !== null"
         :hasOutput="field.outputId !== null"
         :name="field.name"

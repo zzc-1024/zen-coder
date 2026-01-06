@@ -1,7 +1,9 @@
 <template>
   <div class="node">
     <!-- 1. 表头区域：显示表名 -->
-    <NodeHeader>{{ properties?.title || 'Unknown Table' }}</NodeHeader>
+    <NodeHeader>{{
+      properties?.operator ? operatorMap[properties?.operator] : '未知运算符'
+    }}</NodeHeader>
 
     <!-- 2. 字段列表区域 -->
     <div class="node-body" v-if="getNode">
@@ -24,6 +26,7 @@ import NodeHeader from '@/components/node/NodeHeader.vue';
 import type BinaryArithmeticNodeModel from './binaryArithmeticNodeModel';
 import type { BinaryArithmeticNodeProperties } from './binaryArithmeticNodeModel';
 import NodeField from '@/components/node/NodeField.vue';
+import type { BinaryOperator } from '@/parser/expressions';
 
 // 1. 注入 LogicFlow 核心方法
 const getNode = inject<() => BinaryArithmeticNodeModel>('getNode');
@@ -59,6 +62,29 @@ onMounted(() => {
     },
   );
 });
+
+const operatorMap: Record<BinaryOperator, string> = {
+  // 算术运算符
+  addition: '加法',
+  subtraction: '减法',
+  multiplication: '乘法',
+  division: '除法',
+  floor_division: '整除',
+  modulus: '取余',
+  exponentiation: '指数运算',
+  // 比较运算符
+  less_than: '小于',
+  less_than_or_equal: '小于等于',
+  greater_than: '大于',
+  greater_than_or_equal: '大于等于',
+  equal: '等于',
+  not_equal: '不等于',
+  // 逻辑运算符
+  and: '逻辑与',
+  or: '逻辑或',
+  xor: '异或',
+  xnor: '同或',
+};
 </script>
 
 <style scoped style="scss">

@@ -22,7 +22,6 @@ export const setVariableNodeConfig: BasicEditorNodeConfig = {
     label: '设置变量',
     icon: iconPath,
     properties: {
-      title: '设置变量',
       type: new BasicType('builtin:basic:integer').toString(),
       variable: 'Hello',
       defaultValues: {},

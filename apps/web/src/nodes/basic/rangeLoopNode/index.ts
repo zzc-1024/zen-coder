@@ -22,7 +22,6 @@ export const rangeLoopNodeConfig: BasicEditorNodeConfig = {
     label: '次数循环',
     icon: iconPath,
     properties: {
-      title: '次数循环',
       defaultValues: {},
     } satisfies RangeLoopNodeProperties,
   },

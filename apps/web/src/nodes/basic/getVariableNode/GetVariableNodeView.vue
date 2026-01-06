@@ -1,7 +1,7 @@
 <template>
   <div class="node">
     <!-- 1. 表头区域：显示表名 -->
-    <NodeHeader>{{ properties?.title || 'Unknown Table' }}</NodeHeader>
+    <NodeHeader>获取变量{{ properties?.variable || 'Unknown Variable' }}</NodeHeader>
 
     <!-- 2. 字段列表区域 -->
     <div class="node-body" v-if="getNode">
