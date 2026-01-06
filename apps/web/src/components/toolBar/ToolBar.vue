@@ -57,6 +57,10 @@ const props = defineProps<{
   config: ToolBarConfig | null;
 }>();
 
+const emit = defineEmits<{
+  (e: 'generate', code: string): void;
+}>();
+
 const canUndo = ref(true);
 const canRedo = ref(true);
 const selectedLanguage = ref('python'); // 默认导出语言为Python
@@ -66,7 +70,12 @@ const handleImport = () => props.config?.onImport?.();
 const handleUndo = () => canUndo.value && props.config?.onUndo?.();
 const handleRedo = () => canRedo.value && props.config?.onRedo?.();
 const handleExecute = () => props.config?.onExecute?.();
-const handleGenerate = () => props.config?.onGenerate?.(selectedLanguage.value);
+const handleGenerate = () => {
+  const code = props.config?.onGenerate?.(selectedLanguage.value);
+  if (code) {
+    emit('generate', code);
+  }
+};
 const handleLanguageChange = () => props.config?.onLanguageChange?.(selectedLanguage.value);
 const gotoHome = () => props.config?.onGotoHome?.();
 </script>

@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <ToolBar :config="toolBarConfig" />
+    <ToolBar :config="toolBarConfig" @generate="handleGenerate" />
     <div class="lf-container">
       <VariableList
         class="variable-list"
@@ -18,6 +18,12 @@
       />
     </div>
   </div>
+
+  <!-- 弹窗 -->
+  <PopupDialog ref="codePopupDialogRef" title="代码生成结果">
+    <code class="code-block">{{ generatedCode }}</code>
+    <button class="copy-btn" @click="copyCode">复制代码</button>
+  </PopupDialog>
 </template>
 
 <script setup lang="ts">
@@ -40,6 +46,7 @@ import VariableList from './variableList/VariableList.vue';
 import { dragVariable } from './variableList/variableList';
 import BasicEdgeModel from '@/edges/BasicEdgeModel';
 import AttributePanel from './AttributePanel/AttributePanel.vue';
+import PopupDialog from './ui/PopupDialog.vue';
 
 // LogicFlow 相关的必要变量
 const containerRef = ref(null);
@@ -65,6 +72,8 @@ const renderData = ref<LogicFlow.GraphConfigData>({
 const variables = ref<Variable[]>([]);
 // 工具栏配置
 const toolBarConfig = ref<BasicToolBarConfig | null>(null);
+const codePopupDialogRef = ref();
+const generatedCode = ref('');
 // 属性面板配置
 const selectedElements = ref<LogicFlow.GraphData>({
   nodes: [],
@@ -142,8 +151,25 @@ onMounted(() => {
   if (lf.extension.miniMap instanceof MiniMap) {
     lf.extension.miniMap.show();
   }
-});
+}); // onMounted结束
 
+// 工具栏事件
+function handleGenerate(code: string) {
+  if (codePopupDialogRef.value === null) {
+    return;
+  }
+  generatedCode.value = code;
+  codePopupDialogRef.value.open();
+}
+// 复制代码
+function copyCode() {
+  if (generatedCode.value === '') {
+    return;
+  }
+  navigator.clipboard.writeText(generatedCode.value);
+}
+
+// 变量列表事件
 function onPointerDown(dragType: string, variableName: string, variableType: BaseType) {
   if (lf === null) {
     return;
@@ -200,5 +226,9 @@ function onDeleteVariable(variableName: string) {
       }
     }
   }
+}
+.code-block {
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 </style>

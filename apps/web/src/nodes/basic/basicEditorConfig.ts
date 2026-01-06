@@ -222,7 +222,7 @@ export class BasicToolBarConfig extends ToolBarConfig {
     const statements = entryNode.parseFlowIn();
     const pythonBackend: PythonBackend = new PythonBackend();
     const code = pythonBackend.generateCode(this.variables.value, statements);
-    console.log(code);
+    return code;
   };
   onLanguageChange: undefined;
   onGotoHome = () => {
