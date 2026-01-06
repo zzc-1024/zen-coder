@@ -9,12 +9,16 @@
     <!-- Add New Variable Form (Fixed) -->
     <PopupDialog title="新增变量" ref="addVariablePopup" class="add-variable-form">
       <div class="horizontal-group">
+        数据结构
         <select v-model="variableDataStructureType" class="type-selector">
           <option value="basic">普通</option>
           <!-- <option value="list">列表 list</option> -->
           <!-- <option value="dict">映射 dict</option> -->
           <!-- <option value="set">集合 set</option> -->
         </select>
+      </div>
+      <div class="horizontal-group">
+        变量类型
         <select v-model="newVariableType" class="type-selector">
           <option value="bool">布尔值 bool</option>
           <option value="int">整数 int</option>
@@ -23,6 +27,7 @@
         </select>
       </div>
       <div class="horizontal-group">
+        变量名称
         <input
           v-model="newVariableName"
           type="text"
@@ -191,6 +196,7 @@ function onAddVariable() {
     .horizontal-group {
       display: flex;
       gap: 12px;
+      align-items: center;
       .variable-input,
       .type-selector {
         padding: 10px 12px;
@@ -376,8 +382,6 @@ function onAddVariable() {
       border-radius: 8px;
 
       .horizontal-group {
-        display: flex;
-        gap: 12px;
         flex-wrap: wrap;
         .variable-input {
           flex: 1;
