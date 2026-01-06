@@ -3,9 +3,10 @@ import BasicNodeModel, {
   type BasicNodePropertiesWithDefaultValues,
   type FieldType,
 } from '../basicNodeModel';
-import { BasicEditorNodeTypePrefix, BasicType, FlowType } from '../typeDifination';
+import { BasicEditorNodeTypePrefix, FlowType } from '../typeDifination';
 import type { Expression, Statement } from '@/parser/defination';
 import { IfStatement } from '@/parser/statements';
+import { BasicType } from '@/parser/variable';
 
 export const ConditionBranchNodeType = `${BasicEditorNodeTypePrefix}:conditionBranch`;
 export type ConditionBranchNodeProperties = BasicNodePropertiesWithDefaultValues;

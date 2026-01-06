@@ -127,7 +127,7 @@ import type { RecommendationFunction } from '@/nodes/basic/basicEditorConfig';
 import type BasicNodeModel from '@/nodes/basic/basicNodeModel';
 import LogicFlow from '@logicflow/core';
 import { computed } from 'vue';
-import { BasicType } from '@/nodes/basic/typeDifination';
+import { BasicType } from '@/parser/variable';
 import type { BasicNodePropertiesWithDefaultValues, DefaultValueMap } from '@/nodes/basic/basicNodeModel';
 
 const props = defineProps<{

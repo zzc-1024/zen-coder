@@ -1,6 +1,5 @@
 import LogicFlow, { HtmlNodeModel, type BaseNodeModel, type Model } from '@logicflow/core';
 import {
-  BasicType,
   BUILTIN_BASIC_FLOW_TYPE,
   type AnchorType,
   type DirectType,
@@ -13,6 +12,7 @@ import {
   IntegerExpression,
   StringExpression,
 } from '@/parser/expressions';
+import { BasicType } from '@/parser/variable';
 
 export type AnchorSide = 'left' | 'right' | 'both' | 'none';
 

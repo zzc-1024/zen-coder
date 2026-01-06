@@ -1,4 +1,4 @@
-import type { Variable } from '@/nodes/basic/typeDifination';
+import type { Variable } from '@/parser/variable';
 
 export abstract class Expression {
   // abstract toString(): string

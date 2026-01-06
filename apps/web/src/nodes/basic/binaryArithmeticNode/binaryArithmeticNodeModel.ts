@@ -5,14 +5,11 @@ import BasicNodeModel, {
 } from '../basicNodeModel';
 import {
   BasicEditorNodeTypePrefix,
-  BasicType,
-  BUILTIN_BASIC_FLOAT_TYPE,
-  BUILTIN_BASIC_INTEGER_TYPE,
-  parseType,
   type AnchorType,
 } from '../typeDifination';
 import type LogicFlow from '@logicflow/core';
 import { BinaryExpression, type BinaryOperator } from '@/parser/expressions';
+import { BasicType, BUILTIN_BASIC_FLOAT_TYPE, BUILTIN_BASIC_INTEGER_TYPE, parseType } from '@/parser/variable';
 
 export const BinaryArithmeticNodeType = `${BasicEditorNodeTypePrefix}:binaryArithmetic`;
 export type BinaryArithmeticNodeProperties = BasicNodePropertiesWithDefaultValues & {

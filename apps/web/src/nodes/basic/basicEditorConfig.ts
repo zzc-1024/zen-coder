@@ -4,15 +4,10 @@ import { type VueNodeConfig } from '@logicflow/vue-node-registry';
 
 import type LogicFlow from '@logicflow/core';
 import { EventType } from '@logicflow/core';
-import {
-  BaseType,
-  BUILTIN_BASIC_FLOW_TYPE,
-  type AnchorType,
-  type DirectType,
-} from './typeDifination';
+import { BUILTIN_BASIC_FLOW_TYPE, type AnchorType, type DirectType } from './typeDifination';
 import { ToolBarConfig } from '@/components/toolBar/toolBar';
 import router from '@/router';
-import type { Variable } from './typeDifination';
+import { BaseType, type Variable } from '@/parser/variable';
 
 // 节点属性
 import type { BasicNodeProperties } from './basicNodeModel';
@@ -67,16 +62,13 @@ export const dndPanelItem: LogicFlow.OnDragNodeConfig[] = [
     type: entryNodeConfig.type,
     label: '程序入口',
     icon: entryNodeConfig.iconPath,
-    properties: {
-      title: '程序入口',
-    } satisfies BasicNodeProperties,
+    properties: {} satisfies BasicNodeProperties,
   },
   {
     type: conditionLoopNodeConfig.type,
     label: '条件循环',
     icon: conditionLoopNodeConfig.iconPath,
     properties: {
-      title: '条件循环',
       defaultValues: {},
     } satisfies ConditionLoopNodeProperties,
   },
@@ -85,7 +77,6 @@ export const dndPanelItem: LogicFlow.OnDragNodeConfig[] = [
     label: '范围循环',
     icon: rangeLoopNodeConfig.iconPath,
     properties: {
-      title: '范围循环',
       defaultValues: {},
     } satisfies RangeLoopNodeProperties,
   },
@@ -93,24 +84,19 @@ export const dndPanelItem: LogicFlow.OnDragNodeConfig[] = [
     type: breakNodeConfig.type,
     label: 'break节点',
     icon: breakNodeConfig.iconPath,
-    properties: {
-      title: 'break节点',
-    } satisfies BreakNodeProperties,
+    properties: {} satisfies BreakNodeProperties,
   },
   {
     type: continueNodeConfig.type,
     label: '继续节点',
     icon: continueNodeConfig.iconPath,
-    properties: {
-      title: '继续节点',
-    } satisfies ContinueNodeProperties,
+    properties: {} satisfies ContinueNodeProperties,
   },
   {
     type: conditionBranchNodeConfig.type,
     label: '条件分支',
     icon: conditionBranchNodeConfig.iconPath,
     properties: {
-      title: '条件分支',
       defaultValues: {},
     } satisfies ConditionBranchNodeProperties,
   },

@@ -3,10 +3,11 @@ import BasicNodeModel, {
   type BasicNodePropertiesWithDefaultValues,
   type FieldType,
 } from '../basicNodeModel';
-import { BasicEditorNodeTypePrefix, FlowType, parseType } from '../typeDifination';
+import { BasicEditorNodeTypePrefix, FlowType } from '../typeDifination';
 import type { Expression, Statement } from '@/parser/defination';
 import { AssignmentStatement } from '@/parser/statements';
 import { VariableExpression } from '@/parser/expressions';
+import { parseType } from '@/parser/variable';
 
 export const SetVariableNodeType = `${BasicEditorNodeTypePrefix}:set`;
 export type SetVariableNodeProperties = BasicNodePropertiesWithDefaultValues & {

@@ -1,5 +1,5 @@
+import { BasicType } from '@/parser/variable';
 import { type BasicEditorNodeConfig } from '../basicEditorConfig';
-import { BasicType } from '../typeDifination';
 import BinaryArithmeticNodeView from './BinaryArithmeticNodeView.vue';
 import BinaryArithmeticNodeModel, {
   binaryArithmeticNodeGenerateAnchorRecommendation,

@@ -3,9 +3,10 @@ import BasicNodeModel, {
   type BasicNodePropertiesWithDefaultValues,
   type FieldType,
 } from '../basicNodeModel';
-import { BasicEditorNodeTypePrefix, BasicType, FlowType } from '../typeDifination';
+import { BasicEditorNodeTypePrefix, FlowType } from '../typeDifination';
 import type { Expression, Statement } from '@/parser/defination';
 import { CountLoopStatement } from '@/parser/statements';
+import { BasicType } from '@/parser/variable';
 
 export const RangeLoopNodeType = `${BasicEditorNodeTypePrefix}:rangeLoop`;
 export type RangeLoopNodeProperties = BasicNodePropertiesWithDefaultValues;

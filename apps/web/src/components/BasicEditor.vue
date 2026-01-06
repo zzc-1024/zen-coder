@@ -31,7 +31,7 @@ import { onMounted, ref } from 'vue';
 import { getTeleport } from '@logicflow/vue-node-registry';
 import LogicFlow, { BezierEdge, EventType } from '@logicflow/core';
 import { DndPanel, MiniMap } from '@logicflow/extension';
-import { BaseType, type Variable } from '@/nodes/basic/typeDifination';
+import { BaseType, type Variable } from '@/parser/variable';
 import { batchRegisterVueNode } from '@/utils/editor';
 import {
   basicEditorNode,

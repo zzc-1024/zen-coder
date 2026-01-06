@@ -3,9 +3,10 @@ import BasicNodeModel, {
   type BasicNodePropertiesWithDefaultValues,
   type FieldType,
 } from '../basicNodeModel';
-import { BasicEditorNodeTypePrefix, BasicType, FlowType } from '../typeDifination';
+import { BasicEditorNodeTypePrefix, FlowType } from '../typeDifination';
 import type { Expression, Statement } from '@/parser/defination';
 import { WhileStatement } from '@/parser/statements';
+import { BasicType } from '@/parser/variable';
 
 export const ConditionLoopNodeType = `${BasicEditorNodeTypePrefix}:conditionLoop`;
 export type ConditionLoopNodeProperties = BasicNodePropertiesWithDefaultValues;

@@ -77,8 +77,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import type { Variable } from '@/nodes/basic/typeDifination';
-import { BaseType, BasicType, type DataStructureType } from '@/nodes/basic/typeDifination';
+import { BaseType, BasicType, type DataStructureType, type Variable } from '@/parser/variable';
 import PopupDialog from '../ui/PopupDialog.vue';
 const props = defineProps<{
   variables: Variable[];

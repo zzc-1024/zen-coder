@@ -1,4 +1,4 @@
-import type { BasicTypeName, Variable } from '@/nodes/basic/typeDifination';
+import type { BasicTypeName, Variable } from '../variable';
 import { CompilerBackend, Expression, Statement } from '../defination';
 import {
   AssignmentStatement,
