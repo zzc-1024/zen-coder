@@ -11,69 +11,69 @@ import type LogicFlow from '@logicflow/core';
 import { BinaryExpression, type BinaryOperator } from '@/parser/expressions';
 import { BasicType, BUILTIN_BASIC_FLOAT_TYPE, BUILTIN_BASIC_INTEGER_TYPE, parseType } from '@/parser/variable';
 
-export const BinaryArithmeticNodeType = `${BasicEditorNodeTypePrefix}:binaryArithmetic`;
-export type BinaryArithmeticNodeProperties = BasicNodePropertiesWithDefaultValues & {
+export const BinaryOperatorNodeType = `${BasicEditorNodeTypePrefix}:binaryOperator`;
+export type BinaryOperatorNodeProperties = BasicNodePropertiesWithDefaultValues & {
   type: string;
   operator: BinaryOperator;
 };
 
-export const BinaryArithmeticNodeAnchorIds = {
+export const BinaryOperatorNodeAnchorIds = {
   LEFT_OPERAND: 'left-operand',
   RIGHT_OPERAND: 'right-operand',
   DATA_OUT: 'data-out',
 };
 
-class BinaryArithmeticNodeModel extends BasicNodeModel {
+class BinaryOperatorNodeModel extends BasicNodeModel {
   getFields(): FieldType[] {
     return [
       {
         name: '左操作数',
         type: parseType(this.properties.type as string),
-        inputId: BinaryArithmeticNodeAnchorIds.LEFT_OPERAND,
+        inputId: BinaryOperatorNodeAnchorIds.LEFT_OPERAND,
         outputId: null,
       },
       {
         name: '右操作数',
         type: parseType(this.properties.type as string),
-        inputId: BinaryArithmeticNodeAnchorIds.RIGHT_OPERAND,
+        inputId: BinaryOperatorNodeAnchorIds.RIGHT_OPERAND,
         outputId: null,
       },
       {
         name: '计算结果',
         type: parseType(this.properties.type as string),
         inputId: null,
-        outputId: BinaryArithmeticNodeAnchorIds.DATA_OUT,
+        outputId: BinaryOperatorNodeAnchorIds.DATA_OUT,
       },
     ];
   }
 
   parseFlowIn(anchorId: string): Statement[] {
-    throw new Error(`BinaryArithmeticNodeModel parseFlowIn anchorId ${anchorId} not supported`);
+    throw new Error(`BinaryOperatorNodeModel parseFlowIn anchorId ${anchorId} not supported`);
   }
 
   parseDataOut(anchorId: string): Expression {
     const dataOutId = anchorId.split(':')[1];
-    if (dataOutId !== BinaryArithmeticNodeAnchorIds.DATA_OUT) {
-      throw new Error(`BinaryArithmeticNodeModel parseDataOut anchorId ${anchorId} not supported`);
+    if (dataOutId !== BinaryOperatorNodeAnchorIds.DATA_OUT) {
+      throw new Error(`BinaryOperatorNodeModel parseDataOut anchorId ${anchorId} not supported`);
     }
-    const properties = this.properties as BinaryArithmeticNodeProperties;
+    const properties = this.properties as BinaryOperatorNodeProperties;
 
     // 获取左右操作数表达式
     let leftOperandExpression = this.getDataInExpression(
-      `${this.id}:${BinaryArithmeticNodeAnchorIds.LEFT_OPERAND}`,
+      `${this.id}:${BinaryOperatorNodeAnchorIds.LEFT_OPERAND}`,
     );
     let rightOperandExpression = this.getDataInExpression(
-      `${this.id}:${BinaryArithmeticNodeAnchorIds.RIGHT_OPERAND}`,
+      `${this.id}:${BinaryOperatorNodeAnchorIds.RIGHT_OPERAND}`,
     );
     if (!leftOperandExpression) {
-      const defaultValue = properties.defaultValues[BinaryArithmeticNodeAnchorIds.LEFT_OPERAND];
+      const defaultValue = properties.defaultValues[BinaryOperatorNodeAnchorIds.LEFT_OPERAND];
       leftOperandExpression = this.parseTypeStringToDefaultExpression(
         properties.type,
         defaultValue,
       );
     }
     if (!rightOperandExpression) {
-      const defaultValue = properties.defaultValues[BinaryArithmeticNodeAnchorIds.RIGHT_OPERAND];
+      const defaultValue = properties.defaultValues[BinaryOperatorNodeAnchorIds.RIGHT_OPERAND];
       rightOperandExpression = this.parseTypeStringToDefaultExpression(
         properties.type,
         defaultValue,
@@ -81,7 +81,7 @@ class BinaryArithmeticNodeModel extends BasicNodeModel {
     }
     if (!leftOperandExpression || !rightOperandExpression) {
       throw new Error(
-        'BinaryArithmeticNodeModel parseDataOut left or right operand expression is null',
+        'BinaryOperatorNodeModel parseDataOut left or right operand expression is null',
       );
     }
 
@@ -89,7 +89,7 @@ class BinaryArithmeticNodeModel extends BasicNodeModel {
   }
 }
 
-export function binaryArithmeticNodeGenerateAnchorRecommendation(
+export function binaryOperatorNodeGenerateAnchorRecommendation(
   anchorType: AnchorType,
 ): LogicFlow.OnDragNodeConfig[] {
   if (!(anchorType instanceof BasicType)) {
@@ -103,61 +103,61 @@ export function binaryArithmeticNodeGenerateAnchorRecommendation(
   }
   const recommendations: LogicFlow.OnDragNodeConfig[] = [
     {
-      type: BinaryArithmeticNodeType,
+      type: BinaryOperatorNodeType,
       label: '加法',
       icon: 'favicon.ico',
       properties: {
         type: anchorType.toString(), // 在 LogicFlow 中，锚点类型必须是字符串
         operator: 'addition',
         defaultValues: {},
-      } satisfies BinaryArithmeticNodeProperties,
+      } satisfies BinaryOperatorNodeProperties,
     },
     {
-      type: BinaryArithmeticNodeType,
+      type: BinaryOperatorNodeType,
       label: '减法',
       icon: 'favicon.ico',
       properties: {
         type: anchorType.toString(), // 在 LogicFlow 中，锚点类型必须是字符串
         operator: 'subtraction',
         defaultValues: {},
-      } satisfies BinaryArithmeticNodeProperties,
+      } satisfies BinaryOperatorNodeProperties,
     },
     {
-      type: BinaryArithmeticNodeType,
+      type: BinaryOperatorNodeType,
       label: '乘法',
       icon: 'favicon.ico',
       properties: {
         type: anchorType.toString(), // 在 LogicFlow 中，锚点类型必须是字符串
         operator: 'multiplication',
         defaultValues: {},
-      } satisfies BinaryArithmeticNodeProperties,
+      } satisfies BinaryOperatorNodeProperties,
     },
   ];
 
   if (anchorType.basicTypeName === BUILTIN_BASIC_INTEGER_TYPE) {
     recommendations.push({
-      type: BinaryArithmeticNodeType,
+      type: BinaryOperatorNodeType,
       label: '整除',
       icon: 'favicon.ico',
       properties: {
         defaultValues: {},
         type: anchorType.toString(), // 在 LogicFlow 中，锚点类型必须是字符串
         operator: 'floor_division',
-      } satisfies BinaryArithmeticNodeProperties,
+      } satisfies BinaryOperatorNodeProperties,
     });
     recommendations.push({
-      type: BinaryArithmeticNodeType,
+      type: BinaryOperatorNodeType,
       label: '取余运算',
       icon: 'favicon.ico',
       properties: {
         defaultValues: {},
         type: anchorType.toString(), // 在 LogicFlow 中，锚点类型必须是字符串
         operator: 'modulus',
-      } satisfies BinaryArithmeticNodeProperties,
+      } satisfies BinaryOperatorNodeProperties,
     });
   }
 
   return recommendations;
 }
 
-export default BinaryArithmeticNodeModel;
+export default BinaryOperatorNodeModel;

@@ -21,7 +21,7 @@ import type { ConditionBranchNodeProperties } from './conditionBranchNode/condit
 import { entryNodeConfig } from './entryNode'; // 入口节点
 import { setVariableNodeConfig } from './setVariableNode'; // 设置变量节点
 import { getVariableNodeConfig } from './getVariableNode'; // 获取变量节点
-import { binaryArithmeticNodeConfig } from './binaryArithmeticNode'; // 二元算术运算节点
+import { binaryOperatorNodeConfig } from './binaryOperatorNode'; // 二元算术运算节点
 import { conditionLoopNodeConfig } from './conditionLoopNode'; // 条件循环节点
 import { rangeLoopNodeConfig } from './rangeLoopNode'; // 范围循环节点
 import { breakNodeConfig } from './breakNode'; // 中断节点
@@ -49,7 +49,7 @@ export const basicEditorNode: BasicEditorNodeConfig[] = [
   entryNodeConfig,
   setVariableNodeConfig,
   getVariableNodeConfig,
-  binaryArithmeticNodeConfig,
+  binaryOperatorNodeConfig,
   conditionLoopNodeConfig,
   rangeLoopNodeConfig,
   breakNodeConfig,

@@ -23,18 +23,18 @@
 import { ref, inject, onMounted } from 'vue';
 import { EventType, GraphModel } from '@logicflow/core';
 import NodeHeader from '@/components/node/NodeHeader.vue';
-import type BinaryArithmeticNodeModel from './binaryArithmeticNodeModel';
-import type { BinaryArithmeticNodeProperties } from './binaryArithmeticNodeModel';
+import type BinaryOperatorNodeModel from './binaryOperatorNodeModel';
+import type { BinaryOperatorNodeProperties } from './binaryOperatorNodeModel';
 import NodeField from '@/components/node/NodeField.vue';
 import type { BinaryOperator } from '@/parser/expressions';
 
 // 1. 注入 LogicFlow 核心方法
-const getNode = inject<() => BinaryArithmeticNodeModel>('getNode');
+const getNode = inject<() => BinaryOperatorNodeModel>('getNode');
 const getGraph = inject<() => GraphModel>('getGraph');
 
 // 2. 定义响应式数据
 // 给定一个默认结构，防止渲染报错
-const properties = ref<BinaryArithmeticNodeProperties>();
+const properties = ref<BinaryOperatorNodeProperties>();
 
 // 3. 初始化与事件监听
 onMounted(() => {
@@ -44,13 +44,13 @@ onMounted(() => {
   const graph = getGraph();
 
   // --- 函数：从节点属性同步数据到 Vue 组件 ---
-  const updateData = (props: BinaryArithmeticNodeProperties) => {
+  const updateData = (props: BinaryOperatorNodeProperties) => {
     // 这里做一层合并，确保即使 props 为空也有默认值
     properties.value = { ...props };
   };
 
   // A. 初始化：首次加载时读取数据
-  updateData(node.properties as BinaryArithmeticNodeProperties);
+  updateData(node.properties as BinaryOperatorNodeProperties);
 
   // B. 监听：当图表上的节点属性发生变化时（例如通过 properties 面板修改了表名）
   graph.eventCenter.on(
@@ -58,7 +58,7 @@ onMounted(() => {
     (eventData: { id: string; properties: unknown }) => {
       // 关键判断：确保事件是针对当前这个节点的
       if (eventData.id !== node.id) return;
-      updateData(eventData.properties as BinaryArithmeticNodeProperties);
+      updateData(eventData.properties as BinaryOperatorNodeProperties);
     },
   );
 });
