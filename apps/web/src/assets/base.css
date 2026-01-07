@@ -5,9 +5,9 @@
 
 /* 边 */
 :root {
-  --zencoder-edge-flow-color: black;
-  --zencoder-edge-boolean-color: darkred;
-  --zencoder-edge-integer-color: darkblue;
-  --zencoder-edge-float-color: darkgreen;
+  --zencoder-edge-flow-color: white;
+  --zencoder-edge-boolean-color: crimson;
+  --zencoder-edge-integer-color: aqua;
+  --zencoder-edge-float-color: lime;
   --zencoder-edge-string-color: fuchsia;
 }

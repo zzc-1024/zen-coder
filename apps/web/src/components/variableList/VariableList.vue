@@ -154,7 +154,6 @@ function onAddVariable() {
   background-color: #2a2a2a; /* Dark background */
   color: #e0e0e0; /* Light text */
   font-family: 'Roboto Mono', monospace;
-  border: 1px solid #444;
   border-radius: 4px;
   overflow: hidden;
   user-select: none; /* Prevent text selection */

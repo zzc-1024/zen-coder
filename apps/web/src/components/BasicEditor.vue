@@ -40,7 +40,7 @@ import {
   setBasicEditorEvent,
   type RecommendationFunction,
 } from '@/nodes/basic/basicEditorConfig';
-import { EntryNodeType } from '@/nodes/basic/entryNode/entryNodeModel';
+import { EntryNodeType, type EntryNodeProperties } from '@/nodes/basic/entryNode/entryNodeModel';
 import ToolBar from './toolBar/ToolBar.vue';
 import VariableList from './variableList/VariableList.vue';
 import { dragVariable } from './variableList/variableList';
@@ -60,9 +60,7 @@ const renderData = ref<LogicFlow.GraphConfigData>({
       type: EntryNodeType,
       x: 100,
       y: 100,
-      properties: {
-        title: '2026新年快乐！',
-      },
+      properties: {} satisfies EntryNodeProperties,
     },
   ],
 });
@@ -195,7 +193,8 @@ function onDeleteVariable(variableName: string) {
 .wrapper {
   height: 100%;
   .lf-container {
-    height: calc(99% - 49px);
+    // 49是工具栏高度，5px是实验值
+    height: calc(100% - 49px - 5px);
     min-height: 686px;
     width: 100vw;
     display: flex;

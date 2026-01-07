@@ -19,16 +19,6 @@
         </div>
 
         <div class="attribute-item">
-          <label class="attribute-label">标题</label>
-          <input
-            type="text"
-            class="attribute-input"
-            :value="selectedElement.properties.title || ''"
-            disabled
-          />
-        </div>
-
-        <div class="attribute-item">
           <button class="delete-node-btn" @click="deleteNode">删除</button>
         </div>
       </div>
@@ -128,7 +118,10 @@ import type BasicNodeModel from '@/nodes/basic/basicNodeModel';
 import LogicFlow from '@logicflow/core';
 import { computed } from 'vue';
 import { BasicType } from '@/parser/variable';
-import type { BasicNodePropertiesWithDefaultValues, DefaultValueMap } from '@/nodes/basic/basicNodeModel';
+import type {
+  BasicNodePropertiesWithDefaultValues,
+  DefaultValueMap,
+} from '@/nodes/basic/basicNodeModel';
 
 const props = defineProps<{
   lf: LogicFlow | null;
@@ -221,8 +214,7 @@ function updateDefaultValue(inputId: string, event: Event) {
   width: 280px;
   min-width: 250px;
   height: 100%;
-  background-color: #f5f5f5;
-  border-right: 1px solid #e0e0e0;
+  background-color: #2a2a2a;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -269,8 +261,8 @@ function updateDefaultValue(inputId: string, event: Event) {
 
   .list-title-bar {
     height: 40px;
-    background-color: #fff;
-    border-bottom: 1px solid #e0e0e0;
+    background-color: #1a1a1a;
+    border-bottom: 1px solid #444;
     display: flex;
     align-items: center;
     padding: 0 15px;
@@ -279,7 +271,7 @@ function updateDefaultValue(inputId: string, event: Event) {
     .title-text {
       font-size: 14px;
       font-weight: 600;
-      color: #333;
+      color: #b0b0b0;
     }
   }
 
@@ -289,7 +281,7 @@ function updateDefaultValue(inputId: string, event: Event) {
     padding: 15px;
 
     .attribute-group {
-      background-color: #fff;
+      background-color: #333333;
       border-radius: 4px;
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
       margin-bottom: 15px;
@@ -298,19 +290,19 @@ function updateDefaultValue(inputId: string, event: Event) {
 
       .group-header {
         padding: 12px 15px;
-        background-color: #fafafa;
-        border-bottom: 1px solid #e0e0e0;
+        background-color: #333333;
+        border-bottom: 1px solid #444;
 
         .group-title {
           font-size: 13px;
           font-weight: 600;
-          color: #666;
+          color: #b0b0b0;
         }
       }
 
       .attribute-item {
         padding: 12px 15px;
-        border-bottom: 1px solid #f0f0f0;
+        border-bottom: 1px solid #444;
 
         &:last-child {
           border-bottom: none;
@@ -320,17 +312,17 @@ function updateDefaultValue(inputId: string, event: Event) {
           display: block;
           font-size: 12px;
           font-weight: 500;
-          color: #666;
+          color: #ddd;
           margin-bottom: 6px;
         }
 
         .attribute-input {
-          width: 100%;
+          width: calc(100% - 22px);
           padding: 8px 10px;
           border: 1px solid #e0e0e0;
           border-radius: 3px;
           font-size: 13px;
-          color: #333;
+          color: #000;
           background-color: #fff;
           transition: border-color 0.2s ease;
 
@@ -395,8 +387,8 @@ function updateDefaultValue(inputId: string, event: Event) {
 
           .anchor-data-type {
             font-size: 11px;
-            color: #888;
-            background: #f0f0f0;
+            color: #000000;
+            background: #ffffff;
             padding: 2px 6px;
             border-radius: 3px;
             align-self: flex-start;
