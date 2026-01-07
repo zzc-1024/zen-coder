@@ -1,8 +1,8 @@
 <template>
-  <div class="variable-manager">
+  <div class="resource-manager">
     <!-- Title Bar -->
     <div class="list-title-bar">
-      <span class="title-text">变量列表</span>
+      <span class="title-text">资源列表</span>
       <button class="add-button" @click="addVariablePopup.open()">➕添加</button>
     </div>
 
@@ -145,7 +145,7 @@ function onAddVariable() {
 </script>
 
 <style scoped lang="scss">
-.variable-manager {
+.resource-manager {
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -363,7 +363,7 @@ function onAddVariable() {
     }
   }
 
-  /* 响应式布局：当屏幕宽度小于 768px 时，VariableList 改为横向展示 */
+  /* 响应式布局：当屏幕宽度小于 768px ResourceList 改为横向展示 */
   @media (max-width: 768px) {
     width: 100%;
     height: 202px;

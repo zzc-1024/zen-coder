@@ -32,7 +32,7 @@ class GetNodeModel extends BasicNodeModel {
 }
 ```
 
-设计好的节点，需要在`apps\web\src\nodes\basic\basicEditorConfig.ts`中注册。如果需要在变量列表中拖拽的话，需要在`apps\web\src\components\variableList\variableList.ts`中注册。
+设计好的节点，需要在`apps\web\src\nodes\basic\basicEditorConfig.ts`中注册。如果需要在资源列表中拖拽的话，需要在`apps\web\src\components\resourceList\resourceList.ts`中注册。
 
 # 关于类型系统
 

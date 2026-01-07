@@ -2,7 +2,7 @@
   <div class="wrapper">
     <ToolBar :config="toolBarConfig" @generate="handleGenerate" />
     <div class="lf-container">
-      <VariableList
+      <resourceList
         class="variable-list"
         :variables="variables"
         @onPointerDown="onPointerDown"
@@ -42,8 +42,8 @@ import {
 } from '@/nodes/basic/basicEditorConfig';
 import { EntryNodeType, type EntryNodeProperties } from '@/nodes/basic/entryNode/entryNodeModel';
 import ToolBar from './toolBar/ToolBar.vue';
-import VariableList from './variableList/VariableList.vue';
-import { dragVariable } from './variableList/variableList';
+import resourceList from './resourceList/ResourceList.vue';
+import { dragVariable } from './resourceList/resourceList';
 import BasicEdgeModel from '@/edges/BasicEdgeModel';
 import AttributePanel from './AttributePanel/AttributePanel.vue';
 import PopupDialog from './ui/PopupDialog.vue';
