@@ -225,9 +225,6 @@ export function binaryOperatorNodeGenerateAnchorRecommendation(
         } satisfies BinaryOperatorNodeProperties,
       },
     ];
-    if (direction === 'in') {
-      booleanTypeResult.push(...comparisonDragNodeConfig);
-    }
     return booleanTypeResult;
   } //布尔型处理结束
 
