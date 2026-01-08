@@ -4,7 +4,6 @@ import {
   AssignmentStatement,
   BreakStatement,
   ContinueStatement,
-  CountLoopStatement,
   IfStatement,
   WhileStatement,
 } from '../statements';
@@ -96,12 +95,6 @@ export class PythonBackend extends CompilerBackend {
     } else if (statement instanceof WhileStatement) {
       code += `${' '.repeat(this.pythonContext.indentSpaceCount)}`;
       code += `while ${this.parseExpression(statement.condition)}:\n`;
-      this.pythonContext.indentSpaceCount += 4;
-      code += this.parseStatements(statement.statements);
-      this.pythonContext.indentSpaceCount -= 4;
-    } else if (statement instanceof CountLoopStatement) {
-      code += `${' '.repeat(this.pythonContext.indentSpaceCount)}`;
-      code += `for _ in range(${this.parseExpression(statement.timesExpression)}):\n`;
       this.pythonContext.indentSpaceCount += 4;
       code += this.parseStatements(statement.statements);
       this.pythonContext.indentSpaceCount -= 4;

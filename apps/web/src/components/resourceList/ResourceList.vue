@@ -188,10 +188,6 @@ function onAddVariable() {
     display: flex;
     flex-direction: column;
     gap: 12px;
-    padding: 16px;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
     .horizontal-group {
       display: flex;
       gap: 12px;
@@ -375,10 +371,6 @@ function onAddVariable() {
       flex-shrink: 0;
       flex-direction: column;
       flex-wrap: nowrap;
-      padding: 16px;
-      background-color: #fff;
-      border: 1px solid #ddd;
-      border-radius: 8px;
 
       .horizontal-group {
         flex-wrap: wrap;

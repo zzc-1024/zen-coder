@@ -12,7 +12,6 @@ import { BaseType, type Variable } from '@/parser/variable';
 // 节点属性
 import type { BasicNodeProperties } from './basicNodeModel';
 import type { ConditionLoopNodeProperties } from './conditionLoopNode/conditionLoopNodeModel';
-import type { RangeLoopNodeProperties } from './rangeLoopNode/rangeLoopNodeModel';
 import type { BreakNodeProperties } from './breakNode/breakNodeModel';
 import type { ContinueNodeProperties } from './continueNode/continueNodeModel';
 import type { ConditionBranchNodeProperties } from './conditionBranchNode/conditionBranchNodeModel';
@@ -23,7 +22,6 @@ import { setVariableNodeConfig } from './setVariableNode'; // 设置变量节点
 import { getVariableNodeConfig } from './getVariableNode'; // 获取变量节点
 import { binaryOperatorNodeConfig } from './binaryOperatorNode'; // 二元算术运算节点
 import { conditionLoopNodeConfig } from './conditionLoopNode'; // 条件循环节点
-import { rangeLoopNodeConfig } from './rangeLoopNode'; // 范围循环节点
 import { breakNodeConfig } from './breakNode'; // 中断节点
 import { continueNodeConfig } from './continueNode'; // 继续节点
 import { conditionBranchNodeConfig } from './conditionBranchNode'; // 条件分支节点
@@ -51,7 +49,6 @@ export const basicEditorNode: BasicEditorNodeConfig[] = [
   getVariableNodeConfig,
   binaryOperatorNodeConfig,
   conditionLoopNodeConfig,
-  rangeLoopNodeConfig,
   breakNodeConfig,
   continueNodeConfig,
   conditionBranchNodeConfig,
@@ -71,14 +68,6 @@ export const dndPanelItem: LogicFlow.OnDragNodeConfig[] = [
     properties: {
       defaultValues: {},
     } satisfies ConditionLoopNodeProperties,
-  },
-  {
-    type: rangeLoopNodeConfig.type,
-    label: '范围循环',
-    icon: rangeLoopNodeConfig.iconPath,
-    properties: {
-      defaultValues: {},
-    } satisfies RangeLoopNodeProperties,
   },
   {
     type: breakNodeConfig.type,
