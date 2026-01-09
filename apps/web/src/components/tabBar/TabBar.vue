@@ -14,7 +14,7 @@
           v-for="(tab, index) in tabs"
           :key="tab.id"
           class="tab-item"
-          :class="{ 'active': selectedTabId === tab.id, 'dragging': draggingIndex === index }"
+          :class="{ active: selectedTabId === tab.id, dragging: draggingIndex === index }"
           :draggable="true"
           @dragstart="onDragStart($event, index)"
           @dragenter="onDragEnter($event, index)"
@@ -46,206 +46,201 @@
     >
       →
     </button>
-    <button
-      class="tab-add-btn"
-      @click="onTabAdd"
-      @touchstart="onTabAdd"
-    >
-      +
-    </button>
+    <button class="tab-add-btn" @click="onTabAdd" @touchstart="onTabAdd">+</button>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue';
 
 // 定义Tab类型
 interface Tab {
-  id: string | number
-  name: string
+  id: string;
+  name: string;
 }
 
 // 定义props
 interface Props {
-  tabs: Tab[]
-  selectedTabId?: string | number
+  tabs: Tab[];
+  selectedTabId?: string;
 }
 
 // 定义emit事件
 type Emits = {
-  (e: 'update:selectedTabId', value: string | number): void
-  (e: 'tabClick', tabId: string | number): void
-  (e: 'tabAdd'): void
-  (e: 'tabDelete', tabId: string | number): void
-  (e: 'tabReorder', tabs: Tab[]): void
-}
+  (e: 'tabClick', tabId: string): void;
+  (e: 'tabAdd'): void;
+  (e: 'tabDelete', tabId: string): void;
+  (e: 'tabReorder', tabs: string[]): void;
+};
 
 // 声明props和emit
 const props = withDefaults(defineProps<Props>(), {
-  selectedTabId: undefined
-})
+  selectedTabId: undefined,
+});
 
-const emit = defineEmits<Emits>()
+const emit = defineEmits<Emits>();
 
 // 拖拽状态
-const draggingIndex = ref<number | null>(null)
-const dragOverIndex = ref<number | null>(null)
-const tabBarRef = ref<HTMLElement | null>(null)
-const tabBarScrollWrapperRef = ref<HTMLElement | null>(null)
+const draggingIndex = ref<number | null>(null);
+const dragOverIndex = ref<number | null>(null);
+const tabBarRef = ref<HTMLElement | null>(null);
+const tabBarScrollWrapperRef = ref<HTMLElement | null>(null);
 
 // 触摸拖拽状态
-const isTouchDragging = ref(false)
-const touchStartX = ref(0)
-const touchStartIndex = ref<number | null>(null)
-const originalOrder = ref<Tab[]>([])
+const isTouchDragging = ref(false);
+const touchStartX = ref(0);
+const touchStartIndex = ref<number | null>(null);
+const originalOrder = ref<Tab[]>([]);
 
 // 滚动状态
-const canScrollLeft = ref(false)
-const canScrollRight = ref(false)
+const canScrollLeft = ref(false);
+const canScrollRight = ref(false);
 
 // 处理tab点击
-const onTabClick = (tabId: string | number) => {
-  emit('update:selectedTabId', tabId)
-  emit('tabClick', tabId)
-}
+const onTabClick = (tabId: string) => {
+  emit('tabClick', tabId);
+};
 
 // 处理tab添加
 const onTabAdd = () => {
-  emit('tabAdd')
-}
+  emit('tabAdd');
+};
 
 // 处理tab删除
-const onTabDelete = (tabId: string | number) => {
-  emit('tabDelete', tabId)
-}
+const onTabDelete = (tabId: string) => {
+  emit('tabDelete', tabId);
+};
 
 // 拖拽事件处理
 const onDragStart = (event: DragEvent, index: number) => {
-  draggingIndex.value = index
-  originalOrder.value = [...props.tabs]
+  draggingIndex.value = index;
+  originalOrder.value = [...props.tabs];
   if (event.dataTransfer) {
-    event.dataTransfer.effectAllowed = 'move'
-    event.dataTransfer.setData('text/plain', index.toString())
+    event.dataTransfer.effectAllowed = 'move';
+    event.dataTransfer.setData('text/plain', index.toString());
   }
-}
+};
 
 const onDragEnter = (event: DragEvent, index: number) => {
-  event.preventDefault()
+  event.preventDefault();
   if (draggingIndex.value !== null && draggingIndex.value !== index) {
-    dragOverIndex.value = index
+    dragOverIndex.value = index;
   }
-}
+};
 
 const onDragOver = (event: DragEvent) => {
-  event.preventDefault()
+  event.preventDefault();
   if (event.dataTransfer) {
-    event.dataTransfer.dropEffect = 'move'
+    event.dataTransfer.dropEffect = 'move';
   }
-}
+};
 
 const onDragLeave = (event: DragEvent, index: number) => {
-  event.preventDefault()
+  event.preventDefault();
   if (dragOverIndex.value === index) {
-    dragOverIndex.value = null
+    dragOverIndex.value = null;
   }
-}
+};
 
 const onDrop = (event: DragEvent, dropIndex: number) => {
-  event.preventDefault()
-  if (draggingIndex.value === null || draggingIndex.value === dropIndex) return
+  event.preventDefault();
+  if (draggingIndex.value === null || draggingIndex.value === dropIndex) return;
 
-  const newTabs = [...props.tabs]
-  const [movedTab] = newTabs.splice(draggingIndex.value, 1)
+  const newTabs = [...props.tabs];
+  const [movedTab] = newTabs.splice(draggingIndex.value, 1);
   if (movedTab) {
-    newTabs.splice(dropIndex, 0, movedTab)
-    emit('tabReorder', newTabs)
+    newTabs.splice(dropIndex, 0, movedTab);
+    emit(
+      'tabReorder',
+      newTabs.map((tab) => tab.id),
+    );
   }
-  dragOverIndex.value = null
-}
+  dragOverIndex.value = null;
+};
 
 const onDragEnd = () => {
-  draggingIndex.value = null
-  dragOverIndex.value = null
-}
+  draggingIndex.value = null;
+  dragOverIndex.value = null;
+};
 
 // 触摸事件处理（移动端兼容）
 const onTouchStart = (event: TouchEvent, index: number) => {
   if (event.touches && event.touches.length > 0) {
-    touchStartX.value = event.touches[0]!.clientX
-    touchStartIndex.value = index
-    originalOrder.value = [...props.tabs]
+    touchStartX.value = event.touches[0]!.clientX;
+    touchStartIndex.value = index;
+    originalOrder.value = [...props.tabs];
   }
-}
+};
 
 const onTouchMove = (event: TouchEvent, index: number) => {
-  if (touchStartIndex.value === null || !event.touches || event.touches.length === 0) return
+  if (touchStartIndex.value === null || !event.touches || event.touches.length === 0) return;
 
-  const currentX = event.touches[0]!.clientX
-  const diffX = currentX - touchStartX.value
+  const currentX = event.touches[0]!.clientX;
+  const diffX = currentX - touchStartX.value;
 
   // 如果移动距离超过阈值，认为是拖拽操作
   if (Math.abs(diffX) > 10) {
-    isTouchDragging.value = true
-    draggingIndex.value = index
-    event.preventDefault() // 防止页面滚动
+    isTouchDragging.value = true;
+    draggingIndex.value = index;
+    event.preventDefault(); // 防止页面滚动
   }
-}
+};
 
 const onTouchEnd = () => {
   if (isTouchDragging.value && touchStartIndex.value !== null) {
     // 触摸拖拽结束，处理顺序调整
-    isTouchDragging.value = false
-    draggingIndex.value = null
+    isTouchDragging.value = false;
+    draggingIndex.value = null;
   }
-  touchStartIndex.value = null
-}
+  touchStartIndex.value = null;
+};
 
 // 滚动控制
-const scrollAmount = 200
+const scrollAmount = 200;
 
 const updateScrollButtons = () => {
-  if (!tabBarScrollWrapperRef.value) return
+  if (!tabBarScrollWrapperRef.value) return;
 
-  const wrapper = tabBarScrollWrapperRef.value
-  canScrollLeft.value = wrapper.scrollLeft > 0
-  canScrollRight.value = wrapper.scrollLeft < (wrapper.scrollWidth - wrapper.clientWidth)
-}
+  const wrapper = tabBarScrollWrapperRef.value;
+  canScrollLeft.value = wrapper.scrollLeft > 0;
+  canScrollRight.value = wrapper.scrollLeft < wrapper.scrollWidth - wrapper.clientWidth;
+};
 
 const scrollLeft = () => {
-  if (!tabBarScrollWrapperRef.value) return
+  if (!tabBarScrollWrapperRef.value) return;
 
   tabBarScrollWrapperRef.value.scrollBy({
     left: -scrollAmount,
-    behavior: 'smooth'
-  })
-}
+    behavior: 'smooth',
+  });
+};
 
 const scrollRight = () => {
-  if (!tabBarScrollWrapperRef.value) return
+  if (!tabBarScrollWrapperRef.value) return;
 
   tabBarScrollWrapperRef.value.scrollBy({
     left: scrollAmount,
-    behavior: 'smooth'
-  })
-}
+    behavior: 'smooth',
+  });
+};
 
 // 生命周期钩子
 onMounted(() => {
   // 初始化滚动按钮状态
-  updateScrollButtons()
+  updateScrollButtons();
 
   // 监听滚动事件
   if (tabBarScrollWrapperRef.value) {
-    tabBarScrollWrapperRef.value.addEventListener('scroll', updateScrollButtons)
+    tabBarScrollWrapperRef.value.addEventListener('scroll', updateScrollButtons);
   }
-})
+});
 
 onUnmounted(() => {
   // 移除滚动事件监听
   if (tabBarScrollWrapperRef.value) {
-    tabBarScrollWrapperRef.value.removeEventListener('scroll', updateScrollButtons)
+    tabBarScrollWrapperRef.value.removeEventListener('scroll', updateScrollButtons);
   }
-})
+});
 </script>
 
 <style scoped lang="scss">

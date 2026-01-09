@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper">
     <ToolBar :config="toolBarConfig" @generate="handleGenerate" />
-    <div class="lf-container">
+    <div class="editor-container">
       <resourceList
         class="variable-list"
         :variables="variables"
@@ -9,7 +9,17 @@
         @onAddVariable="onAddVariable"
         @onDeleteVariable="onDeleteVariable"
       />
-      <div ref="containerRef" class="lf-object"></div>
+      <div class="lf-object">
+        <div ref="containerRef" class="lf-container"></div>
+        <TabBar
+          :tabs="sheets.map((sheet) => ({ id: sheet.id, name: sheet.signature.name }))"
+          :selectedTabId="selectedSheetId"
+          @tabAdd="onTabAdd"
+          @tabClick="onTabChange"
+          @tabDelete="onTabDelete"
+          @tabReorder="onTabReorder"
+        />
+      </div>
       <TeleportContainer :flow-id="flowId" />
       <AttributePanel
         :lf="lf"
@@ -20,9 +30,21 @@
   </div>
 
   <!-- 弹窗 -->
+  <!-- 工具栏的弹窗 -->
   <PopupDialog ref="codePopupDialogRef" title="代码生成结果">
     <code class="code-block">{{ generatedCode }}</code>
     <button class="copy-btn" @click="copyCode">复制代码</button>
+  </PopupDialog>
+
+  <!-- 添加Tab的弹窗 -->
+  <PopupDialog ref="addTabPopupDialogRef" title="添加新工作表">
+    <div class="form-group">
+      <label for="tabName">工作表名称</label>
+      <input id="tabName" v-model="newTabName" type="text" placeholder="请输入工作表名称" />
+    </div>
+    <div class="form-group">
+      <button class="submit-btn" @click="handleAddTab">添加工作表</button>
+    </div>
   </PopupDialog>
 </template>
 
@@ -40,38 +62,49 @@ import {
   setBasicEditorEvent,
   type RecommendationFunction,
 } from '@/nodes/basic/basicEditorConfig';
-import { EntryNodeType, type EntryNodeProperties } from '@/nodes/basic/entryNode/entryNodeModel';
 import ToolBar from './toolBar/ToolBar.vue';
 import resourceList from './resourceList/ResourceList.vue';
 import { dragVariable } from './resourceList/resourceList';
 import BasicEdgeModel from '@/edges/BasicEdgeModel';
 import AttributePanel from './AttributePanel/AttributePanel.vue';
 import PopupDialog from './ui/PopupDialog.vue';
+import TabBar from './tabBar/TabBar.vue';
 
 // LogicFlow 相关的必要变量
 const containerRef = ref(null);
 const TeleportContainer = getTeleport();
 const flowId = ref('');
 let lf: LogicFlow | null = null;
-const renderData = ref<LogicFlow.GraphConfigData>({
-  nodes: [
-    {
-      id: '1',
-      type: EntryNodeType,
-      x: 100,
-      y: 100,
-      properties: {} satisfies EntryNodeProperties,
+type SheetData = {
+  id: string;
+  signature: {
+    name: string;
+    parameters: Variable[];
+  };
+  data: LogicFlow.GraphConfigData;
+};
+const selectedSheetId = ref<string>('1');
+const sheets = ref<SheetData[]>([
+  {
+    id: '1',
+    signature: {
+      name: 'main',
+      parameters: [],
     },
-  ],
-});
+    data: {},
+  },
+]);
 
 // LogicFlow外部数据
-// 变量列表配置
-const variables = ref<Variable[]>([]);
 // 工具栏配置
 const toolBarConfig = ref<BasicToolBarConfig | null>(null);
 const codePopupDialogRef = ref();
 const generatedCode = ref('');
+// 变量列表配置
+const variables = ref<Variable[]>([]);
+// 添加Tab弹窗配置
+const addTabPopupDialogRef = ref();
+const newTabName = ref('');
 // 属性面板配置
 const selectedElements = ref<LogicFlow.GraphData>({
   nodes: [],
@@ -148,7 +181,7 @@ onMounted(() => {
   setBasicEditorEvent(lf);
 
   // 绘制画布并配置显示设置
-  lf.render(renderData.value);
+  lf.render(sheets.value[0]!.data);
   lf.translateCenter();
   if (lf.extension.miniMap instanceof MiniMap) {
     lf.extension.miniMap.show();
@@ -187,12 +220,67 @@ function onAddVariable(variableName: string, variableType: BaseType) {
 function onDeleteVariable(variableName: string) {
   variables.value = variables.value.filter((v) => v.name !== variableName);
 }
+
+// Sheets 栏事件
+function onTabAdd() {
+  if (addTabPopupDialogRef.value === null) {
+    return;
+  }
+  addTabPopupDialogRef.value.open();
+}
+function handleAddTab() {
+  if (addTabPopupDialogRef.value === null) {
+    return;
+  }
+  addTabPopupDialogRef.value.close();
+  if (newTabName.value === '') {
+    return;
+  }
+  // 需要判断 name 是否重复
+  if (sheets.value.some((s) => s.signature.name === newTabName.value)) {
+    alert('工作表名称已存在');
+    return;
+  }
+  if (variables.value.some((v) => v.name === newTabName.value)) {
+    alert('工作表名称不能与变量名称重复');
+    return;
+  }
+  const newId = Date.now();
+  const newLabel = newTabName.value;
+  sheets.value.push({
+    id: newId.toString(),
+    signature: { name: newLabel, parameters: [] },
+    data: {},
+  });
+}
+// 切换工作表
+function onTabChange(tabId: string) {
+  // 先保存上下文
+  if (lf === null) {
+    return;
+  }
+  const data = lf.getGraphRawData();
+  sheets.value[sheets.value.findIndex((s) => s.id === selectedSheetId.value)]!.data = data;
+  // 再切换上下文
+  selectedSheetId.value = tabId;
+  lf.render(sheets.value.find((s) => s.id === tabId)!.data);
+}
+function onTabDelete(tabId: string) {
+  if (selectedSheetId.value === tabId) {
+    alert('不能删除当前工作表');
+    return;
+  }
+  sheets.value = sheets.value.filter((s) => s.id !== tabId);
+}
+function onTabReorder(tabIds: string[]) {
+  sheets.value = tabIds.map((id) => sheets.value.find((s) => s.id === id)!);
+}
 </script>
 
 <style scoped lang="scss">
 .wrapper {
   height: 100%;
-  .lf-container {
+  .editor-container {
     // 49是工具栏高度，5px是实验值
     height: calc(100% - 49px - 5px);
     min-height: 686px;
@@ -205,14 +293,19 @@ function onDeleteVariable(variableName: string) {
     }
 
     .lf-object {
-      height: 100%;
+      height: calc(100% - 41px);
       width: 100%;
+      min-height: 300px;
+      .lf-container {
+        width: 100%;
+        height: 100%;
+      }
     }
   }
 
   /* 响应式布局：当屏幕宽度小于 768px 时采用纵向布局 */
   @media (max-width: 768px) {
-    .lf-container {
+    .editor-container {
       flex-direction: column;
       min-height: 970px;
 
@@ -224,8 +317,6 @@ function onDeleteVariable(variableName: string) {
 
       .lf-object {
         flex: 1;
-        width: 100%;
-        min-height: 300px;
       }
     }
   }
