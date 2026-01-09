@@ -4,7 +4,7 @@
     <nav class="navbar">
       <div class="nav-container">
         <div class="nav-logo">
-          <h2>ZenCoder</h2>
+          <h2>星程蓝图</h2>
         </div>
         <ul class="nav-menu">
           <li><RouterLink to="/">首页</RouterLink></li>
