@@ -21,9 +21,6 @@
           @drop="onDrop($event, index)"
           @dragend="onDragEnd"
           @click="onTabClick(tab.id)"
-          @touchstart="onTouchStart($event, index)"
-          @touchmove="onTouchMove($event, index)"
-          @touchend="onTouchEnd"
         >
           <span class="drag-handle" :draggable="true" @dragstart="onDragStart($event, index)">
             <svg
@@ -81,7 +78,7 @@ interface Props {
 
 // 定义emit事件
 type Emits = {
-  (e: 'tabClick', tabId: string): void;
+  (e: 'tabSelect', tabId: string): void;
   (e: 'tabAdd'): void;
   (e: 'tabDelete', tabId: string): void;
   (e: 'tabReorder', tabs: string[]): void;
@@ -102,9 +99,6 @@ const tabBarRef = ref<HTMLElement | null>(null);
 const tabBarScrollWrapperRef = ref<HTMLElement | null>(null);
 
 // 触摸拖拽状态
-const isTouchDragging = ref(false);
-const touchStartX = ref(0);
-const touchStartIndex = ref<number | null>(null);
 const originalOrder = ref<Tab[]>([]);
 
 // 滚动状态
@@ -113,7 +107,8 @@ const canScrollRight = ref(false);
 
 // 处理tab点击
 const onTabClick = (tabId: string) => {
-  emit('tabClick', tabId);
+  console.log(`点击了tab ${tabId}`);
+  emit('tabSelect', tabId);
 };
 
 // 处理tab添加
@@ -176,38 +171,6 @@ const onDrop = (event: DragEvent, dropIndex: number) => {
 const onDragEnd = () => {
   draggingIndex.value = null;
   dragOverIndex.value = null;
-};
-
-// 触摸事件处理（移动端兼容）
-const onTouchStart = (event: TouchEvent, index: number) => {
-  if (event.touches && event.touches.length > 0) {
-    touchStartX.value = event.touches[0]!.clientX;
-    touchStartIndex.value = index;
-    originalOrder.value = [...props.tabs];
-  }
-};
-
-const onTouchMove = (event: TouchEvent, index: number) => {
-  if (touchStartIndex.value === null || !event.touches || event.touches.length === 0) return;
-
-  const currentX = event.touches[0]!.clientX;
-  const diffX = currentX - touchStartX.value;
-
-  // 如果移动距离超过阈值，认为是拖拽操作
-  if (Math.abs(diffX) > 10) {
-    isTouchDragging.value = true;
-    draggingIndex.value = index;
-    event.preventDefault(); // 防止页面滚动
-  }
-};
-
-const onTouchEnd = () => {
-  if (isTouchDragging.value && touchStartIndex.value !== null) {
-    // 触摸拖拽结束，处理顺序调整
-    isTouchDragging.value = false;
-    draggingIndex.value = null;
-  }
-  touchStartIndex.value = null;
 };
 
 // 滚动控制

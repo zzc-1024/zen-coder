@@ -39,12 +39,12 @@
 
   <!-- 添加Tab的弹窗 -->
   <PopupDialog ref="addTabPopupDialogRef" title="添加新工作表">
-    <div class="form-group">
-      <label for="tabName">工作表名称</label>
-      <input id="tabName" v-model="newTabName" type="text" placeholder="请输入工作表名称" />
+    <div>
+      <label>函数名称</label>
+      <input v-model="newTabName" type="text" placeholder="请输入函数名称" />
     </div>
-    <div class="form-group">
-      <button class="submit-btn" @click="handleAddTab">添加工作表</button>
+    <div>
+      <button @click="handleAddTab">添加函数</button>
     </div>
   </PopupDialog>
 </template>
@@ -239,9 +239,7 @@ function handleAddTab() {
     return;
   }
   if (!/^[a-zA-Z_][a-zA-Z0-9_]{0,31}$/.test(newTabName.value)) {
-    alert(
-      '工作表名称必须以字母开头，只能包含字母、数字和下划线，且长度必须在 1 到 32 个字符之间!',
-    );
+    alert('工作表名称必须以字母开头，只能包含字母、数字和下划线，且长度必须在 1 到 32 个字符之间!');
     return;
   }
   // 需要判断 name 是否重复
