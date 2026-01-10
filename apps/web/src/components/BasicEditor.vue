@@ -15,9 +15,10 @@
           :tabs="sheets.map((sheet) => ({ id: sheet.id, name: sheet.signature.name }))"
           :selectedTabId="selectedSheetId"
           @tabAdd="onTabAdd"
-          @tabClick="onTabChange"
+          @tabSelect="onTabChange"
           @tabDelete="onTabDelete"
           @tabReorder="onTabReorder"
+          @tabTouch="onTabTouch"
         />
       </div>
       <TeleportContainer :flow-id="flowId" />
@@ -69,6 +70,7 @@ import BasicEdgeModel from '@/edges/BasicEdgeModel';
 import AttributePanel from './AttributePanel/AttributePanel.vue';
 import PopupDialog from './ui/PopupDialog.vue';
 import TabBar from './tabBar/TabBar.vue';
+import { EntryNodeType, type EntryNodeProperties } from '@/nodes/basic/entryNode/entryNodeModel';
 
 // LogicFlow 相关的必要变量
 const containerRef = ref(null);
@@ -236,6 +238,12 @@ function handleAddTab() {
   if (newTabName.value === '') {
     return;
   }
+  if (!/^[a-zA-Z_][a-zA-Z0-9_]{0,31}$/.test(newTabName.value)) {
+    alert(
+      '工作表名称必须以字母开头，只能包含字母、数字和下划线，且长度必须在 1 到 32 个字符之间!',
+    );
+    return;
+  }
   // 需要判断 name 是否重复
   if (sheets.value.some((s) => s.signature.name === newTabName.value)) {
     alert('工作表名称已存在');
@@ -274,6 +282,16 @@ function onTabDelete(tabId: string) {
 }
 function onTabReorder(tabIds: string[]) {
   sheets.value = tabIds.map((id) => sheets.value.find((s) => s.id === id)!);
+}
+function onTabTouch(tabId: string) {
+  console.log(tabId);
+  if (lf === null) {
+    return;
+  }
+  lf.dnd.startDrag({
+    type: EntryNodeType,
+    properties: {} satisfies EntryNodeProperties,
+  });
 }
 </script>
 

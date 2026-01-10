@@ -15,8 +15,6 @@
           :key="tab.id"
           class="tab-item"
           :class="{ active: selectedTabId === tab.id, dragging: draggingIndex === index }"
-          :draggable="true"
-          @dragstart="onDragStart($event, index)"
           @dragenter="onDragEnter($event, index)"
           @dragover.prevent="onDragOver($event)"
           @dragleave="onDragLeave($event, index)"
@@ -27,7 +25,23 @@
           @touchmove="onTouchMove($event, index)"
           @touchend="onTouchEnd"
         >
-          <span class="tab-text">{{ tab.name }}</span>
+          <span class="drag-handle" :draggable="true" @dragstart="onDragStart($event, index)">
+            <svg
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              class="drag-handle-icon"
+            >
+              <circle cx="5" cy="7" r="1.5" />
+              <circle cx="5" cy="12" r="1.5" />
+              <circle cx="5" cy="17" r="1.5" />
+              <circle cx="12" cy="7" r="1.5" />
+              <circle cx="12" cy="12" r="1.5" />
+              <circle cx="12" cy="17" r="1.5" />
+            </svg>
+          </span>
+          <span class="tab-text" @pointerdown="emit('tabTouch', tab.id)">{{ tab.name }}</span>
           <button
             class="tab-delete-btn"
             @click.stop="onTabDelete(tab.id)"
@@ -71,6 +85,7 @@ type Emits = {
   (e: 'tabAdd'): void;
   (e: 'tabDelete', tabId: string): void;
   (e: 'tabReorder', tabs: string[]): void;
+  (e: 'tabTouch', tabId: string): void;
 };
 
 // 声明props和emit
@@ -327,6 +342,10 @@ $delete-color: #ff4444;
     transform: rotate(2deg);
     background-color: $bg-tertiary;
     box-shadow: 0 4px 12px rgba(0, 170, 255, 0.4);
+  }
+
+  .drag-handle {
+    cursor: move;
   }
 
   .tab-text {
