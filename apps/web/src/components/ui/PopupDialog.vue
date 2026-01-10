@@ -1,9 +1,9 @@
 <template>
-  <div v-if="isVisible" class="popup-overlay" @click.self="close">
+  <div v-if="isVisible" class="popup-overlay" @pointerdown.self="close">
     <div class="popup-dialog">
       <div class="popup-header">
         <h3 class="popup-title">{{ title }}</h3>
-        <button class="popup-close" @click="close">×</button>
+        <button class="popup-close" @pointerdown="close">×</button>
       </div>
       <div class="popup-content">
         <slot>{{ content }}</slot>
