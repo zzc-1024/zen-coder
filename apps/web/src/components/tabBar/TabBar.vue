@@ -1,13 +1,5 @@
 <template>
   <div class="tab-bar-container">
-    <button
-      class="tab-scroll-btn left"
-      @click="scrollLeft"
-      @touchstart="scrollLeft"
-      :disabled="!canScrollLeft"
-    >
-      ←
-    </button>
     <div class="tab-bar-scroll-wrapper" ref="tabBarScrollWrapperRef">
       <div class="tab-bar" ref="tabBarRef">
         <div
@@ -49,14 +41,6 @@
         </div>
       </div>
     </div>
-    <button
-      class="tab-scroll-btn right"
-      @click="scrollRight"
-      @touchstart="scrollRight"
-      :disabled="!canScrollRight"
-    >
-      →
-    </button>
     <button class="tab-add-btn" @click="onTabAdd" @touchstart="onTabAdd">+</button>
   </div>
 </template>
@@ -174,32 +158,12 @@ const onDragEnd = () => {
 };
 
 // 滚动控制
-const scrollAmount = 200;
-
 const updateScrollButtons = () => {
   if (!tabBarScrollWrapperRef.value) return;
 
   const wrapper = tabBarScrollWrapperRef.value;
   canScrollLeft.value = wrapper.scrollLeft > 0;
   canScrollRight.value = wrapper.scrollLeft < wrapper.scrollWidth - wrapper.clientWidth;
-};
-
-const scrollLeft = () => {
-  if (!tabBarScrollWrapperRef.value) return;
-
-  tabBarScrollWrapperRef.value.scrollBy({
-    left: -scrollAmount,
-    behavior: 'smooth',
-  });
-};
-
-const scrollRight = () => {
-  if (!tabBarScrollWrapperRef.value) return;
-
-  tabBarScrollWrapperRef.value.scrollBy({
-    left: scrollAmount,
-    behavior: 'smooth',
-  });
 };
 
 // 生命周期钩子
@@ -266,7 +230,6 @@ $delete-color: #ff4444;
   display: flex;
   align-items: center;
   height: 100%;
-  padding: 0 8px;
   gap: 4px;
   min-width: max-content;
 }
@@ -338,50 +301,6 @@ $delete-color: #ff4444;
   }
 }
 
-.tab-scroll-btn {
-  width: 28px;
-  height: 28px;
-  padding: 0;
-  background-color: $bg-secondary;
-  border: 1px solid $border-color;
-  border-radius: 16px;
-  color: $text-primary;
-  font-size: 14px;
-  line-height: 1;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s ease;
-  touch-action: manipulation;
-  margin: 0 2px;
-
-  &:hover:not(:disabled) {
-    background-color: $bg-tertiary;
-    border-color: $accent-color;
-    box-shadow: 0 0 8px rgba(0, 170, 255, 0.3);
-  }
-
-  &:active:not(:disabled) {
-    background-color: $accent-color;
-    color: $bg-primary;
-  }
-
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    border-color: $border-color;
-  }
-
-  &.left {
-    margin-left: 8px;
-  }
-
-  &.right {
-    margin-right: 4px;
-  }
-}
-
 .tab-add-btn {
   width: 28px;
   height: 28px;
@@ -415,7 +334,6 @@ $delete-color: #ff4444;
 // 响应式设计
 @media (max-width: 768px) {
   .tab-bar {
-    padding: 0 4px;
     gap: 2px;
   }
 

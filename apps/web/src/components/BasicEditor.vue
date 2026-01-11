@@ -12,6 +12,7 @@
       <div class="lf-object">
         <div ref="containerRef" class="lf-container"></div>
         <TabBar
+          class="tab-bar"
           :tabs="sheets.map((sheet) => ({ id: sheet.id, name: sheet.signature.name }))"
           :selectedTabId="selectedSheetId"
           @tabAdd="onTabAdd"
@@ -300,7 +301,7 @@ function onTabTouch(tabId: string) {
     // 49是工具栏高度，5px是实验值
     height: calc(100% - 49px - 5px);
     min-height: 686px;
-    width: 100vw;
+    width: 100%;
     display: flex;
     flex-direction: row;
 
@@ -315,6 +316,9 @@ function onTabTouch(tabId: string) {
       .lf-container {
         width: 100%;
         height: 100%;
+      }
+      .tab-bar {
+        width: 100%;
       }
     }
   }
