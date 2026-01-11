@@ -6,6 +6,15 @@ export class VariableExpression extends Expression {
   }
 }
 
+export class TypeCastExpression extends Expression {
+  constructor(
+    public expression: Expression,
+    public type: string,
+  ) {
+    super();
+  }
+}
+
 export class FunctionCallExpression extends Expression {
   constructor(
     public name: string,

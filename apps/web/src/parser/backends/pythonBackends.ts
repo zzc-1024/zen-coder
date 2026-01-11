@@ -1,4 +1,11 @@
-import type { BasicTypeName, Variable } from '../variable';
+import {
+  BUILTIN_BASIC_BOOLEAN_TYPE,
+  BUILTIN_BASIC_FLOAT_TYPE,
+  BUILTIN_BASIC_INTEGER_TYPE,
+  BUILTIN_BASIC_STRING_TYPE,
+  type BasicTypeName,
+  type Variable,
+} from '../variable';
 import { CompilerBackend, Expression, Statement } from '../defination';
 import {
   AssignmentStatement,
@@ -9,6 +16,7 @@ import {
 } from '../statements';
 import {
   BinaryExpression,
+  TypeCastExpression,
   BooleanExpression,
   FloatExpression,
   IntegerExpression,
@@ -45,12 +53,20 @@ export class PythonBackend extends CompilerBackend {
   };
   private parseExpression(expression: Expression): string {
     if (expression instanceof VariableExpression) return expression.name;
-    if (expression instanceof BinaryExpression)
+    else if (expression instanceof TypeCastExpression) {
+      if (expression.type === BUILTIN_BASIC_FLOAT_TYPE)
+        return `float(${this.parseExpression(expression.expression)})`;
+      if (expression.type === BUILTIN_BASIC_INTEGER_TYPE)
+        return `int(${this.parseExpression(expression.expression)})`;
+      if (expression.type === BUILTIN_BASIC_STRING_TYPE)
+        return `str(${this.parseExpression(expression.expression)})`;
+      throw new Error(`Unknown type cast type: ${expression.type.toString()}`);
+    } else if (expression instanceof BinaryExpression)
       return `(${this.parseExpression(expression.left)} ${this.pythonBinaryOperatorMap[expression.operator]} ${this.parseExpression(expression.right)})`;
-    if (expression instanceof BooleanExpression) return expression.value ? 'True' : 'False';
-    if (expression instanceof FloatExpression) return expression.value.toString();
-    if (expression instanceof IntegerExpression) return expression.value.toString();
-    if (expression instanceof StringExpression) return `'${expression.value}'`;
+    else if (expression instanceof BooleanExpression) return expression.value ? 'True' : 'False';
+    else if (expression instanceof FloatExpression) return expression.value.toString();
+    else if (expression instanceof IntegerExpression) return expression.value.toString();
+    else if (expression instanceof StringExpression) return `'${expression.value}'`;
     throw new Error(`Unknown expression type: ${expression.constructor.name}`);
   }
   private convertVariableToPythonStyle(variable: Variable): string {
@@ -58,13 +74,13 @@ export class PythonBackend extends CompilerBackend {
     if (variable.type.dataStructureType === 'list') return `${variable.name}: list = []`;
     // 剩下的是 basic 情况
     switch (variable.type.toString() as BasicTypeName) {
-      case 'builtin:basic:boolean':
+      case BUILTIN_BASIC_BOOLEAN_TYPE:
         return `${variable.name}: bool = False`;
-      case 'builtin:basic:float':
+      case BUILTIN_BASIC_FLOAT_TYPE:
         return `${variable.name}: float = 0.0`;
-      case 'builtin:basic:string':
+      case BUILTIN_BASIC_STRING_TYPE:
         return `${variable.name}: str = ''`;
-      case 'builtin:basic:integer':
+      case BUILTIN_BASIC_INTEGER_TYPE:
         return `${variable.name}: int = 0`;
       default:
         throw new Error(`Unknown basic type: ${variable.type.toString()}`);
