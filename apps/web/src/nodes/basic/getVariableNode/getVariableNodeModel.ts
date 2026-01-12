@@ -32,10 +32,11 @@ class GetVariableNodeModel extends BasicNodeModel {
     throw new Error(`GetVariableNodeModel parseFlowIn anchorId ${anchorId} not supported`);
   }
   parseDataOut(anchorId: string): Expression {
+    const properties = this.properties as GetVariableNodeProperties;
     const dataOutId = anchorId.split(':')[1];
     if (dataOutId !== GetVariableNodeAnchorIds.DATA_OUT)
       throw new Error(`GetVariableNodeModel parseDataOut anchorId ${anchorId} not supported`);
-    return new VariableExpression(this.properties.variable as string);
+    return new VariableExpression(properties.variableScopeType, properties.variable);
   }
 }
 

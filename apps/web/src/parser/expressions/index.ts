@@ -1,7 +1,11 @@
 import { Expression } from '../defination';
+import type { VariableScopeType } from '../variable';
 
 export class VariableExpression extends Expression {
-  constructor(public name: string) {
+  constructor(
+    public variableScopeType: VariableScopeType,
+    public name: string,
+  ) {
     super();
   }
 }

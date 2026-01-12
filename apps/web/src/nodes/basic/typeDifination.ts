@@ -31,7 +31,7 @@ export type SheetData = {
   signature: {
     name: string;
     parameters: Variable[];
-    returnValues: Variable[];
+    returnValue: BaseType | undefined;
   };
   variables: Variable[];
   graph: LogicFlow.GraphConfigData;

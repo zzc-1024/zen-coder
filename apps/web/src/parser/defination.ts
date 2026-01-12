@@ -10,5 +10,5 @@ export abstract class Statement {
 }
 
 export abstract class CompilerBackend {
-  abstract generateCode(variables: Variable[], statements: Statement[]): string;
+  abstract generateCode(variables: Variable[], functionName: string, statements: Statement[]): string;
 }

@@ -87,7 +87,7 @@ const sheets = ref<SheetData[]>([
     signature: {
       name: 'main',
       parameters: [],
-      returnValues: [],
+      returnValue: undefined,
     },
     variables: [],
     graph: {},
@@ -208,7 +208,12 @@ function copyCode() {
 }
 
 // 变量列表事件
-function onPointerDown(dragType: string, variableScopeType: VariableScopeType, variableName: string, variableType: BaseType) {
+function onPointerDown(
+  dragType: string,
+  variableScopeType: VariableScopeType,
+  variableName: string,
+  variableType: BaseType,
+) {
   if (lf === null) {
     return;
   }
@@ -276,7 +281,7 @@ function handleAddTab() {
   const newLabel = newTabName.value;
   sheets.value.push({
     id: newId.toString(),
-    signature: { name: newLabel, parameters: [], returnValues: [] },
+    signature: { name: newLabel, parameters: [], returnValue: undefined },
     variables: [],
     graph: {},
   });

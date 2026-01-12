@@ -2,7 +2,7 @@ import { type Ref } from 'vue';
 
 import { type VueNodeConfig } from '@logicflow/vue-node-registry';
 
-import type LogicFlow from '@logicflow/core';
+import LogicFlow from '@logicflow/core';
 import { EventType } from '@logicflow/core';
 import {
   BUILTIN_BASIC_FLOW_TYPE,
@@ -152,7 +152,15 @@ export class BasicToolBarConfig extends ToolBarConfig {
     super();
   }
 
+  private saveCurrentSheet() {
+    const graphRawData = this.lf.getGraphRawData();
+    this.sheets.value[
+      this.sheets.value.findIndex((s) => s.id === this.selectedSheetId.value)
+    ]!.graph = graphRawData;
+  }
+
   onSave = () => {
+    this.saveCurrentSheet();
     // 保存为 JSON 文件
     const json = JSON.stringify(
       {
@@ -215,18 +223,41 @@ export class BasicToolBarConfig extends ToolBarConfig {
   };
   onExecute: undefined;
   onGenerate = () => {
-    const entryNodes = this.lf.graphModel.nodes.filter(
-      (node) => (node.type as string) === EntryNodeType,
-    );
-    if (entryNodes.length !== 1) {
-      alert('入口节点有且仅能有一个');
-      return;
-    }
-    const entryNode = entryNodes[0]! as EntryNodeModel;
-    const statements = entryNode.parseFlowIn();
+    this.saveCurrentSheet();
+    const graphModel = this.lf.graphModel;
+    const functions: string[] = [];
     const pythonBackend: PythonBackend = new PythonBackend();
-    const code = pythonBackend.generateCode(this.globalVariables.value, statements);
-    return code;
+    for (const sheet of this.sheets.value) {
+      graphModel.graphDataToModel(sheet.graph);
+      const entryNodes = graphModel.nodes?.filter(
+        (node) => (node.type as string) === EntryNodeType,
+      );
+      if (entryNodes === undefined || entryNodes.length !== 1) {
+        alert(`${sheet.signature.name} 主函数的入口节点必须有一个且至多只能有一个`);
+        return;
+      }
+
+      const entryNode = entryNodes[0]! as EntryNodeModel;
+      const statements = entryNode.parseFlowIn();
+      const code = pythonBackend.generateCode(sheet.variables, sheet.signature.name, statements);
+      functions.push(code);
+    }
+    graphModel.graphDataToModel(
+      this.sheets.value[this.sheets.value.findIndex((s) => s.id === this.selectedSheetId.value)]!
+        .graph,
+    );
+    // 合并所有函数
+    let result = '';
+    for (const variable of this.globalVariables.value) {
+      result += pythonBackend.convertVariableToPythonStyle(variable) + '\n';
+    }
+    result += '\n';
+    for (const functionCode of functions) {
+      result += functionCode + '\n';
+    }
+    result += 'if __name__ == "__main__":\n';
+    result += `    ${this.sheets.value.find((sheet) => sheet.id === this.selectedSheetId.value)!.signature.name}()\n`;
+    return result;
   };
   onLanguageChange: undefined;
   onGotoHome = () => {

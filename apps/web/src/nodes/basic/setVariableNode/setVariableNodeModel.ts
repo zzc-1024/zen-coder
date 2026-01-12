@@ -68,7 +68,11 @@ class SetVariableNodeModel extends BasicNodeModel {
 
     // 生成语句
     const statements = [
-      new AssignmentStatement(new VariableExpression(properties.variable), expression),
+      new AssignmentStatement(
+        properties.variableScopeType,
+        new VariableExpression(properties.variableScopeType, properties.variable),
+        expression,
+      ),
       ...this.getFlowOutStatement(`${this.id}:${SetVariableNodeAnchorIds.FLOW_OUT}`),
     ];
     return statements;

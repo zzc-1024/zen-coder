@@ -1,5 +1,6 @@
 import { Expression, Statement } from '../defination';
 import type { VariableExpression } from '../expressions';
+import type { VariableScopeType } from '../variable';
 
 export class VariableStatement extends Statement {
   constructor(public variable: VariableExpression) {
@@ -9,6 +10,7 @@ export class VariableStatement extends Statement {
 
 export class AssignmentStatement extends Statement {
   constructor(
+    public variableScopeType: VariableScopeType,
     public variable: VariableExpression,
     public expression: Expression,
   ) {

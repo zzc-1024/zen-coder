@@ -52,8 +52,10 @@ export class PythonBackend extends CompilerBackend {
     xnor: '==',
   };
   private parseExpression(expression: Expression): string {
-    if (expression instanceof VariableExpression) return expression.name;
-    else if (expression instanceof TypeCastExpression) {
+    if (expression instanceof VariableExpression) {
+      if (expression.variableScopeType === 'local') return expression.name;
+      return `globals()["${expression.name}"]`;
+    } else if (expression instanceof TypeCastExpression) {
       if (expression.type === BUILTIN_BASIC_FLOAT_TYPE)
         return `float(${this.parseExpression(expression.expression)})`;
       if (expression.type === BUILTIN_BASIC_INTEGER_TYPE)
@@ -69,7 +71,7 @@ export class PythonBackend extends CompilerBackend {
     else if (expression instanceof StringExpression) return `'${expression.value}'`;
     throw new Error(`Unknown expression type: ${expression.constructor.name}`);
   }
-  private convertVariableToPythonStyle(variable: Variable): string {
+  convertVariableToPythonStyle(variable: Variable): string {
     if (variable.type.dataStructureType === 'dict') return `${variable.name}: dict = {}`;
     if (variable.type.dataStructureType === 'list') return `${variable.name}: list = []`;
     // 剩下的是 basic 情况
@@ -90,7 +92,9 @@ export class PythonBackend extends CompilerBackend {
     let code = '';
     if (statement instanceof AssignmentStatement) {
       code += `${' '.repeat(this.pythonContext.indentSpaceCount)}`;
-      code += `${statement.variable.name} = ${this.parseExpression(statement.expression)}\n`;
+      if (statement.variableScopeType === 'global')
+        code += `globals()["${statement.variable.name}"] = ${this.parseExpression(statement.expression)}\n`;
+      else code += `${statement.variable.name} = ${this.parseExpression(statement.expression)}\n`;
     } else if (statement instanceof IfStatement) {
       code += `${' '.repeat(this.pythonContext.indentSpaceCount)}`;
       code += `if ${this.parseExpression(statement.condition)}:\n`;
@@ -128,24 +132,20 @@ export class PythonBackend extends CompilerBackend {
     });
     return code;
   }
-  generateCode(variables: Variable[], statements: Statement[]): string {
+  generateCode(localVariables: Variable[], functionName: string, statements: Statement[]): string {
     // 先配置基础的上下文
     this.pythonContext.indentSpaceCount = 0;
     let code = '';
-    code += 'def main():\n';
+    code += `def ${functionName}():\n`;
     this.pythonContext.indentSpaceCount += 4;
 
     // 先声明变量
-    variables.forEach((variable) => {
+    localVariables.forEach((variable) => {
       code += `${' '.repeat(this.pythonContext.indentSpaceCount)}${this.convertVariableToPythonStyle(variable)}\n`;
     });
 
     // 再执行语句
     code += this.parseStatements(statements);
-
-    // 最后添加主函数调用
-    code += 'if __name__ == "__main__":\n';
-    code += '    main()\n';
     return code;
   }
 }
