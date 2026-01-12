@@ -18,6 +18,7 @@ export type BasicTypeName =
   | BuiltinBasicStringType
   | BuiltinBasicBooleanType;
 
+export type VariableScopeType = 'global' | 'local';
 export type DataStructureType = 'basic' | 'list' | 'dict';
 
 export abstract class BaseType {

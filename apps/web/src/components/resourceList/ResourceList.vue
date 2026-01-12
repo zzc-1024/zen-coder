@@ -9,6 +9,13 @@
     <!-- Add New Variable Form (Fixed) -->
     <PopupDialog title="新增变量" ref="addVariablePopup" class="add-variable-form">
       <div class="horizontal-group">
+        作用范围
+        <select v-model="variableScopeType" class="type-selector">
+          <option value="local">当前蓝图</option>
+          <option value="global">全局变量</option>
+        </select>
+      </div>
+      <div class="horizontal-group">
         数据结构
         <select v-model="variableDataStructureType" class="type-selector">
           <option value="basic">普通</option>
@@ -43,8 +50,50 @@
 
     <!-- List Body -->
     <div class="list-body">
-      <!-- Variable Item -->
-      <div v-for="(variable, index) in props.variables" :key="index" class="variable-item">
+      <!-- 局部变量 -->
+      <div
+        v-for="(variable, index) in props.localVariables"
+        :key="index"
+        class="variable-item local-variable-item"
+      >
+        <!-- Variable Info -->
+        <div class="variable-header">
+          <span class="variable-name">{{ variable.name }}</span>
+          <span class="variable-type">{{ variable.type.toDisplayString() }}</span>
+          <button
+            class="delete-button"
+            @click="onDeleteVariable(variable.name)"
+            title="Delete Variable"
+          >
+            ✕
+          </button>
+        </div>
+
+        <!-- Variable Nodes -->
+        <div class="variable-nodes">
+          <div
+            class="node get-node"
+            data-node-type="get-variable"
+            @pointerdown="onPointerDown($event, 'get', variable.name, variable.type)"
+          >
+            <span class="node-label">获取</span>
+          </div>
+          <div
+            class="node set-node"
+            data-node-type="set-variable"
+            @pointerdown="onPointerDown($event, 'set', variable.name, variable.type)"
+          >
+            <span class="node-label">设置</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 全局变量 -->
+      <div
+        v-for="(variable, index) in props.globalVariables"
+        :key="index"
+        class="variable-item global-variable-item"
+      >
         <!-- Variable Info -->
         <div class="variable-header">
           <span class="variable-name">{{ variable.name }}</span>
@@ -82,24 +131,32 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { BaseType, BasicType, type DataStructureType, type Variable } from '@/parser/variable';
+import {
+  BaseType,
+  BasicType,
+  type DataStructureType,
+  type Variable,
+  type VariableScopeType,
+} from '@/parser/variable';
 import PopupDialog from '../ui/PopupDialog.vue';
 const props = defineProps<{
-  variables: Variable[];
+  globalVariables: Variable[];
+  localVariables: Variable[];
 }>();
 const emits = defineEmits<{
-  onDeleteVariable: [variableName: string];
+  onDeleteVariable: [scopeType: VariableScopeType, variableName: string];
   onPointerDown: [dragType: string, variableName: string, variableType: BaseType];
-  onAddVariable: [variableName: string, variableType: BaseType];
+  onAddVariable: [scopeType: VariableScopeType, variableName: string, variableType: BaseType];
 }>();
 
 const addVariablePopup = ref();
+const variableScopeType = ref<VariableScopeType>('local');
 const variableDataStructureType = ref<DataStructureType>('basic');
 const newVariableType = ref('int');
 const newVariableName = ref('hello');
 
 function onDeleteVariable(variableName: string) {
-  emits('onDeleteVariable', variableName);
+  emits('onDeleteVariable', variableScopeType.value, variableName);
 }
 
 function onPointerDown(
@@ -114,7 +171,18 @@ function onPointerDown(
 
 function onAddVariable() {
   // 验证变量名是否存在
-  if (props.variables.some((v) => v.name === newVariableName.value)) {
+  if (variableScopeType.value === 'global') {
+    if (props.globalVariables.some((v) => v.name === newVariableName.value)) {
+      alert('Variable name already exists!');
+      return;
+    }
+  } else if (variableScopeType.value === 'local') {
+    if (props.localVariables.some((v) => v.name === newVariableName.value)) {
+      alert('Variable name already exists!');
+      return;
+    }
+  }
+  if (props.localVariables.some((v) => v.name === newVariableName.value)) {
     alert('Variable name already exists!');
     return;
   }
@@ -139,7 +207,7 @@ function onAddVariable() {
     } else throw new Error(`Unknown variable type: ${newVariableType.value}`);
   } else throw new Error(`Unknown data structure type: ${variableDataStructureType.value}`);
 
-  emits('onAddVariable', newVariableName.value, type);
+  emits('onAddVariable', variableScopeType.value, newVariableName.value, type);
   newVariableName.value = '';
 }
 </script>
@@ -253,6 +321,16 @@ function onAddVariable() {
       border-radius: 4px;
       overflow: hidden;
       flex-shrink: 0;
+      &.global-variable-item {
+        .variable-header {
+          background: linear-gradient(to right, #48502c, #325702);
+        }
+      }
+      &.local-variable-item {
+        .variable-header {
+          background: linear-gradient(to right, #2c3e50, #03056e);
+        }
+      }
 
       .variable-header {
         display: flex;

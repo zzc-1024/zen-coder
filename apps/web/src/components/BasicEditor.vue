@@ -4,7 +4,8 @@
     <div class="editor-container">
       <resourceList
         class="variable-list"
-        :variables="variables"
+        :globalVariables="globalVariables"
+        :localVariables="localVariables"
         @onPointerDown="onPointerDown"
         @onAddVariable="onAddVariable"
         @onDeleteVariable="onDeleteVariable"
@@ -51,11 +52,11 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { getTeleport } from '@logicflow/vue-node-registry';
 import LogicFlow, { BezierEdge, EventType } from '@logicflow/core';
 import { DndPanel, MiniMap } from '@logicflow/extension';
-import { BaseType, type Variable } from '@/parser/variable';
+import { BaseType, type Variable, type VariableScopeType } from '@/parser/variable';
 import { batchRegisterVueNode } from '@/utils/editor';
 import {
   basicEditorNode,
@@ -83,8 +84,10 @@ type SheetData = {
   signature: {
     name: string;
     parameters: Variable[];
+    returnValues: Variable[];
   };
-  data: LogicFlow.GraphConfigData;
+  variables: Variable[];
+  graph: LogicFlow.GraphConfigData;
 };
 const selectedSheetId = ref<string>('1');
 const sheets = ref<SheetData[]>([
@@ -93,8 +96,10 @@ const sheets = ref<SheetData[]>([
     signature: {
       name: 'main',
       parameters: [],
+      returnValues: [],
     },
-    data: {},
+    variables: [],
+    graph: {},
   },
 ]);
 
@@ -104,7 +109,11 @@ const toolBarConfig = ref<BasicToolBarConfig | null>(null);
 const codePopupDialogRef = ref();
 const generatedCode = ref('');
 // 变量列表配置
-const variables = ref<Variable[]>([]);
+const globalVariables = ref<Variable[]>([]);
+const localVariables = computed(() => {
+  const sheet = sheets.value.find((sheet) => sheet.id === selectedSheetId.value);
+  return sheet?.variables || [];
+});
 // 添加Tab弹窗配置
 const addTabPopupDialogRef = ref();
 const newTabName = ref('');
@@ -133,7 +142,7 @@ onMounted(() => {
   });
 
   // 工具栏配置
-  toolBarConfig.value = new BasicToolBarConfig(lf!, variables);
+  toolBarConfig.value = new BasicToolBarConfig(lf!, globalVariables);
 
   // 注册自定义边和节点
   lf.register({
@@ -184,7 +193,7 @@ onMounted(() => {
   setBasicEditorEvent(lf);
 
   // 绘制画布并配置显示设置
-  lf.render(sheets.value[0]!.data);
+  lf.render(sheets.value[0]!.graph);
   lf.translateCenter();
   if (lf.extension.miniMap instanceof MiniMap) {
     lf.extension.miniMap.show();
@@ -214,14 +223,32 @@ function onPointerDown(dragType: string, variableName: string, variableType: Bas
   }
   dragVariable(lf, dragType, variableName, variableType);
 }
-function onAddVariable(variableName: string, variableType: BaseType) {
-  variables.value.push({
-    name: variableName,
-    type: variableType,
-  });
+function onAddVariable(
+  variableScopeType: VariableScopeType,
+  variableName: string,
+  variableType: BaseType,
+) {
+  if (variableScopeType === 'global') {
+    globalVariables.value.push({
+      name: variableName,
+      type: variableType,
+    });
+  } else if (variableScopeType === 'local') {
+    sheets.value[sheets.value.findIndex((s) => s.id === selectedSheetId.value)]!.variables.push({
+      name: variableName,
+      type: variableType,
+    });
+  }
 }
-function onDeleteVariable(variableName: string) {
-  variables.value = variables.value.filter((v) => v.name !== variableName);
+function onDeleteVariable(variableScopeType: VariableScopeType, variableName: string) {
+  if (variableScopeType === 'global') {
+    globalVariables.value = globalVariables.value.filter((v) => v.name !== variableName);
+  } else if (variableScopeType === 'local') {
+    sheets.value[sheets.value.findIndex((s) => s.id === selectedSheetId.value)]!.variables =
+      sheets.value[sheets.value.findIndex((s) => s.id === selectedSheetId.value)]!.variables.filter(
+        (v) => v.name !== variableName,
+      );
+  }
 }
 
 // Sheets 栏事件
@@ -248,7 +275,7 @@ function handleAddTab() {
     alert('工作表名称已存在');
     return;
   }
-  if (variables.value.some((v) => v.name === newTabName.value)) {
+  if (globalVariables.value.some((v) => v.name === newTabName.value)) {
     alert('工作表名称不能与变量名称重复');
     return;
   }
@@ -256,8 +283,9 @@ function handleAddTab() {
   const newLabel = newTabName.value;
   sheets.value.push({
     id: newId.toString(),
-    signature: { name: newLabel, parameters: [] },
-    data: {},
+    signature: { name: newLabel, parameters: [], returnValues: [] },
+    variables: [],
+    graph: {},
   });
 }
 // 切换工作表
@@ -266,11 +294,11 @@ function onTabChange(tabId: string) {
   if (lf === null) {
     return;
   }
-  const data = lf.getGraphRawData();
-  sheets.value[sheets.value.findIndex((s) => s.id === selectedSheetId.value)]!.data = data;
+  const graphRawData = lf.getGraphRawData();
+  sheets.value[sheets.value.findIndex((s) => s.id === selectedSheetId.value)]!.graph = graphRawData;
   // 再切换上下文
   selectedSheetId.value = tabId;
-  lf.render(sheets.value.find((s) => s.id === tabId)!.data);
+  lf.render(sheets.value.find((s) => s.id === tabId)!.graph);
 }
 function onTabDelete(tabId: string) {
   if (selectedSheetId.value === tabId) {
