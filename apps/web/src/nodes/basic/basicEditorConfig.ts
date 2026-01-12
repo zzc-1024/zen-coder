@@ -4,10 +4,15 @@ import { type VueNodeConfig } from '@logicflow/vue-node-registry';
 
 import type LogicFlow from '@logicflow/core';
 import { EventType } from '@logicflow/core';
-import { BUILTIN_BASIC_FLOW_TYPE, type AnchorType, type DirectType } from './typeDifination';
+import {
+  BUILTIN_BASIC_FLOW_TYPE,
+  type AnchorType,
+  type DirectType,
+  type SheetData,
+} from './typeDifination';
 import { ToolBarConfig } from '@/components/toolBar/toolBar';
 import router from '@/router';
-import { BaseType, type Variable } from '@/parser/variable';
+import { parseType, type Variable } from '@/parser/variable';
 
 // 节点属性
 import type { BasicNodeProperties } from './basicNodeModel';
@@ -130,24 +135,32 @@ export function setBasicEditorEvent(lf: LogicFlow) {
   });
 }
 
+type SaveDataType = {
+  version: '0.0.1';
+  sheets: SheetData[];
+  selectedSheetId: string;
+  globalVariables: Variable[];
+};
 // 工具栏配置
 export class BasicToolBarConfig extends ToolBarConfig {
   constructor(
     public lf: LogicFlow,
-    public variables: Ref<Variable[]>,
+    public sheets: Ref<SheetData[]>,
+    public selectedSheetId: Ref<string>,
+    public globalVariables: Ref<Variable[]>,
   ) {
     super();
   }
 
   onSave = () => {
-    const graphData = this.lf.getGraphRawData();
     // 保存为 JSON 文件
     const json = JSON.stringify(
       {
-        version: '0.0.0',
-        ...graphData,
-        variables: this.variables.value,
-      },
+        version: '0.0.1',
+        sheets: this.sheets.value,
+        selectedSheetId: this.selectedSheetId.value,
+        globalVariables: this.globalVariables.value,
+      } satisfies SaveDataType,
       null,
       2,
     );
@@ -171,12 +184,25 @@ export class BasicToolBarConfig extends ToolBarConfig {
       reader.readAsText(file, 'utf-8');
       reader.onload = () => {
         const json = reader.result as string;
-        this.lf.render(JSON.parse(json));
-        const variables = JSON.parse(json).variables.map((variable: Variable) => ({
+        const data = JSON.parse(json) as SaveDataType;
+        // 逐个解析局部变量
+        data.sheets.forEach((sheet: SheetData) => {
+          sheet.variables.forEach((variable: Variable) => {
+            variable.type = parseType(variable.type.toString());
+          });
+        });
+        if (data.version !== '0.0.1') {
+          alert('文件版本不匹配');
+          return;
+        }
+        this.sheets.value = data.sheets;
+        this.selectedSheetId.value = data.selectedSheetId;
+        this.lf.render(data.sheets.find((sheet) => sheet.id === data.selectedSheetId)?.graph || {});
+        const globalVariables = data.globalVariables.map((variable: Variable) => ({
           ...variable,
-          type: BaseType.fromString(variable.type.toString()),
+          type: parseType(variable.type.toString()),
         }));
-        this.variables.value = variables;
+        this.globalVariables.value = globalVariables;
       };
     });
     input.remove();
@@ -199,7 +225,7 @@ export class BasicToolBarConfig extends ToolBarConfig {
     const entryNode = entryNodes[0]! as EntryNodeModel;
     const statements = entryNode.parseFlowIn();
     const pythonBackend: PythonBackend = new PythonBackend();
-    const code = pythonBackend.generateCode(this.variables.value, statements);
+    const code = pythonBackend.generateCode(this.globalVariables.value, statements);
     return code;
   };
   onLanguageChange: undefined;

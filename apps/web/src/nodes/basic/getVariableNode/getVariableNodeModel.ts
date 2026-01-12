@@ -3,10 +3,11 @@ import BasicNodeModel, { type BasicNodeProperties, type FieldType } from '../bas
 import { BasicEditorNodeTypePrefix } from '../typeDifination';
 import type { Expression, Statement } from '@/parser/defination';
 import { VariableExpression } from '@/parser/expressions';
-import { parseType } from '@/parser/variable';
+import { parseType, type VariableScopeType } from '@/parser/variable';
 
 export const GetVariableNodeType = `${BasicEditorNodeTypePrefix}:get`;
 export type GetVariableNodeProperties = BasicNodeProperties & {
+  variableScopeType: VariableScopeType;
   type: string;
   variable: string;
 };

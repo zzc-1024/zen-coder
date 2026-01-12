@@ -23,6 +23,7 @@ export const setVariableNodeConfig: BasicEditorNodeConfig = {
     icon: iconPath,
     properties: {
       type: new BasicType('builtin:basic:integer').toString(),
+      variableScopeType: 'local',
       variable: 'Hello',
       defaultValues: {},
     } satisfies SetVariableNodeProperties,

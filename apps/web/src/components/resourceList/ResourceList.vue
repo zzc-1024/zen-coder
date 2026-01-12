@@ -74,14 +74,14 @@
           <div
             class="node get-node"
             data-node-type="get-variable"
-            @pointerdown="onPointerDown($event, 'get', variable.name, variable.type)"
+            @pointerdown="onPointerDown($event, 'get', 'local', variable.name, variable.type)"
           >
             <span class="node-label">获取</span>
           </div>
           <div
             class="node set-node"
             data-node-type="set-variable"
-            @pointerdown="onPointerDown($event, 'set', variable.name, variable.type)"
+            @pointerdown="onPointerDown($event, 'set', 'local', variable.name, variable.type)"
           >
             <span class="node-label">设置</span>
           </div>
@@ -112,14 +112,14 @@
           <div
             class="node get-node"
             data-node-type="get-variable"
-            @pointerdown="onPointerDown($event, 'get', variable.name, variable.type)"
+            @pointerdown="onPointerDown($event, 'get', 'global', variable.name, variable.type)"
           >
             <span class="node-label">获取</span>
           </div>
           <div
             class="node set-node"
             data-node-type="set-variable"
-            @pointerdown="onPointerDown($event, 'set', variable.name, variable.type)"
+            @pointerdown="onPointerDown($event, 'set', 'global', variable.name, variable.type)"
           >
             <span class="node-label">设置</span>
           </div>
@@ -145,7 +145,7 @@ const props = defineProps<{
 }>();
 const emits = defineEmits<{
   onDeleteVariable: [scopeType: VariableScopeType, variableName: string];
-  onPointerDown: [dragType: string, variableName: string, variableType: BaseType];
+  onPointerDown: [dragType: string, scopeType: VariableScopeType, variableName: string, variableType: BaseType];
   onAddVariable: [scopeType: VariableScopeType, variableName: string, variableType: BaseType];
 }>();
 
@@ -162,11 +162,12 @@ function onDeleteVariable(variableName: string) {
 function onPointerDown(
   event: PointerEvent,
   dragType: string,
+  scopeType: VariableScopeType,
   variableName: string,
   variableType: BaseType,
 ) {
   event.preventDefault();
-  emits('onPointerDown', dragType, variableName, variableType);
+  emits('onPointerDown', dragType, scopeType, variableName, variableType);
 }
 
 function onAddVariable() {

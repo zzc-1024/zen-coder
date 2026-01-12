@@ -1,4 +1,5 @@
-import { parseType, type BaseType } from "@/parser/variable";
+import { parseType, type BaseType, type Variable } from "@/parser/variable";
+import type LogicFlow from "@logicflow/core";
 
 type BuiltinBasicTypePrefix = 'builtin:basic';
 
@@ -24,3 +25,14 @@ export type AnchorType = BaseType | FlowType;
 export function parseAnchorType(type: string): AnchorType {
   return type === BUILTIN_BASIC_FLOW_TYPE ? new FlowType() : parseType(type);
 }
+
+export type SheetData = {
+  id: string;
+  signature: {
+    name: string;
+    parameters: Variable[];
+    returnValues: Variable[];
+  };
+  variables: Variable[];
+  graph: LogicFlow.GraphConfigData;
+};

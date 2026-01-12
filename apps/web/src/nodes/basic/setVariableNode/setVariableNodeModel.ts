@@ -7,10 +7,11 @@ import { BasicEditorNodeTypePrefix, FlowType } from '../typeDifination';
 import type { Expression, Statement } from '@/parser/defination';
 import { AssignmentStatement } from '@/parser/statements';
 import { VariableExpression } from '@/parser/expressions';
-import { parseType } from '@/parser/variable';
+import { parseType, type VariableScopeType } from '@/parser/variable';
 
 export const SetVariableNodeType = `${BasicEditorNodeTypePrefix}:set`;
 export type SetVariableNodeProperties = BasicNodePropertiesWithDefaultValues & {
+  variableScopeType: VariableScopeType;
   type: string;
   variable: string;
 };
@@ -58,10 +59,7 @@ class SetVariableNodeModel extends BasicNodeModel {
     let expression = this.getDataInExpression(`${this.id}:${SetVariableNodeAnchorIds.DATA_IN}`);
     if (!expression) {
       const defaultValue = properties.defaultValues[SetVariableNodeAnchorIds.DATA_IN];
-      expression = this.parseTypeStringToDefaultExpression(
-        properties.type,
-        defaultValue,
-      );
+      expression = this.parseTypeStringToDefaultExpression(properties.type, defaultValue);
     }
     if (!expression)
       throw new Error(

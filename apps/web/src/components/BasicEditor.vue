@@ -73,22 +73,13 @@ import AttributePanel from './AttributePanel/AttributePanel.vue';
 import PopupDialog from './ui/PopupDialog.vue';
 import TabBar from './tabBar/TabBar.vue';
 import { EntryNodeType, type EntryNodeProperties } from '@/nodes/basic/entryNode/entryNodeModel';
+import type { SheetData } from '@/nodes/basic/typeDifination';
 
 // LogicFlow 相关的必要变量
 const containerRef = ref(null);
 const TeleportContainer = getTeleport();
 const flowId = ref('');
 let lf: LogicFlow | null = null;
-type SheetData = {
-  id: string;
-  signature: {
-    name: string;
-    parameters: Variable[];
-    returnValues: Variable[];
-  };
-  variables: Variable[];
-  graph: LogicFlow.GraphConfigData;
-};
 const selectedSheetId = ref<string>('1');
 const sheets = ref<SheetData[]>([
   {
@@ -142,7 +133,7 @@ onMounted(() => {
   });
 
   // 工具栏配置
-  toolBarConfig.value = new BasicToolBarConfig(lf!, globalVariables);
+  toolBarConfig.value = new BasicToolBarConfig(lf!, sheets, selectedSheetId, globalVariables);
 
   // 注册自定义边和节点
   lf.register({
@@ -217,11 +208,11 @@ function copyCode() {
 }
 
 // 变量列表事件
-function onPointerDown(dragType: string, variableName: string, variableType: BaseType) {
+function onPointerDown(dragType: string, variableScopeType: VariableScopeType, variableName: string, variableType: BaseType) {
   if (lf === null) {
     return;
   }
-  dragVariable(lf, dragType, variableName, variableType);
+  dragVariable(lf, dragType, variableScopeType, variableName, variableType);
 }
 function onAddVariable(
   variableScopeType: VariableScopeType,
@@ -230,11 +221,13 @@ function onAddVariable(
 ) {
   if (variableScopeType === 'global') {
     globalVariables.value.push({
+      scope: variableScopeType,
       name: variableName,
       type: variableType,
     });
   } else if (variableScopeType === 'local') {
     sheets.value[sheets.value.findIndex((s) => s.id === selectedSheetId.value)]!.variables.push({
+      scope: variableScopeType,
       name: variableName,
       type: variableType,
     });

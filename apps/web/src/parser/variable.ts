@@ -34,6 +34,7 @@ export abstract class BaseType {
 }
 
 export type Variable = {
+  scope: VariableScopeType;
   name: string;
   type: BaseType;
 };
