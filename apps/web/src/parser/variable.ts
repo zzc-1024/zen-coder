@@ -19,7 +19,7 @@ export type BasicTypeName =
   | BuiltinBasicBooleanType;
 
 export type VariableScopeType = 'global' | 'local';
-export type DataStructureType = 'basic' | 'list' | 'dict';
+export type DataStructureType = 'basic' | 'list' | 'dict' | 'set';
 
 export abstract class BaseType {
   abstract dataStructureType: DataStructureType;

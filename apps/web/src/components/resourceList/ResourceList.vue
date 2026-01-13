@@ -11,8 +11,8 @@
       <div class="horizontal-group">
         作用范围
         <select v-model="variableScopeType" class="type-selector">
-          <option value="local">当前蓝图</option>
-          <option value="global">全局变量</option>
+          <option value="local">当前蓝图（局部）</option>
+          <option value="global">当前文件（全局）</option>
         </select>
       </div>
       <div class="horizontal-group">
@@ -27,10 +27,10 @@
       <div class="horizontal-group">
         变量类型
         <select v-model="newVariableType" class="type-selector">
-          <option value="bool">布尔值 bool</option>
-          <option value="int">整数 int</option>
-          <option value="float">浮点数 float</option>
-          <option value="string">字符串 string</option>
+          <option value="builtin:basic:boolean">布尔值 bool</option>
+          <option value="builtin:basic:integer">整数 int</option>
+          <option value="builtin:basic:float">浮点数 float</option>
+          <option value="builtin:basic:string">字符串 string</option>
         </select>
       </div>
       <div class="horizontal-group">
@@ -50,6 +50,44 @@
 
     <!-- List Body -->
     <div class="list-body">
+      <!-- 参数 -->
+      <div
+        v-for="(variable, index) in props.parameters"
+        :key="index"
+        class="variable-item parameter-item"
+      >
+        <!-- Variable Info -->
+        <div class="variable-header">
+          <span class="variable-name">参数{{ variable.name }}</span>
+          <span class="variable-type">{{ variable.type.toDisplayString() }}</span>
+          <button
+            class="delete-button"
+            @click="onDeleteVariable(variable.name)"
+            title="Delete Variable"
+          >
+            ✕
+          </button>
+        </div>
+
+        <!-- Variable Nodes -->
+        <div class="variable-nodes">
+          <div
+            class="node get-node"
+            data-node-type="get-variable"
+            @pointerdown="onPointerDown($event, 'get', 'local', variable.name, variable.type)"
+          >
+            <span class="node-label">获取</span>
+          </div>
+          <!-- <div
+            class="node set-node"
+            data-node-type="set-variable"
+            @pointerdown="onPointerDown($event, 'set', 'local', variable.name, variable.type)"
+          >
+            <span class="node-label">设置</span>
+          </div> -->
+        </div>
+      </div>
+
       <!-- 局部变量 -->
       <div
         v-for="(variable, index) in props.localVariables"
@@ -58,7 +96,7 @@
       >
         <!-- Variable Info -->
         <div class="variable-header">
-          <span class="variable-name">{{ variable.name }}</span>
+          <span class="variable-name">局部{{ variable.name }}</span>
           <span class="variable-type">{{ variable.type.toDisplayString() }}</span>
           <button
             class="delete-button"
@@ -96,7 +134,7 @@
       >
         <!-- Variable Info -->
         <div class="variable-header">
-          <span class="variable-name">{{ variable.name }}</span>
+          <span class="variable-name">全局{{ variable.name }}</span>
           <span class="variable-type">{{ variable.type.toDisplayString() }}</span>
           <button
             class="delete-button"
@@ -134,26 +172,33 @@ import { ref } from 'vue';
 import {
   BaseType,
   BasicType,
+  type BasicTypeName,
   type DataStructureType,
   type Variable,
   type VariableScopeType,
 } from '@/parser/variable';
 import PopupDialog from '../ui/PopupDialog.vue';
 const props = defineProps<{
-  globalVariables: Variable[];
+  parameters: Variable[];
   localVariables: Variable[];
+  globalVariables: Variable[];
 }>();
 const emits = defineEmits<{
   onDeleteVariable: [scopeType: VariableScopeType, variableName: string];
-  onPointerDown: [dragType: string, scopeType: VariableScopeType, variableName: string, variableType: BaseType];
+  onPointerDown: [
+    dragType: string,
+    scopeType: VariableScopeType,
+    variableName: string,
+    variableType: BaseType,
+  ];
   onAddVariable: [scopeType: VariableScopeType, variableName: string, variableType: BaseType];
 }>();
 
 const addVariablePopup = ref();
 const variableScopeType = ref<VariableScopeType>('local');
 const variableDataStructureType = ref<DataStructureType>('basic');
-const newVariableType = ref('int');
-const newVariableName = ref('hello');
+const newVariableType = ref<BasicTypeName>('builtin:basic:integer');
+const newVariableName = ref<string>('hello');
 
 function onDeleteVariable(variableName: string) {
   emits('onDeleteVariable', variableScopeType.value, variableName);
@@ -182,10 +227,10 @@ function onAddVariable() {
       alert('Variable name already exists!');
       return;
     }
-  }
-  if (props.localVariables.some((v) => v.name === newVariableName.value)) {
-    alert('Variable name already exists!');
-    return;
+    if (props.parameters.some((v) => v.name === newVariableName.value)) {
+      alert('该变量已存在于参数列表中');
+      return;
+    }
   }
   // 验证变量名是否合法，并且长度在1到32之间
   if (!/^[a-zA-Z_][a-zA-Z0-9_]{0,31}$/.test(newVariableName.value)) {
@@ -197,15 +242,7 @@ function onAddVariable() {
 
   let type: BaseType;
   if (variableDataStructureType.value === 'basic') {
-    if (newVariableType.value === 'bool') {
-      type = new BasicType('builtin:basic:boolean');
-    } else if (newVariableType.value === 'int') {
-      type = new BasicType('builtin:basic:integer');
-    } else if (newVariableType.value === 'float') {
-      type = new BasicType('builtin:basic:float');
-    } else if (newVariableType.value === 'string') {
-      type = new BasicType('builtin:basic:string');
-    } else throw new Error(`Unknown variable type: ${newVariableType.value}`);
+    type = new BasicType(newVariableType.value);
   } else throw new Error(`Unknown data structure type: ${variableDataStructureType.value}`);
 
   emits('onAddVariable', variableScopeType.value, newVariableName.value, type);
@@ -322,6 +359,11 @@ function onAddVariable() {
       border-radius: 4px;
       overflow: hidden;
       flex-shrink: 0;
+      &.parameter-item {
+        .variable-header {
+          background: linear-gradient(to right, #502c35, #740312);
+        }
+      }
       &.global-variable-item {
         .variable-header {
           background: linear-gradient(to right, #48502c, #325702);

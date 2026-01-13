@@ -4,8 +4,9 @@
     <div class="editor-container">
       <resourceList
         class="variable-list"
-        :globalVariables="globalVariables"
+        :parameters="selectedSheetParameters"
         :localVariables="localVariables"
+        :globalVariables="globalVariables"
         @onPointerDown="onPointerDown"
         @onAddVariable="onAddVariable"
         @onDeleteVariable="onDeleteVariable"
@@ -45,8 +46,18 @@
       <label>函数名称</label>
       <input v-model="newTabName" type="text" placeholder="请输入函数名称" />
     </div>
+    <label v-if="parameters.length !== 0">参数列表</label>
+    <div v-for="(parameter, index) in parameters" :key="index">
+      {{ parameter.name }}: {{ parameter.type.toDisplayString() }}
+      <button @click="onDeleteParameter(index)">删除</button>
+    </div>
+    <VariablePicker
+      :needVariableScopeType="false"
+      :needVariableName="true"
+      @onAddVariable="onAddParameter"
+    />
     <div>
-      <button @click="handleAddTab">添加函数</button>
+      <button @click="handleAddTab" :disabled="newTabName.length === 0">添加函数</button>
     </div>
   </PopupDialog>
 </template>
@@ -79,6 +90,7 @@ import {
   type ReturnNodeProperties,
 } from '@/nodes/basic/returnNode/returnNodeModel';
 import { returnNodeConfig } from '@/nodes/basic/returnNode';
+import VariablePicker from './variablePicker/VariablePicker.vue';
 
 // LogicFlow 相关的必要变量
 const containerRef = ref(null);
@@ -106,13 +118,19 @@ const codePopupDialogRef = ref();
 const generatedCode = ref('');
 // 变量列表配置
 const globalVariables = ref<Variable[]>([]);
+const selectedSheet = computed(() => {
+  return sheets.value.find((sheet) => sheet.id === selectedSheetId.value)!;
+});
 const localVariables = computed(() => {
-  const sheet = sheets.value.find((sheet) => sheet.id === selectedSheetId.value);
-  return sheet?.variables || [];
+  return selectedSheet.value.variables;
+});
+const selectedSheetParameters = computed(() => {
+  return selectedSheet.value.signature.parameters;
 });
 // 添加Tab弹窗配置
 const addTabPopupDialogRef = ref();
 const newTabName = ref('');
+const parameters = ref<Variable[]>([]);
 // 属性面板配置
 const selectedElements = ref<LogicFlow.GraphData>({
   nodes: [],
@@ -278,12 +296,31 @@ function onTabAdd() {
   }
   addTabPopupDialogRef.value.open();
 }
-function handleAddTab() {
-  if (addTabPopupDialogRef.value === null) {
+function onDeleteParameter(index: number) {
+  parameters.value.splice(index, 1);
+}
+function onAddParameter(
+  _scopeType: VariableScopeType,
+  variableName: string,
+  variableType: BaseType,
+) {
+  if (parameters.value.some((p) => p.name === variableName)) {
+    alert('参数名称已存在');
     return;
   }
-  addTabPopupDialogRef.value.close();
+  parameters.value.push({
+    scope: 'local',
+    name: variableName,
+    type: variableType,
+  });
+}
+function handleAddTab() {
+  if (addTabPopupDialogRef.value === null) {
+    alert('请先打开添加工作表弹窗');
+    return;
+  }
   if (newTabName.value === '') {
+    alert('请输入工作表名称');
     return;
   }
   if (!/^[a-zA-Z_][a-zA-Z0-9_]{0,31}$/.test(newTabName.value)) {
@@ -303,10 +340,12 @@ function handleAddTab() {
   const newLabel = newTabName.value;
   sheets.value.push({
     id: newId.toString(),
-    signature: { name: newLabel, parameters: [], returnValue: undefined },
+    signature: { name: newLabel, parameters: [...parameters.value], returnValue: undefined },
     variables: [],
     graph: {},
   });
+  parameters.value = [];
+  addTabPopupDialogRef.value.close();
 }
 // 切换工作表
 function onTabChange(tabId: string) {
