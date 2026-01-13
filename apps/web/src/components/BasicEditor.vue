@@ -74,6 +74,11 @@ import PopupDialog from './ui/PopupDialog.vue';
 import TabBar from './tabBar/TabBar.vue';
 import { EntryNodeType, type EntryNodeProperties } from '@/nodes/basic/entryNode/entryNodeModel';
 import type { SheetData } from '@/nodes/basic/typeDifination';
+import {
+  ReturnNodeType,
+  type ReturnNodeProperties,
+} from '@/nodes/basic/returnNode/returnNodeModel';
+import { returnNodeConfig } from '@/nodes/basic/returnNode';
 
 // LogicFlow 相关的必要变量
 const containerRef = ref(null);
@@ -146,7 +151,24 @@ onMounted(() => {
 
   // 设置拖拽面板
   if (lf.extension.dndPanel instanceof DndPanel) {
-    lf.extension.dndPanel.setPatternItems(dndPanelItem);
+    lf.extension.dndPanel.setPatternItems([
+      ...dndPanelItem,
+      {
+        label: '返回',
+        icon: returnNodeConfig.iconPath,
+        callback: () => {
+          lf!.dnd.startDrag({
+            type: ReturnNodeType,
+            properties: {
+              type: sheets.value
+                .find((sheet) => sheet.id === selectedSheetId.value)!
+                .signature.returnValue?.toString(),
+              defaultValues: {},
+            } satisfies ReturnNodeProperties,
+          });
+        },
+      },
+    ]);
   }
 
   // 设置事件

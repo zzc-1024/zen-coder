@@ -31,6 +31,7 @@ import { breakNodeConfig } from './breakNode'; // 中断节点
 import { continueNodeConfig } from './continueNode'; // 继续节点
 import { conditionBranchNodeConfig } from './conditionBranchNode'; // 条件分支节点
 import { typeCastNodeConfig } from './typeCastNode'; // 类型转换节点
+import { returnNodeConfig } from './returnNode'; // 返回节点
 
 import EntryNodeModel, { EntryNodeType } from './entryNode/entryNodeModel';
 import { PythonBackend } from '@/parser/backends/pythonBackends';
@@ -60,6 +61,7 @@ export const basicEditorNode: BasicEditorNodeConfig[] = [
   continueNodeConfig,
   conditionBranchNodeConfig,
   typeCastNodeConfig,
+  returnNodeConfig,
 ];
 
 export const dndPanelItem: LogicFlow.OnDragNodeConfig[] = [

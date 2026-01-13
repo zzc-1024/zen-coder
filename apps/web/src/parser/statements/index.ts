@@ -54,7 +54,7 @@ export class FunctionStatement extends Statement {
 }
 
 export class ReturnStatement extends Statement {
-  constructor(public expression: Expression) {
+  constructor(public expression: Expression | undefined) {
     super();
   }
 }
