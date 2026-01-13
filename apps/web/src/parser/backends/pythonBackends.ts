@@ -12,6 +12,7 @@ import {
   BreakStatement,
   ContinueStatement,
   IfStatement,
+  ReturnStatement,
   WhileStatement,
 } from '../statements';
 import {
@@ -118,6 +119,9 @@ export class PythonBackend extends CompilerBackend {
       this.pythonContext.indentSpaceCount += 4;
       code += this.parseStatements(statement.statements);
       this.pythonContext.indentSpaceCount -= 4;
+    } else if (statement instanceof ReturnStatement) {
+      code += `${' '.repeat(this.pythonContext.indentSpaceCount)}return`;
+      if (statement.expression) code += ` ${this.parseExpression(statement.expression)}\n`;
     } else {
       throw new Error(`Unknown statement type: ${statement.constructor.name}`);
     }
