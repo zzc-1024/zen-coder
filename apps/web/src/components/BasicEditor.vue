@@ -46,7 +46,8 @@
       <label>函数名称</label>
       <input v-model="newTabName" type="text" placeholder="请输入函数名称" />
     </div>
-    <label v-if="parameters.length !== 0">参数列表</label>
+    <br />
+    <label>参数列表</label>
     <div v-for="(parameter, index) in parameters" :key="index">
       {{ parameter.name }}: {{ parameter.type.toDisplayString() }}
       <button @click="onDeleteParameter(index)">删除</button>
@@ -55,6 +56,14 @@
       :needVariableScopeType="false"
       :needVariableName="true"
       @onAddVariable="onAddParameter"
+    />
+    <br />
+    <label>返回值类型：{{ returnType !== undefined ? returnType.toDisplayString() : '空' }}</label>
+    <button v-if="returnType !== undefined" @click="onDeleteReturnType">删除返回值类型</button>
+    <VariablePicker
+      :needVariableScopeType="false"
+      :needVariableName="false"
+      @onAddVariable="onSetReturnType"
     />
     <div>
       <button @click="handleAddTab" :disabled="newTabName.length === 0">添加函数</button>
@@ -131,6 +140,7 @@ const selectedSheetParameters = computed(() => {
 const addTabPopupDialogRef = ref();
 const newTabName = ref('');
 const parameters = ref<Variable[]>([]);
+const returnType = ref<BaseType | undefined>(undefined);
 // 属性面板配置
 const selectedElements = ref<LogicFlow.GraphData>({
   nodes: [],
@@ -314,6 +324,16 @@ function onAddParameter(
     type: variableType,
   });
 }
+function onDeleteReturnType() {
+  returnType.value = undefined;
+}
+function onSetReturnType(
+  _scopeType: VariableScopeType,
+  _variableName: string,
+  variableType: BaseType,
+) {
+  returnType.value = variableType;
+}
 function handleAddTab() {
   if (addTabPopupDialogRef.value === null) {
     alert('请先打开添加工作表弹窗');
@@ -340,11 +360,12 @@ function handleAddTab() {
   const newLabel = newTabName.value;
   sheets.value.push({
     id: newId.toString(),
-    signature: { name: newLabel, parameters: [...parameters.value], returnValue: undefined },
+    signature: { name: newLabel, parameters: [...parameters.value], returnValue: returnType.value },
     variables: [],
     graph: {},
   });
   parameters.value = [];
+  returnType.value = undefined;
   addTabPopupDialogRef.value.close();
 }
 // 切换工作表

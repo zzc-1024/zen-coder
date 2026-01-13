@@ -33,10 +33,11 @@
       class="variable-input"
       @keyup.enter="onAddVariable"
     />
+  </div>
+  <div class="horizontal-group">
     <button
-      class="add-button"
       @click="onAddVariable"
-      :disabled="newVariableName.trim().length === 0"
+      :disabled="props.needVariableName && newVariableName.trim().length === 0"
     >
       ➕
     </button>
@@ -65,6 +66,14 @@ const variableDataStructureType = ref<DataStructureType>('basic');
 const newVariableType = ref<BasicTypeName>('builtin:basic:integer');
 const newVariableName = ref<string>('hello');
 const onAddVariable = () => {
+  let type: BaseType;
+  if (variableDataStructureType.value === 'basic') {
+    type = new BasicType(newVariableType.value);
+  } else throw new Error(`Unknown data structure type: ${variableDataStructureType.value}`);
+  if (!props.needVariableName) {
+    emits('onAddVariable', variableScopeType.value, newVariableName.value, type);
+    return;
+  }
   // 验证变量名是否合法，并且长度在1到32之间
   if (!/^[a-zA-Z_][a-zA-Z0-9_]{0,31}$/.test(newVariableName.value)) {
     alert(
@@ -73,10 +82,6 @@ const onAddVariable = () => {
     return;
   }
 
-  let type: BaseType;
-  if (variableDataStructureType.value === 'basic') {
-    type = new BasicType(newVariableType.value);
-  } else throw new Error(`Unknown data structure type: ${variableDataStructureType.value}`);
   emits('onAddVariable', variableScopeType.value, newVariableName.value, type);
   newVariableName.value = '';
 };
