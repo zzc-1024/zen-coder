@@ -1,10 +1,10 @@
 <template>
   <div class="toolbar">
     <!-- 文件操作 -->
-    <button class="toolbar-btn" title="保存" @click="handleSave">
+    <button class="toolbar-btn" title="保存" v-if="handleSave !== undefined" @click="handleSave">
       <i class="icon save-icon"></i>
     </button>
-    <button class="toolbar-btn" title="导入" @click="handleImport">
+    <button class="toolbar-btn" title="导入" v-if="handleImport !== undefined" @click="handleImport">
       <i class="icon import-icon"></i>
     </button>
 
@@ -12,10 +12,10 @@
     <div class="divider"></div>
 
     <!-- 编辑操作 -->
-    <button class="toolbar-btn" :disabled="!canUndo" title="撤回" @click="handleUndo">
+    <button class="toolbar-btn" :disabled="!canUndo" title="撤回" v-if="handleUndo !== undefined" @click="handleUndo">
       <i class="icon undo-icon"></i>
     </button>
-    <button class="toolbar-btn" :disabled="!canRedo" title="重做" @click="handleRedo">
+    <button class="toolbar-btn" :disabled="!canRedo" title="重做" v-if="handleRedo !== undefined" @click="handleRedo">
       <i class="icon redo-icon"></i>
     </button>
 
@@ -23,7 +23,7 @@
     <div class="divider"></div>
 
     <!-- 执行操作 -->
-    <button class="toolbar-btn" title="执行流程(未实现)" @click="handleExecute">
+    <button class="toolbar-btn" title="执行流程(未实现)" v-if="handleExecute !== undefined" @click="handleExecute">
       <i class="icon execute-icon"></i>
     </button>
 
@@ -31,7 +31,7 @@
     <div class="divider"></div>
 
     <!-- 导出代码 -->
-    <div class="export-language-selector">
+    <div class="export-language-selector" v-if="handleGenerate !== undefined">
       <select v-model="selectedLanguage" @change="handleLanguageChange" class="language-select">
         <option value="python">Python</option>
       </select>
@@ -44,7 +44,7 @@
     <div class="divider"></div>
 
     <!-- 路由跳转 -->
-    <button class="toolbar-btn" title="回到首页" @click="gotoHome">
+    <button class="toolbar-btn" title="回到首页" v-if="gotoHome !== undefined" @click="gotoHome">
       <i class="icon home-icon"></i>
     </button>
   </div>
