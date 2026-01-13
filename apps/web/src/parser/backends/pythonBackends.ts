@@ -137,11 +137,16 @@ export class PythonBackend extends CompilerBackend {
     });
     return code;
   }
-  generateCode(localVariables: Variable[], functionName: string, statements: Statement[]): string {
+  generateCode(
+    localVariables: Variable[],
+    functionName: string,
+    parameters: Variable[],
+    statements: Statement[],
+  ): string {
     // 先配置基础的上下文
     this.pythonContext.indentSpaceCount = 0;
     let code = '';
-    code += `def ${functionName}():\n`;
+    code += `def ${functionName}(${parameters.map((parameter) => parameter.name).join(', ')}):\n`;
     this.pythonContext.indentSpaceCount += 4;
 
     // 先声明变量

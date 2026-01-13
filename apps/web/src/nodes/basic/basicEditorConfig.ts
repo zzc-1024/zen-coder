@@ -160,6 +160,13 @@ export class BasicToolBarConfig extends ToolBarConfig {
       this.sheets.value.findIndex((s) => s.id === this.selectedSheetId.value)
     ]!.graph = graphRawData;
   }
+  private changeToSelectedSheet() {
+    const graphModel = this.lf.graphModel;
+    graphModel.graphDataToModel(
+      this.sheets.value[this.sheets.value.findIndex((s) => s.id === this.selectedSheetId.value)]!
+        .graph,
+    );
+  }
 
   onSave = () => {
     this.saveCurrentSheet();
@@ -236,12 +243,18 @@ export class BasicToolBarConfig extends ToolBarConfig {
       );
       if (entryNodes === undefined || entryNodes.length !== 1) {
         alert(`${sheet.signature.name} 主函数的入口节点必须有一个且至多只能有一个`);
+        this.changeToSelectedSheet();
         return;
       }
 
       const entryNode = entryNodes[0]! as EntryNodeModel;
       const statements = entryNode.parseFlowIn();
-      const code = pythonBackend.generateCode(sheet.variables, sheet.signature.name, statements);
+      const code = pythonBackend.generateCode(
+        sheet.variables,
+        sheet.signature.name,
+        sheet.signature.parameters,
+        statements,
+      );
       functions.push(code);
     }
     graphModel.graphDataToModel(
