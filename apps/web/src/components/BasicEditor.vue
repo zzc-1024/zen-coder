@@ -154,7 +154,7 @@ onMounted(() => {
     lf.extension.dndPanel.setPatternItems([
       ...dndPanelItem,
       {
-        label: '返回',
+        label: '返回节点',
         icon: returnNodeConfig.iconPath,
         callback: () => {
           lf!.dnd.startDrag({
