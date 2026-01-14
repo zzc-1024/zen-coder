@@ -19,10 +19,12 @@ export class TypeCastExpression extends Expression {
   }
 }
 
-export class FunctionCallExpression extends Expression {
+export class CallExpression extends Expression {
   constructor(
-    public name: string,
-    public args: Expression[],
+    public source: string,
+    public module: string,
+    public functionName: string,
+    public parameters: Expression[],
   ) {
     super();
   }

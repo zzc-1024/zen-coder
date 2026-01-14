@@ -1,5 +1,5 @@
 import { Expression, Statement } from '../defination';
-import type { VariableExpression } from '../expressions';
+import type { CallExpression, VariableExpression } from '../expressions';
 import type { VariableScopeType } from '../variable';
 
 export class VariableStatement extends Statement {
@@ -37,18 +37,8 @@ export class WhileStatement extends Statement {
   }
 }
 
-export class BlockStatement extends Statement {
-  constructor(public statements: Statement[]) {
-    super();
-  }
-}
-
-export class FunctionStatement extends Statement {
-  constructor(
-    public name: string,
-    public parameters: VariableExpression[],
-    public statements: Statement[],
-  ) {
+export class CallStatement extends Statement {
+  constructor(public callExpression: CallExpression) {
     super();
   }
 }

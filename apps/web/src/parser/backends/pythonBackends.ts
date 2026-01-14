@@ -10,6 +10,7 @@ import { CompilerBackend, Expression, Statement } from '../defination';
 import {
   AssignmentStatement,
   BreakStatement,
+  CallStatement,
   ContinueStatement,
   IfStatement,
   ReturnStatement,
@@ -24,6 +25,7 @@ import {
   StringExpression,
   VariableExpression,
   type BinaryOperator,
+  CallExpression,
 } from '../expressions';
 
 export class PythonBackend extends CompilerBackend {
@@ -70,6 +72,8 @@ export class PythonBackend extends CompilerBackend {
     else if (expression instanceof FloatExpression) return expression.value.toString();
     else if (expression instanceof IntegerExpression) return expression.value.toString();
     else if (expression instanceof StringExpression) return `'${expression.value}'`;
+    else if (expression instanceof CallExpression)
+      return `${expression.functionName}(${expression.parameters.map(this.parseExpression).join(', ')})`;
     throw new Error(`Unknown expression type: ${expression.constructor.name}`);
   }
   convertVariableToPythonStyle(variable: Variable): string {
@@ -123,6 +127,9 @@ export class PythonBackend extends CompilerBackend {
       code += `${' '.repeat(this.pythonContext.indentSpaceCount)}return`;
       if (statement.expression) code += ` ${this.parseExpression(statement.expression)}`;
       code += '\n';
+    } else if (statement instanceof CallStatement) {
+      code += `${' '.repeat(this.pythonContext.indentSpaceCount)}`;
+      code += `${this.parseExpression(statement.callExpression)}\n`;
     } else {
       throw new Error(`Unknown statement type: ${statement.constructor.name}`);
     }
