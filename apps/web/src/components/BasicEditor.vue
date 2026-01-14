@@ -92,7 +92,6 @@ import BasicEdgeModel from '@/edges/BasicEdgeModel';
 import AttributePanel from './AttributePanel/AttributePanel.vue';
 import PopupDialog from './ui/PopupDialog.vue';
 import TabBar from './tabBar/TabBar.vue';
-import { EntryNodeType, type EntryNodeProperties } from '@/nodes/basic/entryNode/entryNodeModel';
 import type { SheetData } from '@/nodes/basic/typeDifination';
 import {
   ReturnNodeType,
@@ -100,6 +99,7 @@ import {
 } from '@/nodes/basic/returnNode/returnNodeModel';
 import { returnNodeConfig } from '@/nodes/basic/returnNode';
 import VariablePicker from './variablePicker/VariablePicker.vue';
+import { CallNodeType, type CallNodeProperties } from '@/nodes/basic/callNode/callNodeModel';
 
 // LogicFlow 相关的必要变量
 const containerRef = ref(null);
@@ -391,13 +391,25 @@ function onTabReorder(tabIds: string[]) {
   sheets.value = tabIds.map((id) => sheets.value.find((s) => s.id === id)!);
 }
 function onTabTouch(tabId: string) {
-  console.log(tabId);
   if (lf === null) {
     return;
   }
+  // 获取选中的 sheet 的参数和返回值类型
+  const currentSheet = sheets.value.find((s) => s.id === tabId)!;
   lf.dnd.startDrag({
-    type: EntryNodeType,
-    properties: {} satisfies EntryNodeProperties,
+    type: CallNodeType,
+    properties: {
+      source: '.',
+      module: '.',
+      functionName: currentSheet.signature.name,
+      parameters: currentSheet.signature.parameters.map((v) => ({
+        name: v.name,
+        type: v.type.toString(),
+      })),
+      returnType: currentSheet.signature.returnValue?.toString(),
+      isPureFunction: false,
+      defaultValues: {},
+    } satisfies CallNodeProperties,
   });
 }
 </script>

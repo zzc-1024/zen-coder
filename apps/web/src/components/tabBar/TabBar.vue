@@ -91,7 +91,6 @@ const canScrollRight = ref(false);
 
 // 处理tab点击
 const onTabClick = (tabId: string) => {
-  console.log(`点击了tab ${tabId}`);
   emit('tabSelect', tabId);
 };
 
