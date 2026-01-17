@@ -7,9 +7,11 @@
         :parameters="selectedSheetParameters"
         :localVariables="localVariables"
         :globalVariables="globalVariables"
+        :availableFunctions="availableFunctions"
         @onPointerDown="onPointerDown"
         @onAddVariable="onAddVariable"
         @onDeleteVariable="onDeleteVariable"
+        @onFunctionPointerDown="onFunctionPointerDown"
       />
       <div class="lf-object">
         <div ref="containerRef" class="lf-container"></div>
@@ -100,6 +102,7 @@ import {
 import { returnNodeConfig } from '@/nodes/basic/returnNode';
 import VariablePicker from './variablePicker/VariablePicker.vue';
 import { CallNodeType, type CallNodeProperties } from '@/nodes/basic/callNode/callNodeModel';
+import { availableFunctions } from '@/functions';
 
 // LogicFlow 相关的必要变量
 const containerRef = ref(null);
@@ -300,6 +303,26 @@ function onDeleteVariable(variableScopeType: VariableScopeType, variableName: st
         (v) => v.name !== variableName,
       );
   }
+}
+function onFunctionPointerDown(source: string, module: string, functionName: string) {
+  if (lf === null) {
+    return;
+  }
+  lf.dnd.startDrag({
+    type: CallNodeType,
+    properties: {
+      source: source,
+      module: module,
+      functionName: functionName,
+      parameters: availableFunctions[source]![module]![functionName]!.parameters.map((v) => ({
+        name: v.name,
+        type: v.type.toString(),
+      })),
+      returnType: availableFunctions[source]![module]![functionName]!.returnType?.toString(),
+      isPureFunction: availableFunctions[source]![module]![functionName]!.isPureFunction,
+      defaultValues: {},
+    } satisfies CallNodeProperties,
+  });
 }
 
 // Sheets 栏事件

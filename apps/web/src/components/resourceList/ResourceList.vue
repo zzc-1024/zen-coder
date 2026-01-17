@@ -3,7 +3,8 @@
     <!-- Title Bar -->
     <div class="list-title-bar">
       <span class="title-text">资源列表</span>
-      <button class="add-button" @click="addVariablePopup.open()">➕添加</button>
+      <button class="add-button" @click="addVariablePopup.open()">➕变量</button>
+      <button class="add-button" @click="functionsDialog.open()">➕函数</button>
     </div>
 
     <!-- Add New Variable Form (Fixed) -->
@@ -165,6 +166,33 @@
       </div>
     </div>
   </div>
+
+  <PopupDialog title="按住节点拖拽使用" ref="functionsDialog">
+    <div class="functions-container">
+      <!-- Source Level -->
+      <div v-for="(modules, source) in props.availableFunctions" :key="source" class="function-source">
+        <div class="source-header">{{ source }}</div>
+        <!-- Module Level -->
+        <div class="modules-container">
+          <div v-for="(functions, module) in modules" :key="module" class="function-module">
+            <div class="module-header">{{ module }}</div>
+            <!-- Function Level -->
+            <div class="functions-list">
+              <div
+                v-for="(functionInfo, functionName) in functions"
+                :key="functionName"
+                class="function-node"
+                @pointerdown="onFunctionPointerDown($event, source, module, functionName)"
+              >
+                <span class="function-name">{{ functionName }}</span>
+                <span class="function-return-type">{{ functionInfo.returnType?.toDisplayString() || 'void' }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </PopupDialog>
 </template>
 
 <script setup lang="ts">
@@ -178,10 +206,12 @@ import {
   type VariableScopeType,
 } from '@/parser/variable';
 import PopupDialog from '../ui/PopupDialog.vue';
+import type { AvailableFunctions } from '@/functions/typeDefination';
 const props = defineProps<{
   parameters: Variable[];
   localVariables: Variable[];
   globalVariables: Variable[];
+  availableFunctions: AvailableFunctions;
 }>();
 const emits = defineEmits<{
   onDeleteVariable: [scopeType: VariableScopeType, variableName: string];
@@ -192,9 +222,15 @@ const emits = defineEmits<{
     variableType: BaseType,
   ];
   onAddVariable: [scopeType: VariableScopeType, variableName: string, variableType: BaseType];
+  onFunctionPointerDown: [
+    source: string,
+    module: string,
+    functionName: string,
+  ];
 }>();
 
 const addVariablePopup = ref();
+const functionsDialog = ref();
 const variableScopeType = ref<VariableScopeType>('local');
 const variableDataStructureType = ref<DataStructureType>('basic');
 const newVariableType = ref<BasicTypeName>('builtin:basic:integer');
@@ -248,6 +284,17 @@ function onAddVariable() {
   emits('onAddVariable', variableScopeType.value, newVariableName.value, type);
   newVariableName.value = '';
 }
+
+function onFunctionPointerDown(
+  event: PointerEvent,
+  source: string,
+  module: string,
+  functionName: string,
+) {
+  event.preventDefault();
+  functionsDialog.value.close();
+  emits('onFunctionPointerDown', source, module, functionName);
+}
 </script>
 
 <style scoped lang="scss">
@@ -280,8 +327,8 @@ function onAddVariable() {
       color: #b0b0b0;
       cursor: pointer;
       background: none;
-      border: none;
-      padding: 4px 8px;
+      border: 1px solid #b0b0b0;
+      padding: 4px;
       border-radius: 4px;
 
       &:hover {
@@ -543,6 +590,118 @@ function onAddVariable() {
         flex-shrink: 0;
       }
     }
+  }
+}
+
+/* 函数列表预览样式 */
+.functions-container {
+  max-height: 400px;
+  overflow-y: auto;
+  padding: 8px;
+}
+
+.function-source {
+  margin-bottom: 16px;
+  border: 1px solid #444;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.source-header {
+  background-color: #1a1a1a;
+  padding: 8px 12px;
+  font-weight: bold;
+  color: #b0b0b0;
+  border-bottom: 1px solid #444;
+}
+
+.modules-container {
+  padding: 8px;
+}
+
+.function-module {
+  margin-bottom: 12px;
+  border-left: 2px solid #444;
+  padding-left: 8px;
+}
+
+.module-header {
+  font-size: 14px;
+  font-weight: bold;
+  color: #808080;
+  margin-bottom: 8px;
+  padding: 4px 8px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 2px;
+}
+
+.functions-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 4px;
+}
+
+.function-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 120px;
+  padding: 12px 8px;
+  background-color: #333;
+  border: 1px solid #555;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+  touch-action: none;
+}
+
+.function-node:hover {
+  background-color: #444;
+  border-color: #00aaff;
+  box-shadow: 0 0 8px rgba(0, 170, 255, 0.3);
+}
+
+.function-node:active {
+  cursor: grabbing;
+}
+
+.function-name {
+  font-size: 14px;
+  font-weight: bold;
+  color: #ffffff;
+  margin-bottom: 4px;
+}
+
+.function-return-type {
+  font-size: 12px;
+  color: #808080;
+}
+
+/* 滚动条样式 */
+.functions-container {
+  scrollbar-width: thin;
+  scrollbar-color: #444 #222;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #222;
+    border-radius: 3px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #444;
+    border-radius: 3px;
+    border: none;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
   }
 }
 </style>
