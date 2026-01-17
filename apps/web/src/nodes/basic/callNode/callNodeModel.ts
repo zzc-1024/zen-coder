@@ -7,14 +7,14 @@ import { BasicEditorNodeTypePrefix, FlowType } from '../typeDifination';
 import type { Expression, Statement } from '@/parser/defination';
 import { CallStatement } from '@/parser/statements';
 import { CallExpression } from '@/parser/expressions';
-import { parseType } from '@/parser/variable';
+import { parseType, type ParameterProperty } from '@/parser/variable';
 
 export const CallNodeType = `${BasicEditorNodeTypePrefix}:call`;
 export type CallNodeProperties = BasicNodePropertiesWithDefaultValues & {
   source: string;
   module: string;
   functionName: string;
-  parameters: { type: string; name: string }[];
+  parameters: ParameterProperty[];
   returnType: string | undefined;
   isPureFunction: boolean;
 };

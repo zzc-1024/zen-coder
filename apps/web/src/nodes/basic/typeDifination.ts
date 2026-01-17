@@ -26,13 +26,18 @@ export function parseAnchorType(type: string): AnchorType {
   return type === BUILTIN_BASIC_FLOW_TYPE ? new FlowType() : parseType(type);
 }
 
+export type FunctionSignature = {
+  source: string;
+  module: string;
+  name: string;
+  parameters: Variable[];
+  returnValue: BaseType | undefined;
+  isPureFunction: boolean;
+};
+
 export type SheetData = {
   id: string;
-  signature: {
-    name: string;
-    parameters: Variable[];
-    returnValue: BaseType | undefined;
-  };
+  signature: FunctionSignature;
   variables: Variable[];
   graph: LogicFlow.GraphConfigData;
 };

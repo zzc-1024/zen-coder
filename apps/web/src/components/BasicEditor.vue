@@ -111,9 +111,12 @@ const sheets = ref<SheetData[]>([
   {
     id: '1',
     signature: {
+      source: '.',
+      module: '.',
       name: 'main',
       parameters: [],
       returnValue: undefined,
+      isPureFunction: false,
     },
     variables: [],
     graph: {},
@@ -360,7 +363,14 @@ function handleAddTab() {
   const newLabel = newTabName.value;
   sheets.value.push({
     id: newId.toString(),
-    signature: { name: newLabel, parameters: [...parameters.value], returnValue: returnType.value },
+    signature: {
+      source: '.',
+      module: '.',
+      name: newLabel,
+      parameters: [...parameters.value],
+      returnValue: returnType.value,
+      isPureFunction: false,
+    },
     variables: [],
     graph: {},
   });

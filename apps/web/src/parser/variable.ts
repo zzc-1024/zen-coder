@@ -39,6 +39,17 @@ export type Variable = {
   type: BaseType;
 };
 
+export type Parameter = {
+  name: string;
+  type: BaseType;
+};
+
+// 属性信息只能用基本数据类型以便于JSON序列化和反序列化
+export type ParameterProperty = {
+  name: string;
+  type: string;
+};
+
 export class BasicType extends BaseType {
   dataStructureType: DataStructureType = 'basic';
   constructor(public basicTypeName: BasicTypeName) {
