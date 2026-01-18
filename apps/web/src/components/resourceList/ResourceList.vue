@@ -56,36 +56,11 @@
         v-for="(variable, index) in props.parameters"
         :key="index"
         class="variable-item parameter-item"
+        @click="onVariableClick(variable, 'parameter')"
       >
-        <!-- Variable Info -->
         <div class="variable-header">
           <span class="variable-name">参数{{ variable.name }}</span>
           <span class="variable-type">{{ variable.type.toDisplayString() }}</span>
-          <button
-            class="delete-button"
-            @click="onDeleteVariable(variable.name)"
-            title="Delete Variable"
-          >
-            ✕
-          </button>
-        </div>
-
-        <!-- Variable Nodes -->
-        <div class="variable-nodes">
-          <div
-            class="node get-node"
-            data-node-type="get-variable"
-            @pointerdown="onPointerDown($event, 'get', 'local', variable.name, variable.type)"
-          >
-            <span class="node-label">获取</span>
-          </div>
-          <!-- <div
-            class="node set-node"
-            data-node-type="set-variable"
-            @pointerdown="onPointerDown($event, 'set', 'local', variable.name, variable.type)"
-          >
-            <span class="node-label">设置</span>
-          </div> -->
         </div>
       </div>
 
@@ -94,36 +69,18 @@
         v-for="(variable, index) in props.localVariables"
         :key="index"
         class="variable-item local-variable-item"
+        @click="onVariableClick(variable, 'local')"
       >
-        <!-- Variable Info -->
         <div class="variable-header">
           <span class="variable-name">局部{{ variable.name }}</span>
           <span class="variable-type">{{ variable.type.toDisplayString() }}</span>
           <button
             class="delete-button"
-            @click="onDeleteVariable(variable.name)"
+            @click.stop="onDeleteVariable(variable.name)"
             title="Delete Variable"
           >
             ✕
           </button>
-        </div>
-
-        <!-- Variable Nodes -->
-        <div class="variable-nodes">
-          <div
-            class="node get-node"
-            data-node-type="get-variable"
-            @pointerdown="onPointerDown($event, 'get', 'local', variable.name, variable.type)"
-          >
-            <span class="node-label">获取</span>
-          </div>
-          <div
-            class="node set-node"
-            data-node-type="set-variable"
-            @pointerdown="onPointerDown($event, 'set', 'local', variable.name, variable.type)"
-          >
-            <span class="node-label">设置</span>
-          </div>
         </div>
       </div>
 
@@ -132,36 +89,18 @@
         v-for="(variable, index) in props.globalVariables"
         :key="index"
         class="variable-item global-variable-item"
+        @click="onVariableClick(variable, 'global')"
       >
-        <!-- Variable Info -->
         <div class="variable-header">
           <span class="variable-name">全局{{ variable.name }}</span>
           <span class="variable-type">{{ variable.type.toDisplayString() }}</span>
           <button
             class="delete-button"
-            @click="onDeleteVariable(variable.name)"
+            @click.stop="onDeleteVariable(variable.name)"
             title="Delete Variable"
           >
             ✕
           </button>
-        </div>
-
-        <!-- Variable Nodes -->
-        <div class="variable-nodes">
-          <div
-            class="node get-node"
-            data-node-type="get-variable"
-            @pointerdown="onPointerDown($event, 'get', 'global', variable.name, variable.type)"
-          >
-            <span class="node-label">获取</span>
-          </div>
-          <div
-            class="node set-node"
-            data-node-type="set-variable"
-            @pointerdown="onPointerDown($event, 'set', 'global', variable.name, variable.type)"
-          >
-            <span class="node-label">设置</span>
-          </div>
         </div>
       </div>
     </div>
@@ -189,6 +128,34 @@
               </div>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+  </PopupDialog>
+
+  <!-- 变量节点选择对话框 -->
+  <PopupDialog title="选择节点" ref="variableNodesDialog">
+    <div v-if="selectedVariable" class="variable-nodes-container">
+      <div class="variable-info">
+        <div class="variable-name">{{ selectedVariable.name }}</div>
+        <div class="variable-type">{{ selectedVariable.type.toDisplayString() }}</div>
+      </div>
+      <div class="variable-nodes-list">
+        <!-- 展示可用的节点 -->
+        <div
+          class="node get-node"
+          data-node-type="get-variable"
+          @pointerdown="onNodePointerDown($event, 'get', selectedVariableScopeType, selectedVariable.name, selectedVariable.type)"
+        >
+          <span class="node-label">获取</span>
+        </div>
+        <div
+          v-if="selectedVariableScopeType !== 'parameter'"
+          class="node set-node"
+          data-node-type="set-variable"
+          @pointerdown="onNodePointerDown($event, 'set', selectedVariableScopeType, selectedVariable.name, selectedVariable.type)"
+        >
+          <span class="node-label">设置</span>
         </div>
       </div>
     </div>
@@ -231,6 +198,11 @@ const emits = defineEmits<{
 
 const addVariablePopup = ref();
 const functionsDialog = ref();
+const variableNodesDialog = ref();
+
+// 当前选中的变量和范围类型
+const selectedVariable = ref<Variable | null>(null);
+const selectedVariableScopeType = ref<VariableScopeType | 'parameter'>('local');
 const variableScopeType = ref<VariableScopeType>('local');
 const variableDataStructureType = ref<DataStructureType>('basic');
 const newVariableType = ref<BasicTypeName>('builtin:basic:integer');
@@ -240,16 +212,14 @@ function onDeleteVariable(variableName: string) {
   emits('onDeleteVariable', variableScopeType.value, variableName);
 }
 
-function onPointerDown(
-  event: PointerEvent,
-  dragType: string,
-  scopeType: VariableScopeType,
-  variableName: string,
-  variableType: BaseType,
-) {
-  event.preventDefault();
-  emits('onPointerDown', dragType, scopeType, variableName, variableType);
+// 处理变量点击事件
+function onVariableClick(variable: Variable, scopeType: VariableScopeType | 'parameter') {
+  selectedVariable.value = variable;
+  selectedVariableScopeType.value = scopeType;
+  variableNodesDialog.value.open();
 }
+
+// onPointerDown函数已被onNodePointerDown函数替代
 
 function onAddVariable() {
   // 验证变量名是否存在
@@ -294,6 +264,19 @@ function onFunctionPointerDown(
   event.preventDefault();
   functionsDialog.value.close();
   emits('onFunctionPointerDown', source, module, functionName);
+}
+
+// 处理节点拖拽事件
+function onNodePointerDown(
+  event: PointerEvent,
+  dragType: string,
+  scopeType: VariableScopeType | 'parameter',
+  variableName: string,
+  variableType: BaseType,
+) {
+  event.preventDefault();
+  variableNodesDialog.value.close();
+  emits('onPointerDown', dragType, scopeType as VariableScopeType, variableName, variableType);
 }
 </script>
 
@@ -391,13 +374,15 @@ function onFunctionPointerDown(
 
   .list-body {
     flex: 1;
-    overflow-x: hidden;
+    overflow-x: auto;
     overflow-y: auto;
     padding: 8px;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 8px;
     min-height: 0; /* 确保flex子元素能正确处理溢出 */
+    scrollbar-width: thin;
+    scrollbar-color: #444 #222;
 
     /* --- Variable Item --- */
     .variable-item {
@@ -405,7 +390,19 @@ function onFunctionPointerDown(
       border: 1px solid #555;
       border-radius: 4px;
       overflow: hidden;
+      display: flex;
+      flex-direction: column;
       flex-shrink: 0;
+      width: 180px;
+      min-width: 180px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      &:hover {
+        border-color: #00aaff;
+        box-shadow: 0 0 8px rgba(0, 170, 255, 0.3);
+      }
+
       &.parameter-item {
         .variable-header {
           background: linear-gradient(to right, #502c35, #740312);
@@ -472,58 +469,6 @@ function onFunctionPointerDown(
           }
         }
       }
-
-      /* --- Variable Nodes --- */
-      .variable-nodes {
-        display: flex;
-        padding: 8px;
-        gap: 8px;
-        background-color: #3a3a3a;
-
-        .node {
-          flex: 1;
-          display: flex;
-          align-items: center;
-          padding: 6px 8px;
-          background-color: #555;
-          border: 1px solid #777;
-          border-radius: 3px;
-          cursor: grab;
-          position: relative;
-          min-height: 30px;
-          box-sizing: border-box;
-          touch-action: none;
-
-          &:active {
-            cursor: grabbing;
-          }
-
-          .node-label {
-            flex-grow: 1;
-            text-align: center;
-            font-size: 12px;
-            font-weight: 500;
-          }
-
-          &.get-node {
-            background-color: #2c5a7b; /* Blue-ish for Get */
-            border-color: #3d7ca8;
-
-            .node-label {
-              color: #a0d0f0;
-            }
-          }
-
-          &.set-node {
-            background-color: #7b5a2c; /* Orange-ish for Set */
-            border-color: #a87c3d;
-
-            .node-label {
-              color: #f0d0a0;
-            }
-          }
-        }
-      }
     }
   }
 
@@ -578,10 +523,12 @@ function onFunctionPointerDown(
     }
 
     .list-body {
-      flex-direction: row;
-      flex-wrap: nowrap;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      flex-wrap: wrap;
       overflow-x: auto;
-      overflow-y: hidden;
+      overflow-y: auto;
       padding: 8px;
       gap: 8px;
 
@@ -589,6 +536,74 @@ function onFunctionPointerDown(
         min-width: 180px;
         flex-shrink: 0;
       }
+    }
+  }
+}
+
+/* 变量节点选择对话框样式 */
+.variable-nodes-container {
+  padding: 8px;
+}
+
+.variable-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding: 12px;
+  background-color: #1a1a1a;
+  border-radius: 4px;
+  border: 1px solid #444;
+}
+
+.variable-nodes-list {
+  display: flex;
+  gap: 12px;
+  padding: 8px;
+  background-color: #3a3a3a;
+  border-radius: 4px;
+}
+
+.variable-nodes-list .node {
+  flex: 1;
+  min-width: 100px;
+  display: flex;
+  align-items: center;
+  padding: 12px 8px;
+  background-color: #555;
+  border: 1px solid #777;
+  border-radius: 4px;
+  cursor: grab;
+  position: relative;
+  justify-content: center;
+  box-sizing: border-box;
+  touch-action: none;
+
+  &:active {
+    cursor: grabbing;
+  }
+
+  .node-label {
+    font-size: 14px;
+    font-weight: bold;
+    color: #ffffff;
+  }
+
+  &.get-node {
+    background-color: #2c5a7b;
+    border-color: #3d7ca8;
+
+    .node-label {
+      color: #a0d0f0;
+    }
+  }
+
+  &.set-node {
+    background-color: #7b5a2c;
+    border-color: #a87c3d;
+
+    .node-label {
+      color: #f0d0a0;
     }
   }
 }

@@ -3,7 +3,6 @@
     <ToolBar :config="toolBarConfig" @generate="handleGenerate" />
     <div class="editor-container">
       <resourceList
-        class="variable-list"
         :parameters="selectedSheetParameters"
         :localVariables="localVariables"
         :globalVariables="globalVariables"
@@ -479,10 +478,6 @@ function onTabTouch(tabId: string) {
     display: flex;
     flex-direction: row;
 
-    .variable-list {
-      min-width: 230px;
-    }
-
     .lf-object {
       height: calc(100% - 41px);
       width: 100%;
@@ -503,7 +498,6 @@ function onTabTouch(tabId: string) {
       flex-direction: column;
       min-height: 970px;
 
-      .variable-list,
       .attribute-panel {
         width: 100%;
         height: auto;
