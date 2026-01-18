@@ -77,7 +77,7 @@
 import { computed, onMounted, ref } from 'vue';
 import { getTeleport } from '@logicflow/vue-node-registry';
 import LogicFlow, { BezierEdge, EventType } from '@logicflow/core';
-import { DndPanel, MiniMap } from '@logicflow/extension';
+import { DndPanel, Menu, MiniMap } from '@logicflow/extension';
 import { BaseType, type Variable, type VariableScopeType } from '@/parser/variable';
 import { batchRegisterVueNode } from '@/utils/editor';
 import {
@@ -168,7 +168,7 @@ onMounted(() => {
     background: {
       color: '#111',
     },
-    plugins: [MiniMap],
+    plugins: [MiniMap, Menu],
   });
 
   // 工具栏配置
@@ -204,6 +204,27 @@ onMounted(() => {
       },
     ]);
   }
+
+  // 设置菜单
+  lf.setMenuConfig({
+    nodeMenu: [
+      {
+        text: '删除',
+        callback(node: LogicFlow.NodeData) {
+          lf!.deleteNode(node.id);
+        },
+      },
+    ],
+    edgeMenu: [
+      {
+        text: '删除',
+        callback(edge: LogicFlow.EdgeData) {
+          lf!.deleteEdge(edge.id);
+        },
+      },
+    ],
+    graphMenu: [],
+  });
 
   // 设置事件
   lf.on(EventType.GRAPH_RENDERED, ({ graphModel }) => {
