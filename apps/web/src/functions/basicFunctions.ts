@@ -5,7 +5,10 @@ export const basicAvailableFunctions: AvailableFunctions = {
   'builtin:basic': {
     '.': {
       print: {
-        parameters: [{ name: 'end', type: new BasicType('builtin:basic:string') }],
+        parameters: [
+          { name: 'value', type: new BasicType('builtin:basic:string') },
+          { name: 'end', type: new BasicType('builtin:basic:string') },
+        ],
         returnType: undefined,
         isPureFunction: false,
         defaultValues: {},

@@ -55,6 +55,9 @@ export class PythonBackend extends CompilerBackend {
     xnor: '==',
   };
   private parseExpression(expression: Expression): string {
+    if (expression === undefined) {
+      throw new Error('未定义表达式错误');
+    }
     if (expression instanceof VariableExpression) {
       if (expression.variableScopeType === 'local') return expression.name;
       return `globals()["${expression.name}"]`;
@@ -72,9 +75,22 @@ export class PythonBackend extends CompilerBackend {
     else if (expression instanceof FloatExpression) return expression.value.toString();
     else if (expression instanceof IntegerExpression) return expression.value.toString();
     else if (expression instanceof StringExpression) return `'${expression.value}'`;
-    else if (expression instanceof CallExpression)
-      return `${expression.functionName}(${expression.parameters.map(this.parseExpression).join(', ')})`;
-    throw new Error(`Unknown expression type: ${expression.constructor.name}`);
+    else if (expression instanceof CallExpression) {
+      console.log(expression);
+      if (expression.source === '.')
+        return `${expression.functionName}(${expression.parameters.map(this.parseExpression).join(', ')})`;
+      if (expression.source === 'builtin:basic') {
+        if (expression.module === '.') {
+          switch (expression.functionName) {
+            case 'print':
+              return `print(${this.parseExpression(expression.parameters[0]!)}, end=${this.parseExpression(expression.parameters[1]!)})`;
+            case 'input':
+              return `input(${this.parseExpression(expression.parameters[0]!)})`;
+          }
+        }
+      }
+    }
+    throw new Error(`Unknown expression type: ${typeof expression}`);
   }
   convertVariableToPythonStyle(variable: Variable): string {
     if (variable.type.dataStructureType === 'dict') return `${variable.name}: dict = {}`;
