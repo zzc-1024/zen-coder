@@ -77,7 +77,7 @@ import { computed, onMounted, ref } from 'vue';
 import { getTeleport } from '@logicflow/vue-node-registry';
 import LogicFlow, { BezierEdge, EventType } from '@logicflow/core';
 import { DndPanel, Menu, MiniMap } from '@logicflow/extension';
-import { BaseType, type Variable, type VariableScopeType } from '@/parser/variable';
+import { BaseType, type BasicTypeName, type Variable, type VariableScopeType } from '@/parser/variable';
 import { batchRegisterVueNode } from '@/utils/editor';
 import {
   basicEditorNode,
@@ -289,11 +289,12 @@ function onPointerDown(
   variableScopeType: VariableScopeType,
   variableName: string,
   variableType: BaseType,
+  indexs: BasicTypeName[],
 ) {
   if (lf === null) {
     return;
   }
-  dragVariable(lf, dragType, variableScopeType, variableName, variableType);
+  dragVariable(lf, dragType, variableScopeType, variableName, variableType, indexs);
 }
 function onAddVariable(
   variableScopeType: VariableScopeType,

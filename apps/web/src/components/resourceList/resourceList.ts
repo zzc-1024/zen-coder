@@ -6,7 +6,7 @@ import {
   SetVariableNodeType,
   type SetVariableNodeProperties,
 } from '@/nodes/basic/setVariableNode/setVariableNodeModel';
-import type { BaseType, VariableScopeType } from '@/parser/variable';
+import type { BaseType, BasicTypeName, VariableScopeType } from '@/parser/variable';
 import type LogicFlow from '@logicflow/core';
 
 export function dragVariable(
@@ -15,6 +15,7 @@ export function dragVariable(
   variableScopeType: VariableScopeType,
   variableName: string,
   variableType: BaseType,
+  indexs: BasicTypeName[],
 ) {
   if (dragType === 'get') {
     lf.dnd.startDrag({
@@ -32,6 +33,7 @@ export function dragVariable(
         variableScopeType,
         type: variableType.toString(),
         variable: variableName,
+        indexs,
         defaultValues: {},
       } satisfies SetVariableNodeProperties,
     });

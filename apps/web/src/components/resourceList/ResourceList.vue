@@ -149,8 +149,24 @@
       <div class="variable-nodes-list">
         <!-- 展示可用的节点 -->
         <div
+          v-for="[indexs, type] in getTypeIndexsWithType(selectedVariable.type)"
+          :key="type.toString()"
+          class="node set-node"
+          @pointerdown="
+            onNodePointerDown(
+              $event,
+              'set',
+              selectedVariableScopeType,
+              selectedVariable.name,
+              type,
+              indexs,
+            )
+          "
+        >
+          <span class="node-label">设置 {{ type.toDisplayString() }}</span>
+        </div>
+        <div
           class="node get-node"
-          data-node-type="get-variable"
           @pointerdown="
             onNodePointerDown(
               $event,
@@ -158,26 +174,11 @@
               selectedVariableScopeType,
               selectedVariable.name,
               selectedVariable.type,
+              [],
             )
           "
         >
-          <span class="node-label">获取</span>
-        </div>
-        <div
-          v-if="selectedVariableScopeType !== 'parameter'"
-          class="node set-node"
-          data-node-type="set-variable"
-          @pointerdown="
-            onNodePointerDown(
-              $event,
-              'set',
-              selectedVariableScopeType,
-              selectedVariable.name,
-              selectedVariable.type,
-            )
-          "
-        >
-          <span class="node-label">设置</span>
+          <span class="node-label">获取 {{ selectedVariable.type.toDisplayString() }}</span>
         </div>
       </div>
     </div>
@@ -189,6 +190,7 @@ import { ref } from 'vue';
 import {
   BaseType,
   BasicType,
+  DictType,
   ListType,
   type BasicTypeName,
   type DataStructureType,
@@ -210,6 +212,7 @@ const emits = defineEmits<{
     scopeType: VariableScopeType,
     variableName: string,
     variableType: BaseType,
+    indexs: BasicTypeName[],
   ];
   onAddVariable: [scopeType: VariableScopeType, variableName: string, variableType: BaseType];
   onFunctionPointerDown: [source: string, module: string, functionName: string];
@@ -288,16 +291,42 @@ function onFunctionPointerDown(
 }
 
 // 处理节点拖拽事件
+function getTypeIndexsWithType(variableType: BaseType): [BasicTypeName[], BaseType][] {
+  const res: [BasicTypeName[], BaseType][] = [];
+  const calculateIndexs: BasicTypeName[] = [];
+  res.push([[...calculateIndexs], variableType]);
+  while (!(variableType instanceof BasicType)) {
+    if (variableType instanceof ListType) {
+      calculateIndexs.push('builtin:basic:integer');
+      res.push([[...calculateIndexs], variableType.itemType]);
+      variableType = variableType.itemType;
+    } else if (variableType instanceof DictType) {
+      calculateIndexs.push(variableType.keyType.toString() as BasicTypeName);
+      res.push([[...calculateIndexs], variableType.valueType]);
+      variableType = variableType.valueType;
+    }
+  }
+  return res;
+}
+
 function onNodePointerDown(
   event: PointerEvent,
   dragType: string,
   scopeType: VariableScopeType | 'parameter',
   variableName: string,
   variableType: BaseType,
+  indexs: BasicTypeName[],
 ) {
   event.preventDefault();
   variableNodesDialog.value.close();
-  emits('onPointerDown', dragType, scopeType as VariableScopeType, variableName, variableType);
+  emits(
+    'onPointerDown',
+    dragType,
+    scopeType as VariableScopeType,
+    variableName,
+    variableType,
+    indexs,
+  );
 }
 </script>
 

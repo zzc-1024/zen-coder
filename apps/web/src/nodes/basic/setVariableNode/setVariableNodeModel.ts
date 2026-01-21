@@ -41,7 +41,7 @@ class SetVariableNodeModel extends BasicNodeModel {
 
     for (const [i, index] of properties.indexs.entries()) {
       fields.push({
-        name: `${i}级索引`,
+        name: `${i}号索引`,
         type: parseType(index),
         inputId: `${SetVariableNodeAnchorIds.DATA_IN}:${i}`,
         outputId: null,

@@ -25,6 +25,7 @@ export const setVariableNodeConfig: BasicEditorNodeConfig = {
       type: new BasicType('builtin:basic:integer').toString(),
       variableScopeType: 'local',
       variable: 'Hello',
+      indexs: [],
       defaultValues: {},
     } satisfies SetVariableNodeProperties,
   },
