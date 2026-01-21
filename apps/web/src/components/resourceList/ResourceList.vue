@@ -20,7 +20,7 @@
         数据结构
         <select v-model="variableDataStructureType" class="type-selector">
           <option value="basic">普通</option>
-          <!-- <option value="list">列表 list</option> -->
+          <option value="list">列表 list</option>
           <!-- <option value="dict">映射 dict</option> -->
           <!-- <option value="set">集合 set</option> -->
         </select>
@@ -109,7 +109,11 @@
   <PopupDialog title="按住节点拖拽使用" ref="functionsDialog">
     <div class="functions-container">
       <!-- Source Level -->
-      <div v-for="(modules, source) in props.availableFunctions" :key="source" class="function-source">
+      <div
+        v-for="(modules, source) in props.availableFunctions"
+        :key="source"
+        class="function-source"
+      >
         <div class="source-header">{{ source }}</div>
         <!-- Module Level -->
         <div class="modules-container">
@@ -124,7 +128,9 @@
                 @pointerdown="onFunctionPointerDown($event, source, module, functionName)"
               >
                 <span class="function-name">{{ functionName }}</span>
-                <span class="function-return-type">{{ functionInfo.returnType?.toDisplayString() || 'void' }}</span>
+                <span class="function-return-type">{{
+                  functionInfo.returnType?.toDisplayString() || 'void'
+                }}</span>
               </div>
             </div>
           </div>
@@ -145,7 +151,15 @@
         <div
           class="node get-node"
           data-node-type="get-variable"
-          @pointerdown="onNodePointerDown($event, 'get', selectedVariableScopeType, selectedVariable.name, selectedVariable.type)"
+          @pointerdown="
+            onNodePointerDown(
+              $event,
+              'get',
+              selectedVariableScopeType,
+              selectedVariable.name,
+              selectedVariable.type,
+            )
+          "
         >
           <span class="node-label">获取</span>
         </div>
@@ -153,7 +167,15 @@
           v-if="selectedVariableScopeType !== 'parameter'"
           class="node set-node"
           data-node-type="set-variable"
-          @pointerdown="onNodePointerDown($event, 'set', selectedVariableScopeType, selectedVariable.name, selectedVariable.type)"
+          @pointerdown="
+            onNodePointerDown(
+              $event,
+              'set',
+              selectedVariableScopeType,
+              selectedVariable.name,
+              selectedVariable.type,
+            )
+          "
         >
           <span class="node-label">设置</span>
         </div>
@@ -167,6 +189,7 @@ import { ref } from 'vue';
 import {
   BaseType,
   BasicType,
+  ListType,
   type BasicTypeName,
   type DataStructureType,
   type Variable,
@@ -189,11 +212,7 @@ const emits = defineEmits<{
     variableType: BaseType,
   ];
   onAddVariable: [scopeType: VariableScopeType, variableName: string, variableType: BaseType];
-  onFunctionPointerDown: [
-    source: string,
-    module: string,
-    functionName: string,
-  ];
+  onFunctionPointerDown: [source: string, module: string, functionName: string];
 }>();
 
 const addVariablePopup = ref();
@@ -249,6 +268,8 @@ function onAddVariable() {
   let type: BaseType;
   if (variableDataStructureType.value === 'basic') {
     type = new BasicType(newVariableType.value);
+  } else if (variableDataStructureType.value === 'list') {
+    type = new ListType(new BasicType(newVariableType.value));
   } else throw new Error(`Unknown data structure type: ${variableDataStructureType.value}`);
 
   emits('onAddVariable', variableScopeType.value, newVariableName.value, type);
