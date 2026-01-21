@@ -6,14 +6,15 @@ import BasicNodeModel, {
 import { BasicEditorNodeTypePrefix, FlowType } from '../typeDifination';
 import type { Expression, Statement } from '@/parser/defination';
 import { AssignmentStatement } from '@/parser/statements';
-import { VariableExpression } from '@/parser/expressions';
-import { parseType, type VariableScopeType } from '@/parser/variable';
+import { IndexExpression, VariableExpression } from '@/parser/expressions';
+import { parseType, type BasicTypeName, type VariableScopeType } from '@/parser/variable';
 
 export const SetVariableNodeType = `${BasicEditorNodeTypePrefix}:set`;
 export type SetVariableNodeProperties = BasicNodePropertiesWithDefaultValues & {
   variableScopeType: VariableScopeType;
   type: string;
   variable: string;
+  indexs: BasicTypeName[];
 };
 
 export const SetVariableNodeAnchorIds = {
@@ -27,20 +28,34 @@ class SetVariableNodeModel extends BasicNodeModel {
    * 定义节点的字段
    */
   getFields(): FieldType[] {
-    return [
+    const properties = this.properties as SetVariableNodeProperties;
+
+    const fields: FieldType[] = [
       {
         name: '流程',
         type: new FlowType(),
         inputId: SetVariableNodeAnchorIds.FLOW_IN,
         outputId: SetVariableNodeAnchorIds.FLOW_OUT,
       },
-      {
-        name: '赋值',
-        type: parseType(this.properties.type as string),
-        inputId: SetVariableNodeAnchorIds.DATA_IN,
-        outputId: null,
-      },
     ];
+
+    for (const [i, index] of properties.indexs.entries()) {
+      fields.push({
+        name: `${i}级索引`,
+        type: parseType(index),
+        inputId: `${SetVariableNodeAnchorIds.DATA_IN}:${i}`,
+        outputId: null,
+      });
+    }
+
+    fields.push({
+      name: '赋值',
+      type: parseType(properties.type),
+      inputId: SetVariableNodeAnchorIds.DATA_IN,
+      outputId: null,
+    });
+
+    return fields;
   }
 
   /**
@@ -65,6 +80,22 @@ class SetVariableNodeModel extends BasicNodeModel {
       throw new Error(
         `SetVariableNodeModel parseTypeStringToDefaultExpression type ${properties.type} not supported`,
       );
+
+    // 生成索引表达式
+    for (const [i, index] of properties.indexs.entries()) {
+      let indexExpression = this.getDataInExpression(
+        `${this.id}:${SetVariableNodeAnchorIds.DATA_IN}:${i}`,
+      );
+      if (!indexExpression) {
+        const defaultValue = properties.defaultValues[`${SetVariableNodeAnchorIds.DATA_IN}:${i}`];
+        indexExpression = this.parseTypeStringToDefaultExpression(index, defaultValue);
+      }
+      if (!indexExpression)
+        throw new Error(
+          `SetVariableNodeModel parseTypeStringToDefaultExpression index ${i} type ${index} not supported`,
+        );
+      expression = new IndexExpression(expression, indexExpression);
+    }
 
     // 生成语句
     const statements = [

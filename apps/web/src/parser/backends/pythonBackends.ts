@@ -26,6 +26,7 @@ import {
   VariableExpression,
   type BinaryOperator,
   CallExpression,
+  IndexExpression,
 } from '../expressions';
 
 export class PythonBackend extends CompilerBackend {
@@ -75,8 +76,9 @@ export class PythonBackend extends CompilerBackend {
     else if (expression instanceof FloatExpression) return expression.value.toString();
     else if (expression instanceof IntegerExpression) return expression.value.toString();
     else if (expression instanceof StringExpression) return `'${expression.value}'`;
+    else if (expression instanceof IndexExpression)
+      return `${this.parseExpression(expression.base)}[${this.parseExpression(expression.index)}]`;
     else if (expression instanceof CallExpression) {
-      console.log(expression);
       if (expression.source === '.')
         return `${expression.functionName}(${expression.parameters.map(this.parseExpression).join(', ')})`;
       if (expression.source === 'builtin:basic') {
