@@ -11,7 +11,7 @@ export class VariableStatement extends Statement {
 export class AssignmentStatement extends Statement {
   constructor(
     public variableScopeType: VariableScopeType,
-    public variable: VariableExpression,
+    public variable: Expression,
     public expression: Expression,
   ) {
     super();

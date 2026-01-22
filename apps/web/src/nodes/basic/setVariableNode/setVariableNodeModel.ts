@@ -82,6 +82,10 @@ class SetVariableNodeModel extends BasicNodeModel {
       );
 
     // 生成索引表达式
+    let leftExpression: Expression = new VariableExpression(
+      properties.variableScopeType,
+      properties.variable,
+    );
     for (const [i, index] of properties.indexs.entries()) {
       let indexExpression = this.getDataInExpression(
         `${this.id}:${SetVariableNodeAnchorIds.DATA_IN}:${i}`,
@@ -94,16 +98,12 @@ class SetVariableNodeModel extends BasicNodeModel {
         throw new Error(
           `SetVariableNodeModel parseTypeStringToDefaultExpression index ${i} type ${index} not supported`,
         );
-      expression = new IndexExpression(expression, indexExpression);
+      leftExpression = new IndexExpression(leftExpression, indexExpression);
     }
 
     // 生成语句
     const statements = [
-      new AssignmentStatement(
-        properties.variableScopeType,
-        new VariableExpression(properties.variableScopeType, properties.variable),
-        expression,
-      ),
+      new AssignmentStatement(properties.variableScopeType, leftExpression, expression),
       ...this.getFlowOutStatement(`${this.id}:${SetVariableNodeAnchorIds.FLOW_OUT}`),
     ];
     return statements;

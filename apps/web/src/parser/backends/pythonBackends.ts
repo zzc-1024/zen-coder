@@ -115,9 +115,7 @@ export class PythonBackend extends CompilerBackend {
     let code = '';
     if (statement instanceof AssignmentStatement) {
       code += `${' '.repeat(this.pythonContext.indentSpaceCount)}`;
-      if (statement.variableScopeType === 'global')
-        code += `globals()["${statement.variable.name}"] = ${this.parseExpression(statement.expression)}\n`;
-      else code += `${statement.variable.name} = ${this.parseExpression(statement.expression)}\n`;
+      code += `${this.parseExpression(statement.variable)} = ${this.parseExpression(statement.expression)}\n`;
     } else if (statement instanceof IfStatement) {
       code += `${' '.repeat(this.pythonContext.indentSpaceCount)}`;
       code += `if ${this.parseExpression(statement.condition)}:\n`;
