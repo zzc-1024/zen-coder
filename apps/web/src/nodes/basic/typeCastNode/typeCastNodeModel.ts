@@ -22,7 +22,6 @@ export type TypeCastNodeProperties = BasicNodePropertiesWithDefaultValues & {
 };
 
 export const TypeCastNodeAnchorIds = {
-  FLOW_OUT: 'flow-out',
   TYPE_IN: 'type-in',
   TYPE_OUT: 'type-out',
 };
