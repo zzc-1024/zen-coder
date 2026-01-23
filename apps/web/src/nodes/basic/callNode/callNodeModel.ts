@@ -97,6 +97,7 @@ class CallNodeModel extends BasicNodeModel {
           parameters,
         ),
       ),
+      ...this.getFlowOutStatement(`${this.id}:${CallNodeAnchorIds.FLOW_OUT}`),
     ];
     return statements;
   }

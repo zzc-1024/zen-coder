@@ -319,6 +319,7 @@ function onNodePointerDown(
 ) {
   event.preventDefault();
   variableNodesDialog.value.close();
+  if (scopeType === 'parameter') scopeType = 'local';
   emits(
     'onPointerDown',
     dragType,

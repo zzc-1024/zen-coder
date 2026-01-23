@@ -80,7 +80,7 @@ export class PythonBackend extends CompilerBackend {
       return `${this.parseExpression(expression.base)}[${this.parseExpression(expression.index)}]`;
     else if (expression instanceof CallExpression) {
       if (expression.source === '.')
-        return `${expression.functionName}(${expression.parameters.map(this.parseExpression).join(', ')})`;
+        return `${expression.functionName}(${expression.parameters.map(this.parseExpression.bind(this)).join(', ')})`;
       if (expression.source === 'builtin:basic') {
         if (expression.module === '.') {
           switch (expression.functionName) {
