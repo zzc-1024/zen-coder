@@ -30,6 +30,16 @@ export class CallExpression extends Expression {
   }
 }
 
+export class MemberExpression extends Expression {
+  constructor(
+    public caller: Expression,
+    public memberName: string,
+    public parameters: Expression[],
+  ) {
+    super();
+  }
+}
+
 export class IndexExpression extends Expression {
   constructor(
     public base: Expression,

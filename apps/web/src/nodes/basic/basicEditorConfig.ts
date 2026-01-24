@@ -37,6 +37,7 @@ import { callNodeConfig } from './callNode';
 
 import EntryNodeModel, { EntryNodeType } from './entryNode/entryNodeModel';
 import { PythonBackend } from '@/parser/backends/pythonBackends';
+import { memberNodeConfig } from './memberNode';
 
 // 节点配置区域
 export type RecommendationFunction = (
@@ -66,6 +67,7 @@ export const basicEditorNode: BasicEditorNodeConfig[] = [
   typeCastNodeConfig,
   returnNodeConfig,
   callNodeConfig,
+  memberNodeConfig,
 ];
 
 export const dndPanelItem: LogicFlow.OnDragNodeConfig[] = [

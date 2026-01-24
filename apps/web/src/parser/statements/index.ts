@@ -1,5 +1,5 @@
 import { Expression, Statement } from '../defination';
-import type { CallExpression, VariableExpression } from '../expressions';
+import type { CallExpression, MemberExpression, VariableExpression } from '../expressions';
 import type { VariableScopeType } from '../variable';
 
 export class VariableStatement extends Statement {
@@ -39,6 +39,12 @@ export class WhileStatement extends Statement {
 
 export class CallStatement extends Statement {
   constructor(public callExpression: CallExpression) {
+    super();
+  }
+}
+
+export class MemberStatement extends Statement {
+  constructor(public memberExpression: MemberExpression) {
     super();
   }
 }
