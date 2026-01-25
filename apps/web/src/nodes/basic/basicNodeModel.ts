@@ -1,18 +1,15 @@
 import LogicFlow, { HtmlNodeModel, type BaseNodeModel, type Model } from '@logicflow/core';
-import {
-  BUILTIN_BASIC_FLOW_TYPE,
-  type AnchorType,
-  type DirectType,
-} from './typeDifination';
+import { BUILTIN_BASIC_FLOW_TYPE, type AnchorType, type DirectType } from './typeDifination';
 import { getThemeVar } from '@/utils/theme';
 import type { Expression, Statement } from '@/parser/defination';
 import {
   BooleanExpression,
   FloatExpression,
   IntegerExpression,
+  ListExpression,
   StringExpression,
 } from '@/parser/expressions';
-import { BasicType } from '@/parser/variable';
+import { BasicType, ListType, parseType } from '@/parser/variable';
 
 export type AnchorSide = 'left' | 'right' | 'both' | 'none';
 
@@ -184,9 +181,12 @@ abstract class BasicNodeModel extends HtmlNodeModel {
         return new IntegerExpression((defaultValue as number) ?? 0);
       case new BasicType('builtin:basic:string').toString():
         return new StringExpression((defaultValue as string) ?? '');
-      default:
-        return null;
     }
+    const type = parseType(typeString);
+    if (type instanceof ListType) {
+      return new ListExpression([]);
+    }
+    return null;
   }
   getFlowOutStatement(anchorId: string): Statement[] {
     const outgoingEdges = this.graphModel.getAnchorOutgoingEdge(anchorId);

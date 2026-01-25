@@ -27,6 +27,7 @@ import {
   type BinaryOperator,
   CallExpression,
   IndexExpression,
+  ListExpression,
 } from '../expressions';
 
 export class PythonBackend extends CompilerBackend {
@@ -76,6 +77,8 @@ export class PythonBackend extends CompilerBackend {
     else if (expression instanceof FloatExpression) return expression.value.toString();
     else if (expression instanceof IntegerExpression) return expression.value.toString();
     else if (expression instanceof StringExpression) return `'${expression.value}'`;
+    else if (expression instanceof ListExpression)
+      return `[${expression.items.map(this.parseExpression.bind(this)).join(', ')}]`;
     else if (expression instanceof IndexExpression)
       return `${this.parseExpression(expression.base)}[${this.parseExpression(expression.index)}]`;
     else if (expression instanceof CallExpression) {
