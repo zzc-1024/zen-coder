@@ -28,6 +28,7 @@ import {
   CallExpression,
   IndexExpression,
   ListExpression,
+  MemberExpression,
 } from '../expressions';
 
 export class PythonBackend extends CompilerBackend {
@@ -94,6 +95,8 @@ export class PythonBackend extends CompilerBackend {
           }
         }
       }
+    } else if (expression instanceof MemberExpression) {
+      return `${this.parseExpression(expression.caller)}.${expression.memberName}(${expression.parameters.map(this.parseExpression.bind(this)).join(', ')})`;
     }
     throw new Error(`Unknown expression type: ${typeof expression}`);
   }
