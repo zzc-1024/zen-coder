@@ -33,11 +33,11 @@ import { continueNodeConfig } from './continueNode'; // 继续节点
 import { conditionBranchNodeConfig } from './conditionBranchNode'; // 条件分支节点
 import { typeCastNodeConfig } from './typeCastNode'; // 类型转换节点
 import { returnNodeConfig } from './returnNode'; // 返回节点
-import { callNodeConfig } from './callNode';
+import { callNodeConfig } from './callNode'; // 调用函数节点
+import { memberNodeConfig } from './memberNode'; // 调用成员节点
 
 import EntryNodeModel, { EntryNodeType } from './entryNode/entryNodeModel';
 import { PythonBackend } from '@/parser/backends/pythonBackends';
-import { memberNodeConfig } from './memberNode';
 
 // 节点配置区域
 export type RecommendationFunction = (
