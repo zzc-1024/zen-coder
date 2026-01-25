@@ -12,14 +12,14 @@ export const memberNodeConfig: BasicEditorNodeConfig = {
   type: MemberNodeType,
   component: CallNodeView,
   model: MemberNodeModel,
-  name: '调用函数',
-  banter: '梦开始的地方',
-  description: '调用指定函数。',
+  name: '调用成员',
+  banter: '你也是梦开始的地方？',
+  description: '调用指定成员，包括成员函数和成员变量',
   generateSuggestedNodes: memberNodeGenerateAnchorRecommendation,
   iconPath: iconPath,
   demoDndData: {
     type: MemberNodeType,
-    label: '调用函数',
+    label: '调用成员',
     icon: iconPath,
     properties: {
       memberName: 'push',
