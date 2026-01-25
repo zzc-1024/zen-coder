@@ -1,13 +1,11 @@
 import { type Ref } from 'vue';
 
-import { type VueNodeConfig } from '@logicflow/vue-node-registry';
 
 import LogicFlow from '@logicflow/core';
 import { EventType } from '@logicflow/core';
 import {
   BUILTIN_BASIC_FLOW_TYPE,
-  type AnchorType,
-  type DirectType,
+  type BasicEditorNodeConfig,
   type SheetData,
 } from './typeDifination';
 import { ToolBarConfig } from '@/components/toolBar/toolBar';
@@ -40,19 +38,6 @@ import EntryNodeModel, { EntryNodeType } from './entryNode/entryNodeModel';
 import { PythonBackend } from '@/parser/backends/pythonBackends';
 
 // 节点配置区域
-export type RecommendationFunction = (
-  type: AnchorType,
-  direction: DirectType,
-) => LogicFlow.OnDragNodeConfig[];
-
-export type BasicEditorNodeConfig = VueNodeConfig & {
-  name: string;
-  banter: string;
-  description: string;
-  generateSuggestedNodes: RecommendationFunction;
-  iconPath: string;
-  demoDndData: LogicFlow.OnDragNodeConfig;
-};
 
 export const basicEditorNode: BasicEditorNodeConfig[] = [
   entryNodeConfig,

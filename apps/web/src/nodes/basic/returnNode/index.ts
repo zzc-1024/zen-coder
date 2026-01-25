@@ -1,11 +1,11 @@
 import { BasicType } from '@/parser/variable';
-import { type BasicEditorNodeConfig } from '../basicEditorConfig';
 import ReturnNodeView from './ReturnNodeView.vue';
 import ReturnNodeModel, {
   returnNodeGenerateAnchorRecommendation,
   ReturnNodeType,
   type ReturnNodeProperties,
 } from './returnNodeModel';
+import type { BasicEditorNodeConfig } from '../typeDifination';
 
 const iconPath = 'nodeIcon/Return.png';
 export const returnNodeConfig: BasicEditorNodeConfig = {

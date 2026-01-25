@@ -1,4 +1,4 @@
-import { type BasicEditorNodeConfig } from '../basicEditorConfig';
+import type { BasicEditorNodeConfig } from '../typeDifination';
 import ConditionBranchNodeView from './ConditionBranchNodeView.vue';
 import ConditionBranchNodeModel, {
   conditionBranchNodeGenerateAnchorRecommendation,

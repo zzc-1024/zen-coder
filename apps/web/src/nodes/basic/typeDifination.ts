@@ -1,5 +1,6 @@
 import { parseType, type BaseType, type Variable } from "@/parser/variable";
 import type LogicFlow from "@logicflow/core";
+import type { VueNodeConfig } from "@logicflow/vue-node-registry";
 
 type BuiltinBasicTypePrefix = 'builtin:basic';
 
@@ -40,4 +41,19 @@ export type SheetData = {
   signature: FunctionSignature;
   variables: Variable[];
   graph: LogicFlow.GraphConfigData;
+};
+
+
+export type RecommendationFunction = (
+  type: AnchorType,
+  direction: DirectType,
+) => LogicFlow.OnDragNodeConfig[];
+
+export type BasicEditorNodeConfig = VueNodeConfig & {
+  name: string;
+  banter: string;
+  description: string;
+  generateSuggestedNodes: RecommendationFunction;
+  iconPath: string;
+  demoDndData: LogicFlow.OnDragNodeConfig;
 };

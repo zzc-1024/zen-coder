@@ -1,4 +1,4 @@
-import { type BasicEditorNodeConfig } from '../basicEditorConfig';
+import type { BasicEditorNodeConfig } from '../typeDifination';
 import RangeLoopNodeView from './RangeLoopNodeView.vue';
 import RangeLoopNodeModel, {
   rangeLoopNodeGenerateAnchorRecommendation,

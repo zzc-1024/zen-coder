@@ -1,4 +1,4 @@
-import { type BasicEditorNodeConfig } from '../basicEditorConfig';
+import type { BasicEditorNodeConfig } from '../typeDifination';
 // 入口节点
 import EntryNodeView from './EntryNodeView.vue';
 import EntryNodeModel, {

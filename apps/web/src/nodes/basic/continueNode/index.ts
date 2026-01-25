@@ -1,4 +1,4 @@
-import { type BasicEditorNodeConfig } from '../basicEditorConfig';
+import type { BasicEditorNodeConfig } from '../typeDifination';
 import ContinueNodeView from './ContinueNodeView.vue';
 import ContinueNodeModel, {
   continueNodeGenerateAnchorRecommendation,

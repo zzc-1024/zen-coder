@@ -1,5 +1,5 @@
 import { BasicType } from '@/parser/variable';
-import { type BasicEditorNodeConfig } from '../basicEditorConfig';
+import type { BasicEditorNodeConfig } from '../typeDifination';
 // 入口节点
 import IndexNodeView from './IndexNodeView.vue';
 import IndexNodeModel, {

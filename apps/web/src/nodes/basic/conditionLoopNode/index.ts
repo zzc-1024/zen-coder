@@ -1,4 +1,4 @@
-import { type BasicEditorNodeConfig } from '../basicEditorConfig';
+import type { BasicEditorNodeConfig } from '../typeDifination';
 import ConditionLoopNodeView from './ConditionLoopNodeView.vue';
 import ConditionLoopNodeModel, {
   conditionLoopNodeGenerateAnchorRecommendation,

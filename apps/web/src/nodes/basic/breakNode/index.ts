@@ -1,4 +1,4 @@
-import { type BasicEditorNodeConfig } from '../basicEditorConfig';
+import type { BasicEditorNodeConfig } from '../typeDifination';
 import BreakNodeView from './BreakNodeView.vue';
 import BreakNodeModel, {
   breakNodeGenerateAnchorRecommendation,
