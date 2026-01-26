@@ -1,7 +1,7 @@
 <template>
   <div class="tab-bar-container">
     <div class="tab-bar-scroll-wrapper" ref="tabBarScrollWrapperRef">
-      <div class="tab-bar" ref="tabBarRef">
+      <div class="tab-bar">
         <div
           v-for="(tab, index) in tabs"
           :key="tab.id"
@@ -79,7 +79,6 @@ const emit = defineEmits<Emits>();
 // 拖拽状态
 const draggingIndex = ref<number | null>(null);
 const dragOverIndex = ref<number | null>(null);
-const tabBarRef = ref<HTMLElement | null>(null);
 const tabBarScrollWrapperRef = ref<HTMLElement | null>(null);
 
 // 触摸拖拽状态
