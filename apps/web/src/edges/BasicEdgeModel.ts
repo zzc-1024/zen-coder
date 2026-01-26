@@ -5,6 +5,8 @@ import {
   BUILTIN_BASIC_FLOAT_TYPE,
   BUILTIN_BASIC_INTEGER_TYPE,
   BUILTIN_BASIC_STRING_TYPE,
+  ListType,
+  parseType,
 } from '@/parser/variable';
 import { getThemeVar } from '@/utils/theme';
 import LogicFlow, { BezierEdgeModel } from '@logicflow/core';
@@ -34,16 +36,19 @@ class BasicEdgeModel extends BezierEdgeModel {
 
   getEdgeStyle() {
     const style = super.getEdgeStyle();
-    if (this.properties.type === BUILTIN_BASIC_FLOW_TYPE) {
+    const type = parseType(this.properties.type);
+    if (type.toString() === BUILTIN_BASIC_FLOW_TYPE) {
       style.stroke = getThemeVar('--zencoder-edge-flow-color');
-    } else if (this.properties.type === BUILTIN_BASIC_BOOLEAN_TYPE) {
+    } else if (type.toString() === BUILTIN_BASIC_BOOLEAN_TYPE) {
       style.stroke = getThemeVar('--zencoder-edge-boolean-color');
-    } else if (this.properties.type === BUILTIN_BASIC_INTEGER_TYPE) {
+    } else if (type.toString() === BUILTIN_BASIC_INTEGER_TYPE) {
       style.stroke = getThemeVar('--zencoder-edge-integer-color');
-    } else if (this.properties.type === BUILTIN_BASIC_FLOAT_TYPE) {
+    } else if (type.toString() === BUILTIN_BASIC_FLOAT_TYPE) {
       style.stroke = getThemeVar('--zencoder-edge-float-color');
-    } else if (this.properties.type === BUILTIN_BASIC_STRING_TYPE) {
+    } else if (type.toString() === BUILTIN_BASIC_STRING_TYPE) {
       style.stroke = getThemeVar('--zencoder-edge-string-color');
+    } else if (type instanceof ListType) {
+      style.stroke = getThemeVar('--zencoder-edge-array-color');
     }
     return style;
   }

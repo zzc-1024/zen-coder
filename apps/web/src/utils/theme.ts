@@ -7,6 +7,7 @@ type ThemeVars = {
   '--zencoder-edge-integer-color': string;
   '--zencoder-edge-float-color': string;
   '--zencoder-edge-string-color': string;
+  '--zencoder-edge-array-color': string;
 };
 
 export const setThemeVar = (key: keyof ThemeVars, value: string) => {
