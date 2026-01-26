@@ -15,7 +15,7 @@ export type MemberNodeProperties = BasicNodePropertiesWithDefaultValues & {
   memberName: string;
   parameters: ParameterProperty[];
   returnType: string | undefined;
-  isPureMethod: boolean;
+  isPureMethod: boolean | undefined;
 };
 
 export const MemberNodeAnchorIds = {
@@ -32,7 +32,7 @@ class MemberNodeModel extends BasicNodeModel {
   getFields(): FieldType[] {
     const properties = this.properties as MemberNodeProperties;
     const fields: FieldType[] = [];
-    if (!properties.isPureMethod) {
+    if (properties.isPureMethod === false) {
       fields.push({
         name: '流程',
         type: new FlowType(),
@@ -102,7 +102,12 @@ class MemberNodeModel extends BasicNodeModel {
     // 生成语句
     const statements = [
       new MemberStatement(
-        new MemberExpression(callerExpression, properties.memberName, parameters),
+        new MemberExpression(
+          callerExpression,
+          parseType(properties.type),
+          properties.memberName,
+          properties.isPureMethod !== undefined ? parameters : undefined,
+        ),
       ),
       ...this.getFlowOutStatement(`${this.id}:${MemberNodeAnchorIds.FLOW_OUT}`),
     ];
@@ -144,7 +149,12 @@ class MemberNodeModel extends BasicNodeModel {
     }
 
     // 生成返回值表达式
-    return new MemberExpression(callerExpression, properties.memberName, parameters);
+    return new MemberExpression(
+      callerExpression,
+      parseType(properties.type),
+      properties.memberName,
+      properties.isPureMethod !== undefined ? parameters : undefined,
+    );
   }
 }
 

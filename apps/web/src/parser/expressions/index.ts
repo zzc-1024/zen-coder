@@ -1,5 +1,5 @@
 import { Expression } from '../defination';
-import type { VariableScopeType } from '../variable';
+import type { BaseType, VariableScopeType } from '../variable';
 
 export class VariableExpression extends Expression {
   constructor(
@@ -33,8 +33,9 @@ export class CallExpression extends Expression {
 export class MemberExpression extends Expression {
   constructor(
     public caller: Expression,
+    public type: BaseType,
     public memberName: string,
-    public parameters: Expression[],
+    public parameters: Expression[] | undefined,
   ) {
     super();
   }

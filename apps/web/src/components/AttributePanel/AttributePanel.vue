@@ -113,7 +113,6 @@
 </template>
 
 <script setup lang="ts">
-import type { RecommendationFunction } from '@/nodes/basic/basicEditorConfig';
 import type BasicNodeModel from '@/nodes/basic/basicNodeModel';
 import LogicFlow from '@logicflow/core';
 import { computed } from 'vue';
@@ -122,6 +121,7 @@ import type {
   BasicNodePropertiesWithDefaultValues,
   DefaultValueMap,
 } from '@/nodes/basic/basicNodeModel';
+import type { RecommendationFunction } from '@/nodes/basic/typeDifination';
 
 const props = defineProps<{
   lf: LogicFlow | null;

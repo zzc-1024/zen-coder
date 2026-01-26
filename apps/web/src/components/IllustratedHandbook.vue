@@ -50,12 +50,13 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import BookCard from './ui/BookCard.vue';
-import { setBasicEditorEvent, type BasicEditorNodeConfig } from '@/nodes/basic/basicEditorConfig';
+import { setBasicEditorEvent } from '@/nodes/basic/basicEditorConfig';
 import LogicFlow, { BezierEdge, EventType } from '@logicflow/core';
 import BasicEdgeModel from '@/edges/BasicEdgeModel';
 import { getTeleport } from '@logicflow/vue-node-registry';
 import { batchRegisterVueNode } from '@/utils/editor';
 import router from '@/router';
+import type { BasicEditorNodeConfig } from '@/nodes/basic/typeDifination';
 
 const props = defineProps<{
   nodes: BasicEditorNodeConfig[];

@@ -3,6 +3,7 @@ import {
   BUILTIN_BASIC_FLOAT_TYPE,
   BUILTIN_BASIC_INTEGER_TYPE,
   BUILTIN_BASIC_STRING_TYPE,
+  ListType,
   type BasicTypeName,
   type Variable,
 } from '../variable';
@@ -13,6 +14,7 @@ import {
   CallStatement,
   ContinueStatement,
   IfStatement,
+  MemberStatement,
   ReturnStatement,
   WhileStatement,
 } from '../statements';
@@ -96,7 +98,20 @@ export class PythonBackend extends CompilerBackend {
         }
       }
     } else if (expression instanceof MemberExpression) {
-      return `${this.parseExpression(expression.caller)}.${expression.memberName}(${expression.parameters.map(this.parseExpression.bind(this)).join(', ')})`;
+      if (expression.type instanceof ListType) {
+        switch (expression.memberName) {
+          case 'push':
+            return `${this.parseExpression(expression.caller)}.append(${this.parseExpression(expression.parameters![0]!)})`;
+          case 'length':
+            return `${this.parseExpression(expression.caller)}.__len__()`;
+        }
+      }
+      return (
+        `${this.parseExpression(expression.caller)}.${expression.memberName}` +
+        (expression.parameters
+          ? `(${expression.parameters.map(this.parseExpression.bind(this)).join(', ')})`
+          : '')
+      );
     }
     throw new Error(`Unknown expression type: ${typeof expression}`);
   }
@@ -152,6 +167,9 @@ export class PythonBackend extends CompilerBackend {
     } else if (statement instanceof CallStatement) {
       code += `${' '.repeat(this.pythonContext.indentSpaceCount)}`;
       code += `${this.parseExpression(statement.callExpression)}\n`;
+    } else if (statement instanceof MemberStatement) {
+      code += `${' '.repeat(this.pythonContext.indentSpaceCount)}`;
+      code += `${this.parseExpression(statement.memberExpression)}\n`;
     } else {
       throw new Error(`Unknown statement type: ${statement.constructor.name}`);
     }

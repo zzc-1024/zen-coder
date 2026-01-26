@@ -84,7 +84,6 @@ import {
   BasicToolBarConfig,
   dndPanelItem,
   setBasicEditorEvent,
-  type RecommendationFunction,
 } from '@/nodes/basic/basicEditorConfig';
 import ToolBar from './toolBar/ToolBar.vue';
 import resourceList from './resourceList/ResourceList.vue';
@@ -93,7 +92,7 @@ import BasicEdgeModel from '@/edges/BasicEdgeModel';
 import AttributePanel from './AttributePanel/AttributePanel.vue';
 import PopupDialog from './ui/PopupDialog.vue';
 import TabBar from './tabBar/TabBar.vue';
-import type { SheetData } from '@/nodes/basic/typeDifination';
+import type { RecommendationFunction, SheetData } from '@/nodes/basic/typeDifination';
 import {
   ReturnNodeType,
   type ReturnNodeProperties,
