@@ -78,7 +78,11 @@ class MemberNodeModel extends BasicNodeModel {
     const properties = this.properties as MemberNodeProperties;
 
     // 生成上一个节点的输出表达式
-    const callerExpression = this.getDataInExpression(`${this.id}:${MemberNodeAnchorIds.DATA_IN}`);
+    let callerExpression = this.getDataInExpression(`${this.id}:${MemberNodeAnchorIds.DATA_IN}`);
+    if (!callerExpression) {
+      const defaultValue = properties.defaultValues[MemberNodeAnchorIds.DATA_IN];
+      callerExpression = this.parseTypeStringToDefaultExpression(properties.type, defaultValue);
+    }
     if (!callerExpression) throw new Error(`MemberNodeModel parseFlowIn caller must be connected`);
 
     // 生成输入表达式

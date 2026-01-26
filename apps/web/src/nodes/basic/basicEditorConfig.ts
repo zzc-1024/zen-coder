@@ -1,6 +1,5 @@
 import { type Ref } from 'vue';
 
-
 import LogicFlow from '@logicflow/core';
 import { EventType } from '@logicflow/core';
 import {
@@ -227,26 +226,31 @@ export class BasicToolBarConfig extends ToolBarConfig {
     const graphModel = this.lf.graphModel;
     const functions: string[] = [];
     const pythonBackend: PythonBackend = new PythonBackend();
-    for (const sheet of this.sheets.value) {
-      graphModel.graphDataToModel(sheet.graph);
-      const entryNodes = graphModel.nodes?.filter(
-        (node) => (node.type as string) === EntryNodeType,
-      );
-      if (entryNodes === undefined || entryNodes.length !== 1) {
-        alert(`${sheet.signature.name} 主函数的入口节点必须有一个且至多只能有一个`);
-        this.changeToSelectedSheet();
-        return;
-      }
+    try {
+      for (const sheet of this.sheets.value) {
+        graphModel.graphDataToModel(sheet.graph);
+        const entryNodes = graphModel.nodes?.filter(
+          (node) => (node.type as string) === EntryNodeType,
+        );
+        if (entryNodes === undefined || entryNodes.length !== 1) {
+          alert(`${sheet.signature.name} 主函数的入口节点必须有一个且至多只能有一个`);
+          this.changeToSelectedSheet();
+          return;
+        }
 
-      const entryNode = entryNodes[0]! as EntryNodeModel;
-      const statements = entryNode.parseFlowIn();
-      const code = pythonBackend.generateCode(
-        sheet.variables,
-        sheet.signature.name,
-        sheet.signature.parameters,
-        statements,
-      );
-      functions.push(code);
+        const entryNode = entryNodes[0]! as EntryNodeModel;
+        const statements = entryNode.parseFlowIn();
+        const code = pythonBackend.generateCode(
+          sheet.variables,
+          sheet.signature.name,
+          sheet.signature.parameters,
+          statements,
+        );
+        functions.push(code);
+      }
+    } catch (error) {
+      alert(error);
+      return;
     }
     graphModel.graphDataToModel(
       this.sheets.value[this.sheets.value.findIndex((s) => s.id === this.selectedSheetId.value)]!
