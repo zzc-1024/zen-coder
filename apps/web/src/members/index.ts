@@ -35,6 +35,19 @@ function listTypeGenerateAnchorRecommendation(
     },
     {
       type: MemberNodeType,
+      label: 'pop',
+      icon: MEMBER_NODE_ICON_PATH,
+      properties: {
+        memberName: 'pop',
+        type: anchorType.toString(),
+        parameters: [],
+        returnType: anchorType.itemType.toString(),
+        isPureMethod: false,
+        defaultValues: {},
+      } satisfies MemberNodeProperties,
+    },
+    {
+      type: MemberNodeType,
       label: 'length',
       icon: MEMBER_NODE_ICON_PATH,
       properties: {
