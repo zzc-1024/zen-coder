@@ -1,4 +1,3 @@
-
 import { MEMBER_NODE_ICON_PATH } from '@/nodes/basic/memberNode';
 import {
   MemberNodeType,
@@ -42,6 +41,19 @@ function listTypeGenerateAnchorRecommendation(
         type: anchorType.toString(),
         parameters: [],
         returnType: anchorType.itemType.toString(),
+        isPureMethod: false,
+        defaultValues: {},
+      } satisfies MemberNodeProperties,
+    },
+    {
+      type: MemberNodeType,
+      label: 'delete',
+      icon: MEMBER_NODE_ICON_PATH,
+      properties: {
+        memberName: 'delete',
+        type: anchorType.toString(),
+        parameters: [{ type: new BasicType('builtin:basic:integer').toString(), name: 'index' }],
+        returnType: undefined,
         isPureMethod: false,
         defaultValues: {},
       } satisfies MemberNodeProperties,
