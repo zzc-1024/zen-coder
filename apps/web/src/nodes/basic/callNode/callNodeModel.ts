@@ -79,7 +79,7 @@ class CallNodeModel extends BasicNodeModel {
         `${this.id}:${CallNodeAnchorIds.DATA_IN}/${parameter.name}`,
       );
       if (!expression) {
-        const defaultValue = properties.defaultValues[CallNodeAnchorIds.DATA_IN];
+        const defaultValue = properties.defaultValues[`${CallNodeAnchorIds.DATA_IN}/${parameter.name}`];
         expression = this.parseTypeStringToDefaultExpression(parameter.type, defaultValue);
       }
       if (!expression)
@@ -118,7 +118,7 @@ class CallNodeModel extends BasicNodeModel {
         `${this.id}:${CallNodeAnchorIds.DATA_IN}/${parameter.name}`,
       );
       if (!expression) {
-        const defaultValue = properties.defaultValues[CallNodeAnchorIds.DATA_IN];
+        const defaultValue = properties.defaultValues[`${CallNodeAnchorIds.DATA_IN}/${parameter.name}`];
         expression = this.parseTypeStringToDefaultExpression(parameter.type, defaultValue);
       }
       if (!expression)
