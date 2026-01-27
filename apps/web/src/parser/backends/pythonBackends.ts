@@ -1,4 +1,5 @@
 import {
+  BasicType,
   BUILTIN_BASIC_BOOLEAN_TYPE,
   BUILTIN_BASIC_FLOAT_TYPE,
   BUILTIN_BASIC_INTEGER_TYPE,
@@ -98,12 +99,23 @@ export class PythonBackend extends CompilerBackend {
         }
       }
     } else if (expression instanceof MemberExpression) {
-      if (expression.type instanceof ListType) {
+      if (
+        expression.type instanceof BasicType &&
+        expression.type.toString() === BUILTIN_BASIC_STRING_TYPE
+      ) {
+        switch (expression.memberName) {
+          case 'substring':
+            return `${this.parseExpression(expression.caller)}[${this.parseExpression(expression.parameters![0]!)}:${this.parseExpression(expression.parameters![1]!)}]`;
+          case 'length':
+            return `${this.parseExpression(expression.caller)}.__len__()`;
+        }
+      } else if (expression.type instanceof ListType) {
         switch (expression.memberName) {
           case 'push':
             return `${this.parseExpression(expression.caller)}.append(${this.parseExpression(expression.parameters![0]!)})`;
           case 'pop':
-            if (`${this.parseExpression(expression.caller)}` === '[]') throw new Error('pop 方法不能作用于空列表');
+            if (`${this.parseExpression(expression.caller)}` === '[]')
+              throw new Error('pop 方法不能作用于空列表');
             return `${this.parseExpression(expression.caller)}.pop()`;
           case 'delete':
             return `${this.parseExpression(expression.caller)}.pop(${this.parseExpression(expression.parameters![0]!)})`;

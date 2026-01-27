@@ -7,6 +7,50 @@ import type { AnchorType, DirectType, RecommendationFunction } from '@/nodes/bas
 import { BasicType, ListType } from '@/parser/variable';
 import type LogicFlow from '@logicflow/core';
 
+function stringTypeGenerateAnchorRecommendation(
+  anchorType: AnchorType,
+  direction: DirectType,
+): LogicFlow.OnDragNodeConfig[] {
+  if (!(anchorType instanceof BasicType) || anchorType.basicTypeName !== 'builtin:basic:string') {
+    return [];
+  }
+  if (direction !== 'out') {
+    return [];
+  }
+
+  return [
+    {
+      type: MemberNodeType,
+      label: 'substring',
+      icon: MEMBER_NODE_ICON_PATH,
+      properties: {
+        memberName: 'substring',
+        type: anchorType.toString(),
+        parameters: [
+          { type: new BasicType('builtin:basic:integer').toString(), name: 'start' },
+          { type: new BasicType('builtin:basic:integer').toString(), name: 'end' },
+        ],
+        returnType: new BasicType('builtin:basic:string').toString(),
+        isPureMethod: true,
+        defaultValues: {},
+      } satisfies MemberNodeProperties,
+    },
+    {
+      type: MemberNodeType,
+      label: 'length',
+      icon: MEMBER_NODE_ICON_PATH,
+      properties: {
+        memberName: 'length',
+        type: anchorType.toString(),
+        parameters: [],
+        returnType: new BasicType('builtin:basic:integer').toString(),
+        isPureMethod: true,
+        defaultValues: {},
+      } satisfies MemberNodeProperties,
+    },
+  ];
+}
+
 function listTypeGenerateAnchorRecommendation(
   anchorType: AnchorType,
   direction: DirectType,
@@ -67,7 +111,7 @@ function listTypeGenerateAnchorRecommendation(
         type: anchorType.toString(),
         parameters: [],
         returnType: new BasicType('builtin:basic:integer').toString(),
-        isPureMethod: undefined,
+        isPureMethod: true,
         defaultValues: {},
       } satisfies MemberNodeProperties,
     },
@@ -77,6 +121,8 @@ function listTypeGenerateAnchorRecommendation(
 export function getRecommendationsByType(): RecommendationFunction {
   const recommendationFunctions: RecommendationFunction[] = [];
 
+  // 字符串相关
+  recommendationFunctions.push(stringTypeGenerateAnchorRecommendation);
   // 列表相关
   recommendationFunctions.push(listTypeGenerateAnchorRecommendation);
 
