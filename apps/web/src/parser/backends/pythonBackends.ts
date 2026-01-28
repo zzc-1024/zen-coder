@@ -103,7 +103,10 @@ export class PythonBackend extends CompilerBackend {
         expression.type instanceof BasicType &&
         expression.type.toString() === BUILTIN_BASIC_STRING_TYPE
       ) {
+        console.log('1231'.replace('1', '4'));
         switch (expression.memberName) {
+          case 'replaceAll':
+            return `${this.parseExpression(expression.caller)}.replace(${this.parseExpression(expression.parameters![0]!)}, ${this.parseExpression(expression.parameters![1]!)})`;
           case 'substring':
             return `${this.parseExpression(expression.caller)}[${this.parseExpression(expression.parameters![0]!)}:${this.parseExpression(expression.parameters![1]!)}]`;
           case 'length':
