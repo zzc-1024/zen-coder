@@ -135,6 +135,17 @@ export class PythonBackend extends CompilerBackend {
           case 'length':
             return `${this.parseExpression(expression.caller)}.__len__()`;
         }
+      } else if (expression.type instanceof DictType) {
+        if (this.parseExpression(expression.caller) === '{}')
+          throw new Error('字典操作不能使用默认字典');
+        switch (expression.memberName) {
+          case 'delete':
+            return `${this.parseExpression(expression.caller)}.pop(${this.parseExpression(expression.parameters![0]!)})`;
+          case 'contains':
+            return `${this.parseExpression(expression.caller)}.__contains__(${this.parseExpression(expression.parameters![0]!)})`;
+          case 'size':
+            return `${this.parseExpression(expression.caller)}.__len__()`;
+        }
       } else if (expression.type instanceof SetType) {
         if (
           this.parseExpression(expression.caller) === 'set()' ||
@@ -146,15 +157,6 @@ export class PythonBackend extends CompilerBackend {
             return `${this.parseExpression(expression.caller)}.add(${this.parseExpression(expression.parameters![0]!)})`;
           case 'discard':
             return `${this.parseExpression(expression.caller)}.discard(${this.parseExpression(expression.parameters![0]!)})`;
-          case 'contains':
-            return `${this.parseExpression(expression.caller)}.__contains__(${this.parseExpression(expression.parameters![0]!)})`;
-          case 'size':
-            return `${this.parseExpression(expression.caller)}.__len__()`;
-        }
-      } else if (expression.type instanceof DictType) {
-        if (this.parseExpression(expression.caller) === '{}')
-          throw new Error('字典操作不能使用默认字典');
-        switch (expression.memberName) {
           case 'contains':
             return `${this.parseExpression(expression.caller)}.__contains__(${this.parseExpression(expression.parameters![0]!)})`;
           case 'size':

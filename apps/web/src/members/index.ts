@@ -215,6 +215,19 @@ function dictTypeGenerateAnchorRecommendation(
   return [
     {
       type: MemberNodeType,
+      label: 'delete',
+      icon: MEMBER_NODE_ICON_PATH,
+      properties: {
+        memberName: 'delete',
+        type: anchorType.toString(),
+        parameters: [{ type: anchorType.keyType.toString(), name: 'key' }],
+        returnType: undefined,
+        isPureMethod: false,
+        defaultValues: {},
+      } satisfies MemberNodeProperties,
+    },
+    {
+      type: MemberNodeType,
       label: 'contains',
       icon: MEMBER_NODE_ICON_PATH,
       properties: {
