@@ -8,7 +8,7 @@
     </span>
 
     <!-- 右侧：字段类型 -->
-    <span class="field-type">
+    <span class="field-type" :style="{ color: getColorByType(parseAnchorType(type)) }">
       {{ fieldType }}
       <i class="anchor-indicator right" v-if="props.hasOutput"></i>
     </span>
@@ -17,6 +17,7 @@
 
 <script setup lang="ts">
 import { parseAnchorType } from '@/nodes/basic/typeDifination';
+import { getColorByType } from '@/utils/theme';
 import { computed } from 'vue';
 
 const props = defineProps<{
@@ -53,7 +54,6 @@ const fieldType = computed(() => {
 }
 
 .field-type {
-  color: #cc7832; /* 类似 IDE 的关键字颜色 */
   display: flex;
   align-items: center;
   gap: 8px;
