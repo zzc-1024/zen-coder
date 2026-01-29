@@ -121,6 +121,8 @@ export class PythonBackend extends CompilerBackend {
               throw new Error('pop 方法不能作用于空列表');
             return `${this.parseExpression(expression.caller)}.pop()`;
           case 'delete':
+            if (`${this.parseExpression(expression.caller)}` === '[]')
+              throw new Error('delete 方法不能作用于空列表');
             return `${this.parseExpression(expression.caller)}.pop(${this.parseExpression(expression.parameters![0]!)})`;
           case 'length':
             return `${this.parseExpression(expression.caller)}.__len__()`;
