@@ -1,4 +1,4 @@
-import { BasicType } from '@/parser/variable';
+import { BasicType, BUILTIN_BASIC_INTEGER_TYPE } from '@/parser/variable';
 import type { BasicEditorNodeConfig } from '../typeDifination';
 // 入口节点
 import IndexNodeView from './IndexNodeView.vue';
@@ -26,7 +26,7 @@ export const indexNodeConfig: BasicEditorNodeConfig = {
       inputType: new BasicType('builtin:basic:integer').toString(),
       outputType: new BasicType('builtin:basic:string').toString(),
       defaultValues: {},
-      indexs: ['builtin:basic:integer'],
+      indexs: [BUILTIN_BASIC_INTEGER_TYPE],
     } satisfies IndexNodeProperties,
   },
 };

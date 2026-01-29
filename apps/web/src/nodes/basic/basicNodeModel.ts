@@ -4,13 +4,14 @@ import { getThemeVar } from '@/utils/theme';
 import type { Expression, Statement } from '@/parser/defination';
 import {
   BooleanExpression,
+  DictExpression,
   FloatExpression,
   IntegerExpression,
   ListExpression,
   SetExpression,
   StringExpression,
 } from '@/parser/expressions';
-import { BasicType, ListType, parseType, SetType } from '@/parser/variable';
+import { BasicType, DictType, ListType, parseType, SetType } from '@/parser/variable';
 
 export type AnchorSide = 'left' | 'right' | 'both' | 'none';
 
@@ -188,6 +189,8 @@ abstract class BasicNodeModel extends HtmlNodeModel {
       return new ListExpression([]);
     } else if (type instanceof SetType) {
       return new SetExpression([]);
+    } else if (type instanceof DictType) {
+      return new DictExpression([]);
     }
     return null;
   }

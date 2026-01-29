@@ -4,6 +4,7 @@ import {
   BUILTIN_BASIC_FLOAT_TYPE,
   BUILTIN_BASIC_INTEGER_TYPE,
   BUILTIN_BASIC_STRING_TYPE,
+  DictType,
   ListType,
   SetType,
   type BasicTypeName,
@@ -34,6 +35,7 @@ import {
   ListExpression,
   MemberExpression,
   SetExpression,
+  DictExpression,
 } from '../expressions';
 
 export class PythonBackend extends CompilerBackend {
@@ -87,6 +89,8 @@ export class PythonBackend extends CompilerBackend {
       return `[${expression.items.map(this.parseExpression, this).join(', ')}]`;
     else if (expression instanceof SetExpression)
       return `set([${expression.items.map(this.parseExpression, this).join(', ')}])`;
+    else if (expression instanceof DictExpression)
+      return `{${expression.pairs.map(([key, value]) => `${this.parseExpression(key)}: ${this.parseExpression(value)}`).join(', ')}}`;
     else if (expression instanceof IndexExpression)
       return `${this.parseExpression(expression.base)}[${this.parseExpression(expression.index)}]`;
     else if (expression instanceof CallExpression) {
@@ -134,14 +138,23 @@ export class PythonBackend extends CompilerBackend {
       } else if (expression.type instanceof SetType) {
         if (
           this.parseExpression(expression.caller) === 'set()' ||
-          `${this.parseExpression(expression.caller)}` === 'set([])'
+          this.parseExpression(expression.caller) === 'set([])'
         )
-          throw new Error('集合操作需要明确指定调用者');
+          throw new Error('集合操作不能使用默认集合');
         switch (expression.memberName) {
           case 'add':
             return `${this.parseExpression(expression.caller)}.add(${this.parseExpression(expression.parameters![0]!)})`;
           case 'discard':
             return `${this.parseExpression(expression.caller)}.discard(${this.parseExpression(expression.parameters![0]!)})`;
+          case 'contains':
+            return `${this.parseExpression(expression.caller)}.__contains__(${this.parseExpression(expression.parameters![0]!)})`;
+          case 'size':
+            return `${this.parseExpression(expression.caller)}.__len__()`;
+        }
+      } else if (expression.type instanceof DictType) {
+        if (this.parseExpression(expression.caller) === '{}')
+          throw new Error('字典操作不能使用默认字典');
+        switch (expression.memberName) {
           case 'contains':
             return `${this.parseExpression(expression.caller)}.__contains__(${this.parseExpression(expression.parameters![0]!)})`;
           case 'size':

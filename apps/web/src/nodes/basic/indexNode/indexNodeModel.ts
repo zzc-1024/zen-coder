@@ -5,19 +5,14 @@ import BasicNodeModel, {
 } from '../basicNodeModel';
 import { BasicEditorNodeTypePrefix, type AnchorType, type DirectType } from '../typeDifination';
 import type { Expression, Statement } from '@/parser/defination';
-import {
-  BasicType,
-  ListType,
-  parseType,
-  type BasicTypeName,
-} from '@/parser/variable';
+import { BasicType, DictType, ListType, parseType } from '@/parser/variable';
 import { IndexExpression } from '@/parser/expressions';
 
 export const IndexNodeType = `${BasicEditorNodeTypePrefix}:index`;
 export type IndexNodeProperties = BasicNodePropertiesWithDefaultValues & {
   inputType: string;
   outputType: string;
-  indexs: BasicTypeName[];
+  indexs: string[];
 };
 
 export const IndexNodeAnchorIds = {
@@ -114,6 +109,18 @@ export function indexNodeGenerateAnchorRecommendation(
         outputType: anchorType.itemType.toString(),
         defaultValues: {},
         indexs: ['builtin:basic:integer'],
+      } satisfies IndexNodeProperties,
+    });
+    return recommendations;
+  } else if (anchorType instanceof DictType) {
+    recommendations.push({
+      type: IndexNodeType,
+      label: `字典索引`,
+      properties: {
+        inputType: anchorType.toString(),
+        outputType: anchorType.valueType.toString(),
+        defaultValues: {},
+        indexs: [anchorType.keyType.toString()],
       } satisfies IndexNodeProperties,
     });
     return recommendations;

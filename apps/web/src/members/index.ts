@@ -4,7 +4,7 @@ import {
   type MemberNodeProperties,
 } from '@/nodes/basic/memberNode/memberNodeModel';
 import type { AnchorType, DirectType, RecommendationFunction } from '@/nodes/basic/typeDifination';
-import { BasicType, ListType, SetType } from '@/parser/variable';
+import { BasicType, DictType, ListType, SetType } from '@/parser/variable';
 import type LogicFlow from '@logicflow/core';
 
 function stringTypeGenerateAnchorRecommendation(
@@ -201,6 +201,47 @@ function setTypeGenerateAnchorRecommendation(
   ];
 }
 
+function dictTypeGenerateAnchorRecommendation(
+  anchorType: AnchorType,
+  direction: DirectType,
+): LogicFlow.OnDragNodeConfig[] {
+  if (!(anchorType instanceof DictType)) {
+    return [];
+  }
+  if (direction !== 'out') {
+    return [];
+  }
+
+  return [
+    {
+      type: MemberNodeType,
+      label: 'contains',
+      icon: MEMBER_NODE_ICON_PATH,
+      properties: {
+        memberName: 'contains',
+        type: anchorType.toString(),
+        parameters: [{ type: anchorType.keyType.toString(), name: 'key' }],
+        returnType: new BasicType('builtin:basic:boolean').toString(),
+        isPureMethod: true,
+        defaultValues: {},
+      } satisfies MemberNodeProperties,
+    },
+    {
+      type: MemberNodeType,
+      label: 'size',
+      icon: MEMBER_NODE_ICON_PATH,
+      properties: {
+        memberName: 'size',
+        type: anchorType.toString(),
+        parameters: [],
+        returnType: new BasicType('builtin:basic:integer').toString(),
+        isPureMethod: true,
+        defaultValues: {},
+      } satisfies MemberNodeProperties,
+    },
+  ];
+}
+
 export function getRecommendationsByType(): RecommendationFunction {
   const recommendationFunctions: RecommendationFunction[] = [];
 
@@ -210,6 +251,8 @@ export function getRecommendationsByType(): RecommendationFunction {
   recommendationFunctions.push(listTypeGenerateAnchorRecommendation);
   // 集合相关
   recommendationFunctions.push(setTypeGenerateAnchorRecommendation);
+  // 字典相关
+  recommendationFunctions.push(dictTypeGenerateAnchorRecommendation);
 
   return (type, direction) => {
     return recommendationFunctions.flatMap((fn) => fn(type, direction));
