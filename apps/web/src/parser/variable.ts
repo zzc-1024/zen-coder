@@ -96,6 +96,19 @@ export class DictType extends BaseType {
   }
 }
 
+export class SetType extends BaseType {
+  dataStructureType: DataStructureType = 'set';
+  constructor(public itemType: BaseType) {
+    super();
+  }
+  toString() {
+    return `set<${this.itemType.toString()}>`;
+  }
+  toDisplayString() {
+    return `集合<${this.itemType.toDisplayString()}>`;
+  }
+}
+
 export function parseType(type: string): BaseType {
   const trimType = type.trim();
   if (trimType.startsWith('list<')) {
@@ -119,6 +132,9 @@ export function parseType(type: string): BaseType {
     const keyType = inner.slice(0, commaIndex);
     const valueType = inner.slice(commaIndex + 1);
     return new DictType(parseType(keyType), parseType(valueType));
+  } else if (trimType.startsWith('set<')) {
+    const itemType = trimType.slice(4, -1);
+    return new SetType(parseType(itemType));
   }
   return new BasicType(trimType as BasicTypeName);
 }
