@@ -21,13 +21,22 @@
         <select v-model="variableDataStructureType" class="type-selector">
           <option value="basic">普通</option>
           <option value="list">列表 list</option>
-          <!-- <option value="dict">映射 dict</option> -->
+          <option value="dict">映射 dict</option>
           <option value="set">集合 set</option>
         </select>
       </div>
       <div class="horizontal-group">
         变量类型
         <select v-model="newVariableType" class="type-selector">
+          <option value="builtin:basic:boolean">布尔值 bool</option>
+          <option value="builtin:basic:integer">整数 int</option>
+          <option value="builtin:basic:float">浮点数 float</option>
+          <option value="builtin:basic:string">字符串 string</option>
+        </select>
+      </div>
+      <div v-if="variableDataStructureType === 'dict'" class="horizontal-group">
+        映射到变量类型
+        <select v-model="newValueVariableType" class="type-selector">
           <option value="builtin:basic:boolean">布尔值 bool</option>
           <option value="builtin:basic:integer">整数 int</option>
           <option value="builtin:basic:float">浮点数 float</option>
@@ -229,6 +238,7 @@ const selectedVariableScopeType = ref<VariableScopeType | 'parameter'>('local');
 const variableScopeType = ref<VariableScopeType>('local');
 const variableDataStructureType = ref<DataStructureType>('basic');
 const newVariableType = ref<BasicTypeName>('builtin:basic:integer');
+const newValueVariableType = ref<BasicTypeName>('builtin:basic:integer');
 const newVariableName = ref<string>('hello');
 
 function onDeleteVariable(variableName: string) {
@@ -274,6 +284,8 @@ function onAddVariable() {
     type = new BasicType(newVariableType.value);
   } else if (variableDataStructureType.value === 'list') {
     type = new ListType(new BasicType(newVariableType.value));
+  } else if (variableDataStructureType.value === 'dict') {
+    type = new DictType(new BasicType(newVariableType.value), new BasicType(newValueVariableType.value));
   } else if (variableDataStructureType.value === 'set') {
     type = new SetType(new BasicType(newVariableType.value));
   } else throw new Error(`Unknown data structure type: ${variableDataStructureType.value}`);

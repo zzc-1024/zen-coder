@@ -4,6 +4,7 @@ import {
   BUILTIN_BASIC_FLOAT_TYPE,
   BUILTIN_BASIC_INTEGER_TYPE,
   BUILTIN_BASIC_STRING_TYPE,
+  DictType,
   ListType,
   SetType,
 } from '@/parser/variable';
@@ -19,6 +20,7 @@ type ThemeVars = {
   '--zencoder-edge-string-color': string;
   '--zencoder-edge-array-color': string;
   '--zencoder-edge-set-color': string;
+  '--zencoder-edge-dict-color': string;
 };
 
 export const setThemeVar = (key: keyof ThemeVars, value: string) => {
@@ -45,6 +47,8 @@ export function getColorByType(type: AnchorType): string {
     return getThemeVar('--zencoder-edge-array-color');
   } else if (type instanceof SetType) {
     return getThemeVar('--zencoder-edge-set-color');
+  } else if (type instanceof DictType) {
+    return getThemeVar('--zencoder-edge-dict-color');
   }
   throw new Error(`Unsupported color type: ${type}`);
 }
