@@ -7,6 +7,7 @@ import {
   BUILTIN_BASIC_STRING_TYPE,
   ListType,
   parseType,
+  SetType,
 } from '@/parser/variable';
 import { getThemeVar } from '@/utils/theme';
 import LogicFlow, { BezierEdgeModel } from '@logicflow/core';
@@ -49,6 +50,8 @@ class BasicEdgeModel extends BezierEdgeModel {
       style.stroke = getThemeVar('--zencoder-edge-string-color');
     } else if (type instanceof ListType) {
       style.stroke = getThemeVar('--zencoder-edge-array-color');
+    } else if (type instanceof SetType) {
+      style.stroke = getThemeVar('--zencoder-edge-set-color');
     }
     return style;
   }
