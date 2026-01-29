@@ -8,7 +8,7 @@
     </span>
 
     <!-- 右侧：字段类型 -->
-    <span class="field-type" :style="{ color: getColorByType(parseAnchorType(type)) }">
+    <span class="field-type" :style="computedStyle">
       {{ fieldType }}
       <i class="anchor-indicator right" v-if="props.hasOutput"></i>
     </span>
@@ -29,6 +29,11 @@ const props = defineProps<{
 const fieldType = computed(() => {
   const parsedAnchorType = parseAnchorType(props.type);
   return parsedAnchorType.toDisplayString();
+});
+const computedStyle = computed(() => {
+  return {
+    color: getColorByType(parseAnchorType(props.type)),
+  };
 });
 </script>
 
