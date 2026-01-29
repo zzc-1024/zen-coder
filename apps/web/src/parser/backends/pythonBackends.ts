@@ -32,6 +32,7 @@ import {
   IndexExpression,
   ListExpression,
   MemberExpression,
+  SetExpression,
 } from '../expressions';
 
 export class PythonBackend extends CompilerBackend {
@@ -82,12 +83,14 @@ export class PythonBackend extends CompilerBackend {
     else if (expression instanceof IntegerExpression) return expression.value.toString();
     else if (expression instanceof StringExpression) return `'${expression.value}'`;
     else if (expression instanceof ListExpression)
-      return `[${expression.items.map(this.parseExpression.bind(this)).join(', ')}]`;
+      return `[${expression.items.map(this.parseExpression, this).join(', ')}]`;
+    else if (expression instanceof SetExpression)
+      return `set([${expression.items.map(this.parseExpression, this).join(', ')}])`;
     else if (expression instanceof IndexExpression)
       return `${this.parseExpression(expression.base)}[${this.parseExpression(expression.index)}]`;
     else if (expression instanceof CallExpression) {
       if (expression.source === '.')
-        return `${expression.functionName}(${expression.parameters.map(this.parseExpression.bind(this)).join(', ')})`;
+        return `${expression.functionName}(${expression.parameters.map(this.parseExpression, this).join(', ')})`;
       if (expression.source === 'builtin:basic') {
         if (expression.module === '.') {
           switch (expression.functionName) {
@@ -140,6 +143,7 @@ export class PythonBackend extends CompilerBackend {
   convertVariableToPythonStyle(variable: Variable): string {
     if (variable.type.dataStructureType === 'dict') return `${variable.name}: dict = {}`;
     if (variable.type.dataStructureType === 'list') return `${variable.name}: list = []`;
+    if (variable.type.dataStructureType === 'set') return `${variable.name}: set = set()`;
     // 剩下的是 basic 情况
     switch (variable.type.toString() as BasicTypeName) {
       case BUILTIN_BASIC_BOOLEAN_TYPE:
@@ -151,7 +155,7 @@ export class PythonBackend extends CompilerBackend {
       case BUILTIN_BASIC_INTEGER_TYPE:
         return `${variable.name}: int = 0`;
       default:
-        throw new Error(`Unknown basic type: ${variable.type.toString()}`);
+        throw new Error(`convertVariableToPythonStyle: Unknown type: ${variable.type.toString()}`);
     }
   }
   private parseStatement(statement: Statement): string {

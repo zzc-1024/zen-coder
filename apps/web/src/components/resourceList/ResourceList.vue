@@ -22,7 +22,7 @@
           <option value="basic">普通</option>
           <option value="list">列表 list</option>
           <!-- <option value="dict">映射 dict</option> -->
-          <!-- <option value="set">集合 set</option> -->
+          <option value="set">集合 set</option>
         </select>
       </div>
       <div class="horizontal-group">
@@ -192,6 +192,7 @@ import {
   BasicType,
   DictType,
   ListType,
+  SetType,
   type BasicTypeName,
   type DataStructureType,
   type Variable,
@@ -273,6 +274,8 @@ function onAddVariable() {
     type = new BasicType(newVariableType.value);
   } else if (variableDataStructureType.value === 'list') {
     type = new ListType(new BasicType(newVariableType.value));
+  } else if (variableDataStructureType.value === 'set') {
+    type = new SetType(new BasicType(newVariableType.value));
   } else throw new Error(`Unknown data structure type: ${variableDataStructureType.value}`);
 
   emits('onAddVariable', variableScopeType.value, newVariableName.value, type);
@@ -304,6 +307,10 @@ function getTypeIndexsWithType(variableType: BaseType): [BasicTypeName[], BaseTy
       calculateIndexs.push(variableType.keyType.toString() as BasicTypeName);
       res.push([[...calculateIndexs], variableType.valueType]);
       variableType = variableType.valueType;
+    } else if (variableType instanceof SetType) {
+      break;
+    } else {
+      throw new Error(`Unknown type: ${variableType}`);
     }
   }
   return res;

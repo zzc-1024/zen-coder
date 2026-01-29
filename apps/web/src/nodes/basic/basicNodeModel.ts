@@ -7,9 +7,10 @@ import {
   FloatExpression,
   IntegerExpression,
   ListExpression,
+  SetExpression,
   StringExpression,
 } from '@/parser/expressions';
-import { BasicType, ListType, parseType } from '@/parser/variable';
+import { BasicType, ListType, parseType, SetType } from '@/parser/variable';
 
 export type AnchorSide = 'left' | 'right' | 'both' | 'none';
 
@@ -185,6 +186,8 @@ abstract class BasicNodeModel extends HtmlNodeModel {
     const type = parseType(typeString);
     if (type instanceof ListType) {
       return new ListExpression([]);
+    } else if (type instanceof SetType) {
+      return new SetExpression([]);
     }
     return null;
   }
