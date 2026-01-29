@@ -5,7 +5,13 @@ import BasicNodeModel, {
 } from '../basicNodeModel';
 import { BasicEditorNodeTypePrefix, type AnchorType, type DirectType } from '../typeDifination';
 import type { Expression, Statement } from '@/parser/defination';
-import { BasicType, DictType, ListType, parseType } from '@/parser/variable';
+import {
+  BasicType,
+  BUILTIN_BASIC_STRING_TYPE,
+  DictType,
+  ListType,
+  parseType,
+} from '@/parser/variable';
 import { IndexExpression } from '@/parser/expressions';
 
 export const IndexNodeType = `${BasicEditorNodeTypePrefix}:index`;
@@ -96,11 +102,21 @@ export function indexNodeGenerateAnchorRecommendation(
   if (direction === 'in') {
     return [];
   }
-  if (anchorType instanceof BasicType) {
-    return [];
-  }
+  
   const recommendations: LogicFlow.OnDragNodeConfig[] = [];
-  if (anchorType instanceof ListType) {
+  if (anchorType instanceof BasicType && anchorType.basicTypeName === BUILTIN_BASIC_STRING_TYPE) {
+    recommendations.push({
+      type: IndexNodeType,
+      label: `字符串索引`,
+      properties: {
+        inputType: anchorType.toString(),
+        outputType: new BasicType('builtin:basic:string').toString(),
+        defaultValues: {},
+        indexs: ['builtin:basic:integer'],
+      } satisfies IndexNodeProperties,
+    });
+    return recommendations;
+  } else if (anchorType instanceof ListType) {
     recommendations.push({
       type: IndexNodeType,
       label: `列表索引`,
