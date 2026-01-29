@@ -4,7 +4,7 @@ import {
   type MemberNodeProperties,
 } from '@/nodes/basic/memberNode/memberNodeModel';
 import type { AnchorType, DirectType, RecommendationFunction } from '@/nodes/basic/typeDifination';
-import { BasicType, ListType } from '@/parser/variable';
+import { BasicType, ListType, SetType } from '@/parser/variable';
 import type LogicFlow from '@logicflow/core';
 
 function stringTypeGenerateAnchorRecommendation(
@@ -134,6 +134,73 @@ function listTypeGenerateAnchorRecommendation(
   ];
 }
 
+function setTypeGenerateAnchorRecommendation(
+  anchorType: AnchorType,
+  direction: DirectType,
+): LogicFlow.OnDragNodeConfig[] {
+  if (!(anchorType instanceof SetType)) {
+    return [];
+  }
+  if (direction !== 'out') {
+    return [];
+  }
+
+  return [
+    {
+      type: MemberNodeType,
+      label: 'add',
+      icon: MEMBER_NODE_ICON_PATH,
+      properties: {
+        memberName: 'add',
+        type: anchorType.toString(),
+        parameters: [{ type: anchorType.itemType.toString(), name: 'element' }],
+        returnType: undefined,
+        isPureMethod: false,
+        defaultValues: {},
+      } satisfies MemberNodeProperties,
+    },
+    {
+      type: MemberNodeType,
+      label: 'discard',
+      icon: MEMBER_NODE_ICON_PATH,
+      properties: {
+        memberName: 'discard',
+        type: anchorType.toString(),
+        parameters: [{ type: anchorType.itemType.toString(), name: 'element' }],
+        returnType: undefined,
+        isPureMethod: false,
+        defaultValues: {},
+      } satisfies MemberNodeProperties,
+    },
+    {
+      type: MemberNodeType,
+      label: 'contains',
+      icon: MEMBER_NODE_ICON_PATH,
+      properties: {
+        memberName: 'contains',
+        type: anchorType.toString(),
+        parameters: [{ type: anchorType.itemType.toString(), name: 'element' }],
+        returnType: new BasicType('builtin:basic:boolean').toString(),
+        isPureMethod: true,
+        defaultValues: {},
+      } satisfies MemberNodeProperties,
+    },
+    {
+      type: MemberNodeType,
+      label: 'size',
+      icon: MEMBER_NODE_ICON_PATH,
+      properties: {
+        memberName: 'size',
+        type: anchorType.toString(),
+        parameters: [],
+        returnType: new BasicType('builtin:basic:integer').toString(),
+        isPureMethod: true,
+        defaultValues: {},
+      } satisfies MemberNodeProperties,
+    },
+  ];
+}
+
 export function getRecommendationsByType(): RecommendationFunction {
   const recommendationFunctions: RecommendationFunction[] = [];
 
@@ -141,6 +208,8 @@ export function getRecommendationsByType(): RecommendationFunction {
   recommendationFunctions.push(stringTypeGenerateAnchorRecommendation);
   // 列表相关
   recommendationFunctions.push(listTypeGenerateAnchorRecommendation);
+  // 集合相关
+  recommendationFunctions.push(setTypeGenerateAnchorRecommendation);
 
   return (type, direction) => {
     return recommendationFunctions.flatMap((fn) => fn(type, direction));

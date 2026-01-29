@@ -5,6 +5,7 @@ import {
   BUILTIN_BASIC_INTEGER_TYPE,
   BUILTIN_BASIC_STRING_TYPE,
   ListType,
+  SetType,
   type BasicTypeName,
   type Variable,
 } from '../variable';
@@ -128,6 +129,22 @@ export class PythonBackend extends CompilerBackend {
               throw new Error('delete 方法不能作用于空列表');
             return `${this.parseExpression(expression.caller)}.pop(${this.parseExpression(expression.parameters![0]!)})`;
           case 'length':
+            return `${this.parseExpression(expression.caller)}.__len__()`;
+        }
+      } else if (expression.type instanceof SetType) {
+        if (
+          this.parseExpression(expression.caller) === 'set()' ||
+          `${this.parseExpression(expression.caller)}` === 'set([])'
+        )
+          throw new Error('集合操作需要明确指定调用者');
+        switch (expression.memberName) {
+          case 'add':
+            return `${this.parseExpression(expression.caller)}.add(${this.parseExpression(expression.parameters![0]!)})`;
+          case 'discard':
+            return `${this.parseExpression(expression.caller)}.discard(${this.parseExpression(expression.parameters![0]!)})`;
+          case 'contains':
+            return `${this.parseExpression(expression.caller)}.__contains__(${this.parseExpression(expression.parameters![0]!)})`;
+          case 'size':
             return `${this.parseExpression(expression.caller)}.__len__()`;
         }
       }
