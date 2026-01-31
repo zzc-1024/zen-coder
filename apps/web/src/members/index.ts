@@ -192,8 +192,8 @@ function setTypeGenerateAnchorRecommendation(
       properties: {
         memberName: 'union',
         type: anchorType.toString(),
-        parameters: [{ type: anchorType.itemType.toString(), name: 'other' }],
-        returnType: anchorType.itemType.toString(),
+        parameters: [{ type: anchorType.toString(), name: 'other' }],
+        returnType: anchorType.toString(),
         isPureMethod: true,
         defaultValues: {},
       } satisfies MemberNodeProperties,
