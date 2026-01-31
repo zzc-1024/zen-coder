@@ -200,19 +200,6 @@ function setTypeGenerateAnchorRecommendation(
     },
     {
       type: MemberNodeType,
-      label: 'union',
-      icon: MEMBER_NODE_ICON_PATH,
-      properties: {
-        memberName: 'union',
-        type: anchorType.toString(),
-        parameters: [{ type: anchorType.itemType.toString(), name: 'other' }],
-        returnType: anchorType.itemType.toString(),
-        isPureMethod: true,
-        defaultValues: {},
-      } satisfies MemberNodeProperties,
-    },
-    {
-      type: MemberNodeType,
       label: 'contains',
       icon: MEMBER_NODE_ICON_PATH,
       properties: {
