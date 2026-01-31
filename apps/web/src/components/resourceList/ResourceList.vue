@@ -115,6 +115,7 @@
     </div>
   </div>
 
+  <!-- 函数调用的对话框 -->
   <PopupDialog title="按住节点拖拽使用" ref="functionsDialog">
     <div class="functions-container">
       <!-- Source Level -->
@@ -123,11 +124,11 @@
         :key="source"
         class="function-source"
       >
-        <div class="source-header">{{ source }}</div>
+        <div class="source-header">来源：{{ source }}</div>
         <!-- Module Level -->
         <div class="modules-container">
           <div v-for="(functions, module) in modules" :key="module" class="function-module">
-            <div class="module-header">{{ module }}</div>
+            <div class="module-header">模块：{{ module }}</div>
             <!-- Function Level -->
             <div class="functions-list">
               <div
@@ -137,9 +138,13 @@
                 @pointerdown="onFunctionPointerDown($event, source, module, functionName)"
               >
                 <span class="function-name">{{ functionName }}</span>
-                <span class="function-return-type">{{
-                  functionInfo.returnType?.toDisplayString() || 'void'
-                }}</span>
+                <span
+                  class="function-return-type"
+                  :style="{
+                    color: getColorByType(functionInfo.returnType || new FlowType()),
+                  }"
+                  >{{ functionInfo.returnType?.toDisplayString() || 'void' }}</span
+                >
               </div>
             </div>
           </div>
@@ -153,7 +158,14 @@
     <div v-if="selectedVariable" class="variable-nodes-container">
       <div class="variable-info">
         <div class="variable-name">{{ selectedVariable.name }}</div>
-        <div class="variable-type">{{ selectedVariable.type.toDisplayString() }}</div>
+        <div
+          class="variable-type"
+          :style="{
+            color: getColorByType(selectedVariable.type || new FlowType()),
+          }"
+        >
+          {{ selectedVariable.type.toDisplayString() }}
+        </div>
       </div>
       <div class="variable-nodes-list">
         <!-- 展示可用的节点 -->
@@ -209,6 +221,8 @@ import {
 } from '@/parser/variable';
 import PopupDialog from '../ui/PopupDialog.vue';
 import type { AvailableFunctions } from '@/functions/typeDefination';
+import { FlowType } from '@/nodes/basic/typeDifination';
+import { getColorByType } from '@/utils/theme';
 const props = defineProps<{
   parameters: Variable[];
   localVariables: Variable[];
@@ -285,7 +299,10 @@ function onAddVariable() {
   } else if (variableDataStructureType.value === 'list') {
     type = new ListType(new BasicType(newVariableType.value));
   } else if (variableDataStructureType.value === 'dict') {
-    type = new DictType(new BasicType(newVariableType.value), new BasicType(newValueVariableType.value));
+    type = new DictType(
+      new BasicType(newVariableType.value),
+      new BasicType(newValueVariableType.value),
+    );
   } else if (variableDataStructureType.value === 'set') {
     type = new SetType(new BasicType(newVariableType.value));
   } else throw new Error(`Unknown data structure type: ${variableDataStructureType.value}`);
@@ -613,6 +630,24 @@ function onNodePointerDown(
 /* 变量节点选择对话框样式 */
 .variable-nodes-container {
   padding: 8px;
+  .variable-name {
+    color: #fffc5c;
+    flex-grow: 1;
+    font-weight: bold;
+    font-size: 13px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .variable-type {
+    font-size: 11px;
+    color: #aaa;
+    background-color: #555;
+    padding: 2px 6px;
+    border-radius: 3px;
+    margin-right: 24px; /* Space for delete button */
+  }
 }
 
 .variable-info {
@@ -621,7 +656,7 @@ function onNodePointerDown(
   align-items: center;
   margin-bottom: 16px;
   padding: 12px;
-  background-color: #1a1a1a;
+  background-color: #043d7e;
   border-radius: 4px;
   border: 1px solid #444;
 }
@@ -693,10 +728,10 @@ function onNodePointerDown(
 }
 
 .source-header {
-  background-color: #1a1a1a;
+  background-color: #043d7e;
   padding: 8px 12px;
   font-weight: bold;
-  color: #b0b0b0;
+  color: #fffc5c;
   border-bottom: 1px solid #444;
 }
 
@@ -713,10 +748,10 @@ function onNodePointerDown(
 .module-header {
   font-size: 14px;
   font-weight: bold;
-  color: #808080;
+  color: #7b5a2c;
   margin-bottom: 8px;
   padding: 4px 8px;
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: #ffffff;
   border-radius: 2px;
 }
 
@@ -756,7 +791,7 @@ function onNodePointerDown(
 .function-name {
   font-size: 14px;
   font-weight: bold;
-  color: #ffffff;
+  color: #308aff;
   margin-bottom: 4px;
 }
 

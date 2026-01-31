@@ -140,6 +140,7 @@ onMounted(() => {
 .book-container {
   height: calc(100% - 40px);
   width: calc(100% - 40px);
+  background-color: ghostwhite;
   margin: 0 auto;
   padding: 20px;
 }
