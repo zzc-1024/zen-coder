@@ -197,6 +197,9 @@ export class BasicToolBarConfig extends ToolBarConfig {
           sheet.variables.forEach((variable: Variable) => {
             variable.type = parseType(variable.type.toString());
           });
+          sheet.signature.parameters.forEach((parameter: Variable) => {
+            parameter.type = parseType(parameter.type.toString());
+          });
         });
         if (data.version !== '0.0.1') {
           alert('文件版本不匹配');
