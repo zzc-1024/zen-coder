@@ -21,6 +21,22 @@ function stringTypeGenerateAnchorRecommendation(
   return [
     {
       type: MemberNodeType,
+      label: 'replace',
+      icon: MEMBER_NODE_ICON_PATH,
+      properties: {
+        memberName: 'replace',
+        type: anchorType.toString(),
+        parameters: [
+          { type: new BasicType('builtin:basic:string').toString(), name: 'old' },
+          { type: new BasicType('builtin:basic:string').toString(), name: 'new' },
+        ],
+        returnType: new BasicType('builtin:basic:string').toString(),
+        isPureMethod: true,
+        defaultValues: {},
+      } satisfies MemberNodeProperties,
+    },
+    {
+      type: MemberNodeType,
       label: 'replaceAll',
       icon: MEMBER_NODE_ICON_PATH,
       properties: {

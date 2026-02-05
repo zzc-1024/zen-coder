@@ -113,6 +113,8 @@ export class PythonBackend extends CompilerBackend {
       ) {
         console.log('1231'.replace('1', '4'));
         switch (expression.memberName) {
+          case 'replace':
+            return `${this.parseExpression(expression.caller)}.replace(${this.parseExpression(expression.parameters![0]!)}, ${this.parseExpression(expression.parameters![1]!)}, 1)`;
           case 'replaceAll':
             return `${this.parseExpression(expression.caller)}.replace(${this.parseExpression(expression.parameters![0]!)}, ${this.parseExpression(expression.parameters![1]!)})`;
           case 'substring':
