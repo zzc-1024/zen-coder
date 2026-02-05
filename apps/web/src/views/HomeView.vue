@@ -12,7 +12,7 @@
           <li><RouterLink to="/handbook">节点图鉴</RouterLink></li>
         </ul>
         <div class="nav-button">
-          <button class="btn-primary">登录功能敬请期待</button>
+          <button class="btn-primary" @click="onLoginClick">登录功能敬请期待</button>
         </div>
       </div>
     </nav>
@@ -231,6 +231,11 @@ function userLogin(username, password) {
 
 <script setup lang="ts">
 import { RouterLink } from 'vue-router';
+import router from '../router';
+
+function onLoginClick() {
+  router.push('/auth');
+}
 </script>
 
 <style scoped lang="scss">
