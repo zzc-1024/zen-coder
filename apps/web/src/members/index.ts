@@ -283,6 +283,19 @@ function dictTypeGenerateAnchorRecommendation(
     },
     {
       type: MemberNodeType,
+      label: 'keys_to_list',
+      icon: MEMBER_NODE_ICON_PATH,
+      properties: {
+        memberName: 'keys_to_list',
+        type: anchorType.toString(),
+        parameters: [],
+        returnType: new ListType(anchorType.keyType).toString(),
+        isPureMethod: true,
+        defaultValues: {},
+      } satisfies MemberNodeProperties,
+    },
+    {
+      type: MemberNodeType,
       label: 'size',
       icon: MEMBER_NODE_ICON_PATH,
       properties: {

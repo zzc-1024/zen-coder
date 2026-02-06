@@ -145,6 +145,8 @@ export class PythonBackend extends CompilerBackend {
             return `${this.parseExpression(expression.caller)}.pop(${this.parseExpression(expression.parameters![0]!)})`;
           case 'contains':
             return `${this.parseExpression(expression.caller)}.__contains__(${this.parseExpression(expression.parameters![0]!)})`;
+          case 'keys_to_list':
+            return `list(${this.parseExpression(expression.caller)}.keys())`;
           case 'size':
             return `${this.parseExpression(expression.caller)}.__len__()`;
         }
