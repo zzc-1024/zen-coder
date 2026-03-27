@@ -1,7 +1,7 @@
 <template>
   <div class="node">
     <!-- 1. 表头区域：显示表名 -->
-    <NodeHeader>2026新年快乐！</NodeHeader>
+    <NodeHeader>开始节点</NodeHeader>
 
     <!-- 2. 字段列表区域 -->
     <div class="node-body" v-if="getNode">
