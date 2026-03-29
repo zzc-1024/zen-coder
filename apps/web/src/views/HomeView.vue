@@ -10,6 +10,7 @@
           <li><RouterLink to="/">首页</RouterLink></li>
           <li><RouterLink to="/editor">编辑器</RouterLink></li>
           <li><RouterLink to="/handbook">节点图鉴</RouterLink></li>
+          <li><RouterLink to="/BluePrintList">蓝图列表</RouterLink></li>
         </ul>
         <div class="nav-button">
           <button class="btn-primary" @click="onLoginClick">登录功能敬请期待</button>

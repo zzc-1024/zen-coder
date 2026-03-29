@@ -27,6 +27,11 @@ const router = createRouter({
       name: 'handbook',
       component: () => import('../views/HandbookView.vue'),
     },
+    {
+      path: '/BluePrintList',
+      name: 'BluePrintList',
+      component: () => import('../views/BluePrintListView.vue'),
+    },
   ],
 });
 
