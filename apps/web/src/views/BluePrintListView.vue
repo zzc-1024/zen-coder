@@ -77,34 +77,20 @@
 
 <!-- ✅ 核心修改：组合式API <script setup> 写法 -->
 <script setup lang="ts">
+import { builtinBluePrintsWithPath, type BlueprintWithPath } from '@/utils/builtinBluePrints';
 import { ref, computed } from 'vue';
 
-// 1. TS 类型定义（不变）
-interface Blueprint {
-  id: number;
-  name: string;
-  description: string;
-  authorName: string;
-  type: 'classic';
-  updatedAt: Date;
-}
+// 1. TS 类型定义
+// 定义部分代码以移动到外部
 
 // 2. 模拟数据（不变）
-const mockBlueprints: Blueprint[] = Array.from({ length: 50 }, (_, i) => ({
-  id: i + 1,
-  name: `蓝图 ${i + 1}`,
-  description: `这是第 ${i + 1} 个蓝图的描述信息，用于展示蓝图的主要功能和特点。`,
-  authorName: `作者${String.fromCharCode(65 + (i % 26))}`,
-  type: 'classic',
-  updatedAt: new Date(Date.now() - Math.floor(Math.random() * 30) * 86400000),
-}));
+const mockBlueprints: BlueprintWithPath[] = builtinBluePrintsWithPath;
 
 // 3. 响应式变量（直接声明，无需 return）
-const blueprints = ref<Blueprint[]>(mockBlueprints);
+const blueprints = ref<BlueprintWithPath[]>(mockBlueprints);
 const searchQuery = ref<string>('');
 const currentPage = ref<number>(1);
 const itemsPerPage = ref<number>(6);
-const selectedBlueprint = ref<Blueprint | null>(null);
 
 // 4. 计算属性 - 搜索过滤
 const filteredList = computed(() => {
@@ -156,8 +142,25 @@ const goToPage = (page: number) => {
   }
 };
 
-const selectBlueprint = (blueprint: Blueprint) => {
-  selectedBlueprint.value = blueprint;
+const selectBlueprint = (blueprint: BlueprintWithPath) => {
+  try {
+    // 直接创建下载链接，指向public目录下的文件
+    const a = document.createElement('a');
+    a.href = blueprint.filePath;
+    a.download = `${blueprint.name}.json`;
+    document.body.appendChild(a);
+
+    // 触发下载
+    a.click();
+
+    // 清理
+    setTimeout(() => {
+      document.body.removeChild(a);
+    }, 100);
+  } catch (error) {
+    console.error('Error downloading blueprint:', error);
+    alert('下载蓝图失败，请重试');
+  }
 };
 
 const formatDate = (date: Date): string => {
