@@ -24,12 +24,12 @@
         >
           <div class="card-header">
             <h3 class="card-title">{{ blueprint.name }}</h3>
-            <span class="card-status" :class="blueprint.status">{{ blueprint.status }}</span>
+            <span class="card-type">{{ blueprint.type }}</span>
           </div>
           <div class="card-content">
             <p class="card-description">{{ blueprint.description }}</p>
             <div class="card-meta">
-              <span class="meta-item">作者: {{ blueprint.author }}</span>
+              <span class="meta-item">作者: {{ blueprint.authorName }}</span>
               <span class="meta-item">更新时间: {{ formatDate(blueprint.updatedAt) }}</span>
             </div>
           </div>
@@ -72,16 +72,6 @@
         </div>
       </div>
     </div>
-
-    <!-- 蓝图详情区域 (预留) -->
-    <div class="blueprint-detail-section" v-if="selectedBlueprint">
-      <h2 class="section-title">蓝图详情</h2>
-      <div class="detail-placeholder">
-        <p>选中的蓝图: {{ selectedBlueprint.name }}</p>
-        <p>这里将显示蓝图详细信息</p>
-        <!-- 蓝图描述部分由用户实现 -->
-      </div>
-    </div>
   </div>
 </template>
 
@@ -94,8 +84,8 @@ interface Blueprint {
   id: number;
   name: string;
   description: string;
-  author: string;
-  status: 'active' | 'inactive' | 'draft';
+  authorName: string;
+  type: 'classic';
   updatedAt: Date;
 }
 
@@ -104,8 +94,8 @@ const mockBlueprints: Blueprint[] = Array.from({ length: 50 }, (_, i) => ({
   id: i + 1,
   name: `蓝图 ${i + 1}`,
   description: `这是第 ${i + 1} 个蓝图的描述信息，用于展示蓝图的主要功能和特点。`,
-  author: `作者${String.fromCharCode(65 + (i % 26))}`,
-  status: ['active', 'inactive', 'draft'][i % 3] as 'active' | 'inactive' | 'draft',
+  authorName: `作者${String.fromCharCode(65 + (i % 26))}`,
+  type: 'classic',
   updatedAt: new Date(Date.now() - Math.floor(Math.random() * 30) * 86400000),
 }));
 
@@ -125,7 +115,7 @@ const filteredList = computed(() => {
     (bp) =>
       bp.name.toLowerCase().includes(query) ||
       bp.description.toLowerCase().includes(query) ||
-      bp.author.toLowerCase().includes(query),
+      bp.authorName.toLowerCase().includes(query),
   );
 });
 
@@ -251,22 +241,11 @@ const formatDate = (date: Date): string => {
             font-size: 1.2rem;
           }
 
-          .card-status {
+          .card-type {
             padding: 4px 10px;
             border-radius: 12px;
             font-size: 0.8rem;
-
-            &.active {
-              background-color: #2ecc71;
-            }
-
-            &.inactive {
-              background-color: #e74c3c;
-            }
-
-            &.draft {
-              background-color: #f39c12;
-            }
+            background-color: #2ecc71;
           }
         }
 
@@ -359,27 +338,6 @@ const formatDate = (date: Date): string => {
           }
         }
       }
-    }
-  }
-
-  .blueprint-detail-section {
-    background: white;
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-
-    .section-title {
-      font-size: 1.5rem;
-      color: #2c3e50;
-      margin-bottom: 15px;
-    }
-
-    .detail-placeholder {
-      padding: 20px;
-      background: #f9f9f9;
-      border-radius: 8px;
-      text-align: center;
-      color: #777;
     }
   }
 }
