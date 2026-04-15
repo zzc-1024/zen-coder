@@ -26,11 +26,31 @@
         />
       </div>
       <TeleportContainer :flow-id="flowId" />
-      <AttributePanel
-        :lf="lf"
-        :selectedElements="selectedElements"
-        :recommendationFunctions="recommendationFunctions"
-      />
+      <div class="side-panel-container">
+        <!-- 侧边栏Tab切换 -->
+        <div class="side-panel-tabs">
+          <button
+            :class="['tab-btn', { active: activeSidePanel === 'attributes' }]"
+            @click="activeSidePanel = 'attributes'"
+          >
+            属性
+          </button>
+          <button
+            :class="['tab-btn', { active: activeSidePanel === 'assistant' }]"
+            @click="activeSidePanel = 'assistant'"
+          >
+            助手
+          </button>
+        </div>
+        <!-- 侧边栏内容 -->
+        <AttributePanel
+          v-show="activeSidePanel === 'attributes'"
+          :lf="lf"
+          :selectedElements="selectedElements"
+          :recommendationFunctions="recommendationFunctions"
+        />
+        <AssistantPanel v-show="activeSidePanel === 'assistant'" />
+      </div>
     </div>
   </div>
 
@@ -90,6 +110,7 @@ import resourceList from './resourceList/ResourceList.vue';
 import { dragVariable } from './resourceList/resourceList';
 import BasicEdgeModel from '@/edges/BasicEdgeModel';
 import AttributePanel from './AttributePanel/AttributePanel.vue';
+import AssistantPanel from './assistantPanel/AssistantPanel.vue';
 import PopupDialog from './ui/PopupDialog.vue';
 import TabBar from './tabBar/TabBar.vue';
 import type { RecommendationFunction, SheetData } from '@/nodes/basic/typeDifination';
@@ -151,6 +172,9 @@ const selectedElements = ref<LogicFlow.GraphData>({
   edges: [],
 }); // 选中的元素
 const recommendationFunctions = ref<RecommendationFunction>(() => []);
+
+// 侧边栏tab切换
+const activeSidePanel = ref('attributes'); // 'attributes' 或 'assistant'
 
 onMounted(() => {
   // 初始化
@@ -490,6 +514,39 @@ function onTabTouch(tabId: string) {
         width: 100%;
       }
     }
+
+    .side-panel-container {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+
+      .side-panel-tabs {
+        display: flex;
+        background-color: #1a1a1a;
+        border-bottom: 1px solid #444;
+
+        .tab-btn {
+          flex: 1;
+          padding: 10px;
+          background-color: transparent;
+          border: none;
+          color: #b0b0b0;
+          cursor: pointer;
+          font-size: 12px;
+          font-weight: 500;
+
+          &:hover {
+            background-color: #333;
+          }
+
+          &.active {
+            background-color: #2a2a2a;
+            color: #00b4d8;
+            border-bottom: 2px solid #00b4d8;
+          }
+        }
+      }
+    }
   }
 
   /* 响应式布局：当屏幕宽度小于 768px 时采用纵向布局 */
@@ -498,7 +555,7 @@ function onTabTouch(tabId: string) {
       flex-direction: column;
       min-height: 970px;
 
-      .attribute-panel {
+      .side-panel-container {
         width: 100%;
         height: auto;
       }

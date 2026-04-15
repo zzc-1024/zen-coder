@@ -279,7 +279,7 @@ onMounted(() => {
 <style lang="scss" scss>
 .assistant-panel {
   width: 300px;
-  min-width: 280px;
+  min-width: 250px;
   height: 100%;
   background-color: #2a2a2a;
   display: flex;
