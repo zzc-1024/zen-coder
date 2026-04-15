@@ -49,7 +49,7 @@
           :selectedElements="selectedElements"
           :recommendationFunctions="recommendationFunctions"
         />
-        <AssistantPanel v-show="activeSidePanel === 'assistant'" />
+        <AssistantPanel v-show="activeSidePanel === 'assistant'" :tools="tools" />
       </div>
     </div>
   </div>
@@ -97,7 +97,12 @@ import { computed, onMounted, ref } from 'vue';
 import { getTeleport } from '@logicflow/vue-node-registry';
 import LogicFlow, { BezierEdge, EventType } from '@logicflow/core';
 import { DndPanel, Menu, MiniMap } from '@logicflow/extension';
-import { BaseType, type BasicTypeName, type Variable, type VariableScopeType } from '@/parser/variable';
+import {
+  BaseType,
+  type BasicTypeName,
+  type Variable,
+  type VariableScopeType,
+} from '@/parser/variable';
 import { batchRegisterVueNode } from '@/utils/editor';
 import {
   basicEditorNode,
@@ -122,6 +127,7 @@ import { returnNodeConfig } from '@/nodes/basic/returnNode';
 import VariablePicker from './variablePicker/VariablePicker.vue';
 import { CallNodeType, type CallNodeProperties } from '@/nodes/basic/callNode/callNodeModel';
 import { availableFunctions } from '@/functions';
+import type { ChatTool } from './assistantPanel/typeDifination';
 
 // LogicFlow 相关的必要变量
 const containerRef = ref(null);
@@ -175,6 +181,29 @@ const recommendationFunctions = ref<RecommendationFunction>(() => []);
 
 // 侧边栏tab切换
 const activeSidePanel = ref('attributes'); // 'attributes' 或 'assistant'
+
+// 助手工具配置
+const tools = ref<ChatTool[]>([
+  {
+    tool: {
+      type: 'function',
+      function: {
+        name: 'callFunction',
+        description: '调用函数',
+        parameters: {
+          type: 'object',
+          properties: {
+            location: { type: 'string', description: '城市名称' },
+          },
+          required: ['location'],
+        },
+      },
+    },
+    execute: (args) => {
+      return args.location + '的天气晴朗，气温3摄氏度';
+    },
+  },
+]);
 
 onMounted(() => {
   // 初始化

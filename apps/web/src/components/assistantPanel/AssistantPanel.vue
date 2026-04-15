@@ -66,8 +66,10 @@
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue';
 import OpenAI from 'openai';
+import type { ChatCompletionMessageParam } from 'openai/resources/chat/completions';
+import type { ChatTool } from './typeDifination';
 
-// 配置类型
+// ==================== 配置类型 ====================
 interface Config {
   apiKey: string;
   apiBase: string;
@@ -86,7 +88,18 @@ interface Message {
   tool_calls?: OpenAI.Chat.ChatCompletionTool[];
 }
 
-// 响应式变量
+// ==================== Props 定义（核心） ====================
+interface Props {
+  /**
+   * 外部传入的工具列表
+   * 强制每个工具必须包含 tool + execute
+   */
+  tools: ChatTool[];
+}
+
+const props = defineProps<Props>();
+
+// ==================== 响应式数据 ====================
 const config = ref<Config>({
   apiKey: '',
   apiBase: 'https://ark.cn-beijing.volces.com/api/v3',
@@ -98,40 +111,27 @@ const inputMessage = ref('');
 const logContainer = ref<HTMLElement | null>(null);
 let openai: OpenAI | null = null;
 
-// 工具定义（Function Calling 标准格式）
-const tools: OpenAI.Chat.ChatCompletionTool[] = [
-  {
-    type: 'function',
-    function: {
-      name: 'get_weather',
-      description: '查询指定城市的天气',
-      parameters: {
-        type: 'object',
-        properties: {
-          location: { type: 'string', description: '城市名称' },
-        },
-        required: ['location'],
-      },
-    },
-  },
-];
-
-// 工具执行函数
-async function executeTool(name: string, params: Record<string, unknown>) {
-  if (name === 'get_weather') {
-    return `${params.location} 天气晴朗，温度 26℃`;
+// ==================== 工具执行（统一调度） ====================
+/**
+ * 统一执行外部传入的工具
+ * @param toolName 工具名称
+ * @param params 工具参数
+ */
+async function executeTool(toolName: string, params: Record<string, unknown>) {
+  const tool = props.tools.find((t) => t.tool.function.name === toolName);
+  if (!tool) {
+    return `❌ 未找到工具：${toolName}`;
   }
-  return '未知工具';
+  return await tool.execute(params);
 }
 
-// 保存配置
+// ==================== 配置方法 ====================
 const saveConfig = () => {
   localStorage.setItem('assistantConfig', JSON.stringify(config.value));
   initOpenAI();
   addMessage('assistant', '✅ 配置已保存');
 };
 
-// 初始化OpenAI
 const initOpenAI = () => {
   if (config.value.apiKey) {
     openai = new OpenAI({
@@ -142,7 +142,7 @@ const initOpenAI = () => {
   }
 };
 
-// 添加消息
+// ==================== 消息方法 ====================
 const addMessage = (role: Role, content: string, thought?: string, tool_call_id?: string) => {
   messages.value.push({
     role,
@@ -159,7 +159,6 @@ const addMessage = (role: Role, content: string, thought?: string, tool_call_id?
   }, 100);
 };
 
-// 构建上下文（自动包含 user / assistant / tool）
 const buildMessages = () => {
   return messages.value.map((msg) => {
     const obj: Message = {
@@ -167,17 +166,16 @@ const buildMessages = () => {
       content: msg.content,
       timestamp: msg.timestamp,
     };
-    if (msg.tool_call_id) {
-      obj.tool_call_id = msg.tool_call_id;
-    }
-    if (msg.tool_calls) {
-      obj.tool_calls = msg.tool_calls;
-    }
+    if (msg.tool_call_id) obj.tool_call_id = msg.tool_call_id;
+    if (msg.tool_calls) obj.tool_calls = msg.tool_calls;
     return obj;
   });
 };
 
-// 发送消息（支持工具调用闭环）
+// 格式化传给 OpenAI 的 tools
+const formatTools = () => props.tools.map((item) => item.tool);
+
+// ==================== 发送消息（支持工具闭环） ====================
 const sendMessage = async (isToolCall = false) => {
   const content = inputMessage.value.trim();
   if (!isToolCall && !content) return;
@@ -192,15 +190,15 @@ const sendMessage = async (isToolCall = false) => {
   }
 
   try {
-    const allMessages = [
+    const allMessages: ChatCompletionMessageParam[] = [
       { role: 'system', content: '你是一个智能助手，需要调用工具获取信息并回答用户。' },
-      ...buildMessages(),
+      ...(buildMessages() as ChatCompletionMessageParam[]),
     ];
 
     const response = await openai.chat.completions.create({
       model: config.value.model,
-      messages: allMessages as OpenAI.Chat.ChatCompletionMessageParam[],
-      tools: tools,
+      messages: allMessages,
+      tools: formatTools(),
       temperature: 0.7,
     });
 
@@ -211,15 +209,15 @@ const sendMessage = async (isToolCall = false) => {
 
     const assistantMsg = response.choices[0].message;
 
-    // 情况1：模型需要调用工具
+    // 工具调用
     if (assistantMsg.tool_calls && assistantMsg.tool_calls.length > 0) {
       addMessage(
         'assistant',
-        '🛠 正在调用天气工具...',
+        '🛠 正在调用工具...',
         JSON.stringify(assistantMsg.tool_calls, null, 2),
       );
 
-      // 把 assistant 的 tool_calls 加入历史
+      // 存入上下文
       messages.value.push({
         role: 'assistant',
         content: assistantMsg.content || '',
@@ -227,24 +225,18 @@ const sendMessage = async (isToolCall = false) => {
         tool_calls: assistantMsg.tool_calls,
       } as Message);
 
-      // 执行工具
+      // 执行所有工具
       for (const tc of assistantMsg.tool_calls) {
-        if (tc.type !== 'function') {
-          continue;
-        }
-
+        if (tc.type !== 'function') continue;
         const args = JSON.parse(tc.function.arguments);
-        const toolResult = await executeTool(tc.function.name, args);
-
-        // 把 tool 结果加入上下文（三角色核心：tool 角色）
-        addMessage('tool', toolResult, undefined, tc.id);
+        const result = await executeTool(tc.function.name, args);
+        addMessage('tool', result, undefined, tc.id);
       }
 
-      // 再次请求，让模型根据工具结果回答
+      // 二次请求
       sendMessage(true);
-    }
-    // 情况2：直接回复
-    else {
+    } else {
+      // 直接回复
       addMessage('assistant', assistantMsg.content || '无返回内容');
     }
   } catch (error) {
@@ -276,7 +268,7 @@ onMounted(() => {
 });
 </script>
 
-<style lang="scss" scss>
+<style lang="scss" scoped>
 .assistant-panel {
   width: 300px;
   min-width: 250px;
