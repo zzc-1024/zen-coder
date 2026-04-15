@@ -99,6 +99,11 @@ import LogicFlow, { BezierEdge, EventType } from '@logicflow/core';
 import { DndPanel, Menu, MiniMap } from '@logicflow/extension';
 import {
   BaseType,
+  BUILTIN_BASIC_BOOLEAN_TYPE,
+  BUILTIN_BASIC_FLOAT_TYPE,
+  BUILTIN_BASIC_INTEGER_TYPE,
+  BUILTIN_BASIC_STRING_TYPE,
+  parseType,
   type BasicTypeName,
   type Variable,
   type VariableScopeType,
@@ -188,19 +193,64 @@ const tools = ref<ChatTool[]>([
     tool: {
       type: 'function',
       function: {
-        name: 'callFunction',
-        description: '调用函数',
+        name: 'currentBlueprint',
+        description: '获取当前蓝图的信息',
+        parameters: {
+          type: 'object',
+          properties: {},
+          required: [],
+        },
+      },
+    },
+    execute: () => {
+      return JSON.stringify({
+        variables: selectedSheet.value.variables,
+        graph: lf?.getGraphRawData(),
+      });
+    },
+  },
+  {
+    tool: {
+      type: 'function',
+      function: {
+        name: 'addVariable',
+        description: '添加指定名称和类型的变量',
         parameters: {
           type: 'object',
           properties: {
-            location: { type: 'string', description: '城市名称' },
+            name: {
+              type: 'string',
+              description: '变量名称，以字母下划线开头，只能包含字母、数字和下划线',
+            },
+            type: {
+              type: 'string',
+              description: '变量类型，只能是基本类型，可选int、float、string、bool',
+            },
           },
-          required: ['location'],
+          required: ['name', 'type'],
         },
       },
     },
     execute: (args) => {
-      return args.location + '的天气晴朗，气温3摄氏度';
+      console.log('执行了addVariable工具', args);
+      let baseType: BasicTypeName;
+      if (args.type === 'bool') {
+        baseType = BUILTIN_BASIC_BOOLEAN_TYPE;
+      } else if (args.type === 'int') {
+        baseType = BUILTIN_BASIC_INTEGER_TYPE;
+      } else if (args.type === 'float') {
+        baseType = BUILTIN_BASIC_FLOAT_TYPE;
+      } else if (args.type === 'string') {
+        baseType = BUILTIN_BASIC_STRING_TYPE;
+      } else {
+        return `未知的变量类型: ${args.type}`;
+      }
+      selectedSheet.value.variables.push({
+        scope: 'local',
+        name: args.name as string,
+        type: parseType(baseType),
+      });
+      return '变量添加成功';
     },
   },
 ]);
