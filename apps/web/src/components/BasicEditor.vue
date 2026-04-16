@@ -133,6 +133,7 @@ import VariablePicker from './variablePicker/VariablePicker.vue';
 import { CallNodeType, type CallNodeProperties } from '@/nodes/basic/callNode/callNodeModel';
 import { availableFunctions } from '@/functions';
 import type { ChatTool } from './assistantPanel/typeDifination';
+import { GENERATE_BLUEPRINT_PROMPT } from '@/prompts/tools';
 // LogicFlow 相关的必要变量
 const containerRef = ref(null);
 const TeleportContainer = getTeleport();
@@ -284,11 +285,124 @@ const tools = ref<ChatTool[]>([
       if (variableIndex === -1) {
         return `变量名称 ${args.name} 不存在`;
       }
-      selectedSheet.value.variables.splice(
-        variableIndex,
-        1,
-      );
+      selectedSheet.value.variables.splice(variableIndex, 1);
       return `变量 ${args.name} 删除成功`;
+    },
+  },
+  {
+    tool: {
+      type: 'function',
+      function: {
+        name: 'generateBlueprint',
+        description: '生成蓝图',
+        parameters: {
+          type: 'object',
+          properties: {
+            blueprint: {
+              type: 'string',
+              description: `${GENERATE_BLUEPRINT_PROMPT}`,
+            },
+          },
+          required: ['blueprint'],
+        },
+      },
+    },
+    execute: (args) => {
+      // 解析蓝图并生成一个用户可以理解的操作教程，让用户一步步实现蓝图
+      const blueprint = JSON.parse(args.blueprint as string);
+      const instructions: string[] = [];
+
+      // 解析语句
+      function parseStatements(statements: Record<string, unknown>[], indentLevel: number = 0) {
+        // 解析表达式
+        function parseExpression(expression: Record<string, unknown>): string {
+          if (expression.type === 'VariableExpression') {
+            return `${expression.variableScopeType === 'local' ? '局部变量' : '全局变量'} ${expression['name']}`;
+          } else if (expression.type === 'IntegerExpression') {
+            return `整数${expression['value']}`;
+          } else if (expression.type === 'FloatExpression') {
+            return `浮点数${expression['value']}`;
+          } else if (expression.type === 'StringExpression') {
+            return `字符串${expression['value']}`;
+          } else if (expression.type === 'BooleanExpression') {
+            return `布尔值${expression['value']}`;
+          } else if (expression.type === 'BinaryExpression') {
+            const operatorMap: Record<string, string> = {
+              // 算术运算符
+              addition: '加法',
+              subtraction: '减法',
+              multiplication: '乘法',
+              division: '除法',
+              floor_division: '整除',
+              modulus: '取余',
+              exponentiation: '指数运算',
+              // 比较运算符
+              less_than: '小于',
+              less_than_or_equal: '小于等于',
+              greater_than: '大于',
+              greater_than_or_equal: '大于等于',
+              equal: '等于',
+              not_equal: '不等于',
+              // 逻辑运算符
+              and: '逻辑与',
+              or: '逻辑或',
+              xor: '异或',
+              xnor: '同或',
+            };
+            return `${parseExpression(expression.left as Record<string, unknown>)} ${operatorMap[expression.operator as string]} ${parseExpression(expression.right as Record<string, unknown>)}`;
+          } else if (expression.type === 'TypeCastExpression') {
+            return `${parseExpression(expression.expression as Record<string, unknown>)} 从 ${expression.castFrom} 转换为 ${expression.castTo}`;
+          } else if (expression.type === 'CallExpression') {
+            return `函数${expression.source}/${expression.module}/${expression.name}(${(
+              expression.parameters as Record<string, unknown>[]
+            )
+              .map((p) => parseExpression(p as Record<string, unknown>))
+              .join(', ')})`;
+          }
+          console.error('未知的表达式类型:', expression.type);
+          return `未知的表达式类型 ${expression.type}`;
+        }
+        for (const node of statements) {
+          switch (node.type) {
+            case 'AssignmentStatement':
+              const variable = node.variable as Record<string, unknown>;
+              instructions.push(
+                `${' '.repeat(indentLevel * 4)}赋值 ${parseExpression(variable)} 为 ${parseExpression(node.expression as Record<string, unknown>)}`,
+              );
+              break;
+            case 'WhileStatement':
+              instructions.push(
+                `${' '.repeat(indentLevel * 4)}当 ${parseExpression(node.condition as Record<string, unknown>)} 时，重复执行以下语句：`,
+              );
+              parseStatements(node.statements as Record<string, unknown>[], indentLevel + 1);
+              break;
+            case 'IfStatement':
+              instructions.push(
+                `${' '.repeat(indentLevel * 4)}当 ${parseExpression(node.condition as Record<string, unknown>)} 时，执行以下语句：`,
+              );
+              parseStatements(node.thenStatements as Record<string, unknown>[], indentLevel + 1);
+              instructions.push(`${' '.repeat(indentLevel * 4)}否则执行以下语句：`);
+              parseStatements(node.elseStatements as Record<string, unknown>[], indentLevel + 1);
+              break;
+            case 'BreakStatement':
+              instructions.push(`${' '.repeat(indentLevel * 4)}跳出循环`);
+              break;
+            case 'CallStatement':
+              instructions.push(
+                `${' '.repeat(indentLevel * 4)}调用 ${parseExpression(node.CallExpression as Record<string, unknown>)}`,
+              );
+              break;
+            default:
+              instructions.push(
+                `${' '.repeat(indentLevel * 4)}解析时遇到未知语句类型 ${node.type}`,
+              );
+          }
+        }
+      }
+
+      // 解析蓝图
+      parseStatements(blueprint);
+      return instructions.join('\n');
     },
   },
 ]);
