@@ -133,7 +133,6 @@ import VariablePicker from './variablePicker/VariablePicker.vue';
 import { CallNodeType, type CallNodeProperties } from '@/nodes/basic/callNode/callNodeModel';
 import { availableFunctions } from '@/functions';
 import type { ChatTool } from './assistantPanel/typeDifination';
-
 // LogicFlow 相关的必要变量
 const containerRef = ref(null);
 const TeleportContainer = getTeleport();
@@ -232,8 +231,15 @@ const tools = ref<ChatTool[]>([
       },
     },
     execute: (args) => {
-      console.log('执行了addVariable工具', args);
       let baseType: BasicTypeName;
+      // 检查变量名称是否已存在
+      const existingVariable = selectedSheet.value.variables.find(
+        (v) => v.name === (args.name as string),
+      );
+      if (existingVariable) {
+        return `变量名称 ${args.name} 已存在`;
+      }
+
       if (args.type === 'bool') {
         baseType = BUILTIN_BASIC_BOOLEAN_TYPE;
       } else if (args.type === 'int') {
@@ -251,6 +257,38 @@ const tools = ref<ChatTool[]>([
         type: parseType(baseType),
       });
       return '变量添加成功';
+    },
+  },
+  {
+    tool: {
+      type: 'function',
+      function: {
+        name: 'deleteVariable',
+        description: '删除指定名称的变量',
+        parameters: {
+          type: 'object',
+          properties: {
+            name: {
+              type: 'string',
+              description: '变量名称',
+            },
+          },
+          required: ['name'],
+        },
+      },
+    },
+    execute: (args) => {
+      const variableIndex = selectedSheet.value.variables.findIndex(
+        (v) => v.name === (args.name as string),
+      );
+      if (variableIndex === -1) {
+        return `变量名称 ${args.name} 不存在`;
+      }
+      selectedSheet.value.variables.splice(
+        variableIndex,
+        1,
+      );
+      return `变量 ${args.name} 删除成功`;
     },
   },
 ]);
