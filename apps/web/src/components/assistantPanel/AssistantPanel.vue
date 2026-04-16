@@ -36,13 +36,19 @@
       <div class="log-container" ref="logContainer">
         <div v-for="(message, index) in messages" :key="index" :class="['message', message.role]">
           <div class="message-header">
-            <span class="role">{{ message.role === 'user' ? '用户' : 'AI' }}</span>
+            <span class="role"
+              >{{ message.role === 'user' ? '用户' : ''
+              }}{{ message.role === 'assistant' ? 'AI' : ''
+              }}{{ message.role === 'system' ? '系统' : ''
+              }}{{ message.role === 'tool' ? '工具' : '' }}</span
+            >
             <span class="time">{{ message.timestamp }}</span>
           </div>
           <div class="message-content">
-            <p>{{ message.content }}</p>
+            <p v-if="message.content" style="white-space: pre-wrap">{{ message.content }}</p>
+            <p v-else>申请查看工具调用结果</p>
             <div v-if="message.role === 'assistant' && message.thought" class="thought">
-              <strong>思考过程：</strong>
+              <strong>详情：</strong>
               <p>{{ message.thought }}</p>
             </div>
           </div>
